@@ -4218,7 +4218,7 @@ async function handleImportJSON(event) {
 // ==================== SERVICE WORKER REGISTRATION ====================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/PlanActDigV2/sw.js')
+    navigator.serviceWorker.register('./sw.js')
       .then((reg) => {
         console.log('Service Worker registrado. Ámbito:', reg.scope);
         // Check for updates periodically
