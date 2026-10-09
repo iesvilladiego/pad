@@ -483,10 +483,6 @@ nav::-webkit-scrollbar{display:none}
         <i class="fas fa-code-branch"></i>
         <span id="versionChipText">v?</span>
       </span>
-      <span class="course-chip-top empty" id="userBarCourse">
-        <i class="fas fa-graduation-cap"></i>
-        <span id="userBarCourseText">Curso —</span>
-      </span>
       <button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
     </div>
   </div>
@@ -1194,8 +1190,9 @@ function updateUserBar() {
       badge.innerHTML = isAdmin() ? '<i class="fas fa-crown"></i> Admin' : '<i class="fas fa-eye"></i> Usuario';
     }
     if (name) name.textContent = state._userName || state.user.name || '';
+    // El chip de curso en la barra superior se ha eliminado; solo queda el del banner.
+    // Si en el futuro se reactiva, este bloque lo actualizará de forma segura.
     if (course) {
-      // El span userBarCourse ahora es un chip con un span interno
       const textEl = document.getElementById('userBarCourseText');
       if (textEl) {
         textEl.textContent = state.currentCourse ? ('Curso ' + state.currentCourse) : 'Curso —';
@@ -1556,6 +1553,8 @@ function renderCourseSelect() {
 document.getElementById('courseSelect').addEventListener('change', async function() {
   state.currentCourse = this.value;
   applyCourseTheme(state.currentCourse);
+  renderCourseSelect(); // mantiene el chip del banner sincronizado
+  updateUserBar();
   await listenToCourseData();
   goInicio();
 });
