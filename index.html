@@ -54,6 +54,23 @@ h2{font-size:1.4rem;font-weight:400;color:var(--light-color);position:relative}
 .course-select option{color:#333;background:#fff}
 .course-select-wrapper{display:inline-block;position:relative}
 .course-select-wrapper::after{content:"\f107";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:#fff;pointer-events:none;font-size:.8rem}
+/* Chip de curso en el banner (sin desplegable) */
+.course-chip-bar{display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:.4rem 1rem;border-radius:50px;font-size:.95rem;font-weight:500;cursor:default;transition:all .3s;user-select:none;backdrop-filter:blur(4px)}
+.course-chip-bar i{font-size:.75rem;opacity:.9}
+.course-chip-bar .chip-label{font-size:.7rem;opacity:.85;text-transform:uppercase;letter-spacing:.5px;margin-right:.15rem}
+/* Chip de versión (estilo "viva", indica versión activa desplegada) */
+.version-chip{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .65rem;border-radius:20px;background:linear-gradient(135deg,#1abc9c,#16a085);color:#fff;font-size:.7rem;font-weight:700;border:1px solid rgba(0,0,0,.05);box-shadow:0 1px 3px rgba(22,160,133,.25);transition:all .2s;letter-spacing:.3px}
+.version-chip i{font-size:.65rem}
+.version-chip .version-dot{width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block;box-shadow:0 0 4px rgba(255,255,255,.8);animation:versionPulse 2s ease-in-out infinite}
+@keyframes versionPulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* Chip de curso en la barra superior derecha */
+.course-chip-top{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .7rem;border-radius:20px;background:#eaf2f8;color:#2c3e50;font-size:.72rem;font-weight:600;border:1px solid #cfe2f3;transition:all .2s}
+.course-chip-top i{font-size:.65rem;color:var(--primary-color)}
+.course-chip-top.empty{color:#95a5a6;background:#f5f5f5;border-color:#e5e5e5}
+/* Botón "Marcar como actual" en el modal de gestión de cursos */
+.course-action-btn.set-current{background:#27ae60;color:#fff}
+.course-action-btn.set-current:hover{background:#229954}
+.course-action-btn.set-current:disabled{background:#bdc3c7;cursor:not-allowed}
 nav{background-color:#fff;padding:.6rem .5rem;display:flex;justify-content:center;gap:.5rem;box-shadow:0 4px 6px rgba(0,0,0,.05);position:sticky;top:0;z-index:100;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
 .nav-btn{background:#fff;color:var(--secondary-color);border:2px solid var(--primary-color);padding:.6rem 1.2rem;border-radius:50px;cursor:pointer;font-size:.9rem;font-weight:600;transition:all .3s ease;display:flex;align-items:center;gap:.4rem;box-shadow:0 4px 6px rgba(0,0,0,.05);white-space:nowrap;flex-shrink:0}
@@ -365,8 +382,8 @@ nav::-webkit-scrollbar{display:none}
 .user-bar .user-name{font-weight:600;color:var(--secondary-color)}
 .user-bar .logout-btn{background:none;border:1.5px solid #e74c3c;color:#e74c3c;padding:.3rem .7rem;border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:.3rem}
 .user-bar .logout-btn:hover{background:#e74c3c;color:#fff}
-@media(max-width:480px){.auth-card{padding:1.8rem;width:95%}.auth-card h2{font-size:1.3rem}.user-bar{padding:.3rem .6rem;font-size:.75rem}.user-bar-right{gap:.3rem}.user-bar .logout-btn{font-size:.65rem;padding:.2rem .4rem}}
-@media(max-width:480px){.portal-titulo{font-size:2rem}.portal-subtitulo{font-size:1.4rem}.portal-curso{font-size:1.2rem}header{padding:.5rem .6rem}h1{font-size:.85rem;display:inline;margin-right:.4rem}h2{font-size:.65rem;display:inline}.course-select{font-size:.65rem;padding:.15rem 2rem .15rem .4rem}.container{padding:0 .6rem;margin:.6rem auto}.ambito-card{padding:.8rem}.ambito-card h3{font-size:1rem}.linea-item{padding:.7rem;flex-direction:column;align-items:flex-start;gap:.4rem}.linea-badge{width:20px;height:20px;font-size:.7rem}.linea-actions{opacity:1}.detalle-linea{padding:.8rem}.tarea-item{padding:.7rem}.estado-tarea{flex-direction:column;align-items:stretch}.estado-btn{width:100%;margin-bottom:.3rem;padding:.4rem;font-size:.75rem}.info-grid{grid-template-columns:1fr}.info-card{padding:.7rem}.info-edit-btn{font-size:.6rem;padding:.1rem .25rem}.info-edit-row .btn-primary,.info-edit-row .btn-secondary{padding:.25rem .4rem;font-size:.65rem}.eval-block{padding:.5rem}.eval-block-header h5{font-size:.75rem}.eval-table thead th,.eval-table tbody td{padding:.25rem .2rem;font-size:.6rem}.eval-chip{font-size:.6rem;padding:.1rem .25rem}.consultas-section,.pdf-section{padding:.8rem}.filtros-avanzados,.filtros-pdf{grid-template-columns:1fr}.steam-hero{padding:1rem .6rem}.steam-hero h2{font-size:1.2rem}.steam-card{padding:.8rem}.steam-integration{padding:.8rem}.modal-content{width:96%;padding:.8rem}.nav-btn .nav-label{display:none}.nav-btn{padding:.35rem .5rem;border-radius:16px;gap:0}.nav-btn i{font-size:.85rem}.gestion-btn{padding:.4rem .45rem;font-size:.68rem;gap:.15rem}.gestion-btn i{font-size:.65rem}.volver-btn{padding:.4rem .7rem;font-size:.75rem}.task-comment-box{font-size:.75rem}}
+@media(max-width:480px){.auth-card{padding:1.8rem;width:95%}.auth-card h2{font-size:1.3rem}.user-bar{padding:.3rem .6rem;font-size:.75rem}.user-bar-right{gap:.3rem}.user-bar .logout-btn{font-size:.65rem;padding:.2rem .4rem}.version-chip{font-size:.62rem;padding:.2rem .5rem}.course-chip-top{font-size:.65rem;padding:.2rem .5rem}.course-chip-top i{font-size:.6rem}}
+@media(max-width:480px){.portal-titulo{font-size:2rem}.portal-subtitulo{font-size:1.4rem}.portal-curso{font-size:1.2rem}header{padding:.5rem .6rem}h1{font-size:.85rem;display:inline;margin-right:.4rem}h2{font-size:.65rem;display:inline}.course-select{font-size:.65rem;padding:.15rem 2rem .15rem .4rem}.course-chip-bar{font-size:.7rem;padding:.25rem .7rem}.container{padding:0 .6rem;margin:.6rem auto}.ambito-card{padding:.8rem}.ambito-card h3{font-size:1rem}.linea-item{padding:.7rem;flex-direction:column;align-items:flex-start;gap:.4rem}.linea-badge{width:20px;height:20px;font-size:.7rem}.linea-actions{opacity:1}.detalle-linea{padding:.8rem}.tarea-item{padding:.7rem}.estado-tarea{flex-direction:column;align-items:stretch}.estado-btn{width:100%;margin-bottom:.3rem;padding:.4rem;font-size:.75rem}.info-grid{grid-template-columns:1fr}.info-card{padding:.7rem}.info-edit-btn{font-size:.6rem;padding:.1rem .25rem}.info-edit-row .btn-primary,.info-edit-row .btn-secondary{padding:.25rem .4rem;font-size:.65rem}.eval-block{padding:.5rem}.eval-block-header h5{font-size:.75rem}.eval-table thead th,.eval-table tbody td{padding:.25rem .2rem;font-size:.6rem}.eval-chip{font-size:.6rem;padding:.1rem .25rem}.consultas-section,.pdf-section{padding:.8rem}.filtros-avanzados,.filtros-pdf{grid-template-columns:1fr}.steam-hero{padding:1rem .6rem}.steam-hero h2{font-size:1.2rem}.steam-card{padding:.8rem}.steam-integration{padding:.8rem}.modal-content{width:96%;padding:.8rem}.nav-btn .nav-label{display:none}.nav-btn{padding:.35rem .5rem;border-radius:16px;gap:0}.nav-btn i{font-size:.85rem}.gestion-btn{padding:.4rem .45rem;font-size:.68rem;gap:.15rem}.gestion-btn i{font-size:.65rem}.volver-btn{padding:.4rem .7rem;font-size:.75rem}.task-comment-box{font-size:.75rem}}
 @media(max-width:768px){
   .user-bar{padding:.3rem .8rem;font-size:.78rem}
   .user-bar-right{gap:.4rem}
@@ -461,7 +478,15 @@ nav::-webkit-scrollbar{display:none}
         <span class="firebase-dot disconnected" id="firebaseDot"></span>
         <span id="firebaseText">Conectando...</span>
       </div>
-      <span id="userBarCourse" style="color:#888;font-size:.8rem"></span>
+      <span class="version-chip" id="versionChip" title="Versión activa desplegada (desde sw.js)">
+        <span class="version-dot"></span>
+        <i class="fas fa-code-branch"></i>
+        <span id="versionChipText">v?</span>
+      </span>
+      <span class="course-chip-top empty" id="userBarCourse">
+        <i class="fas fa-graduation-cap"></i>
+        <span id="userBarCourseText">Curso —</span>
+      </span>
       <button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
     </div>
   </div>
@@ -469,9 +494,13 @@ nav::-webkit-scrollbar{display:none}
     <h1>PLAN DE ACTUACIÓN DIGITAL</h1>
     <h2>IES Virgen de Villadiego</h2>
     <div class="course-selector">
-      <div class="course-select-wrapper">
-        <select class="course-select" id="courseSelect"></select>
-      </div>
+      <span class="course-chip-bar" id="courseChipBar" title="Curso actual. Cámbialo desde 'Gestión de Cursos'.">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="chip-label">Curso</span>
+        <span id="courseChipText">—</span>
+      </span>
+      <!-- Select oculto conservado por compatibilidad con la lógica existente -->
+      <select class="course-select" id="courseSelect" style="display:none" aria-hidden="true"></select>
     </div>
   </header>
 
@@ -1165,7 +1194,16 @@ function updateUserBar() {
       badge.innerHTML = isAdmin() ? '<i class="fas fa-crown"></i> Admin' : '<i class="fas fa-eye"></i> Usuario';
     }
     if (name) name.textContent = state._userName || state.user.name || '';
-    if (course) course.textContent = 'Curso ' + state.currentCourse;
+    if (course) {
+      // El span userBarCourse ahora es un chip con un span interno
+      const textEl = document.getElementById('userBarCourseText');
+      if (textEl) {
+        textEl.textContent = state.currentCourse ? ('Curso ' + state.currentCourse) : 'Curso —';
+        course.classList.toggle('empty', !state.currentCourse);
+      } else {
+        course.textContent = 'Curso ' + (state.currentCourse || '—');
+      }
+    }
   } else {
     bar.style.display = 'none';
   }
@@ -1265,15 +1303,27 @@ async function loadCourses() {
       applyCourseTheme(state.currentCourse);
       setConnectionStatus(true);
     } else if (!state.currentCourse) {
-      const currentCurso = getCurrentCurso();
-      if (courseList.includes(currentCurso)) {
-        state.currentCourse = currentCurso;
+      // 1ª prioridad: curso fijado manualmente por el usuario desde "Gestión de Cursos"
+      let lastActive = null;
+      try { lastActive = localStorage.getItem('lastActiveCourse'); } catch (e) {}
+      if (lastActive && courseList.includes(lastActive)) {
+        state.currentCourse = lastActive;
       } else {
-        state.currentCourse = courseList[courseList.length - 1];
+        // 2ª prioridad: curso deducido de la fecha del sistema (1 sep – 31 ago)
+        const currentCurso = getCurrentCurso();
+        if (courseList.includes(currentCurso)) {
+          state.currentCourse = currentCurso;
+        } else {
+          // 3ª prioridad: último curso disponible
+          state.currentCourse = courseList[courseList.length - 1];
+        }
       }
     }
     applyCourseTheme(state.currentCourse);
-    document.getElementById('courseSelect').value = state.currentCourse;
+    const courseSelEl = document.getElementById('courseSelect');
+    if (courseSelEl) courseSelEl.value = state.currentCourse;
+    const chipTextEl = document.getElementById('courseChipText');
+    if (chipTextEl) chipTextEl.textContent = state.currentCourse || '—';
     document.getElementById('portalCurso').textContent = 'Curso ' + state.currentCourse;
     // Apply theme to the portal-inicio dynamically
     const portal = document.getElementById('portalInicio');
@@ -1494,8 +1544,13 @@ function toggleGestion() {
 // ==================== COURSE SELECT ====================
 function renderCourseSelect() {
   const sel = document.getElementById('courseSelect');
-  sel.innerHTML = state.courses.map(c => `<option value="${escapeAttr(c)}">Curso ${escapeHtml(c)}</option>`).join('');
-  sel.value = state.currentCourse;
+  if (sel) {
+    sel.innerHTML = state.courses.map(c => `<option value="${escapeAttr(c)}">Curso ${escapeHtml(c)}</option>`).join('');
+    sel.value = state.currentCourse;
+  }
+  // Actualiza el chip del banner con el curso actual
+  const chipText = document.getElementById('courseChipText');
+  if (chipText) chipText.textContent = state.currentCourse || '—';
 }
 
 document.getElementById('courseSelect').addEventListener('change', async function() {
@@ -2233,6 +2288,21 @@ function closeCourseModal() {
   document.getElementById('courseModal').classList.remove('active');
 }
 
+// Fija un curso existente como curso actual (persiste la elección en localStorage)
+async function setCurrentCourse(cursoId) {
+  if (!cursoId || !state.courses.includes(cursoId)) return;
+  if (state.currentCourse === cursoId) { closeCourseModal(); return; }
+  state.currentCourse = cursoId;
+  try { localStorage.setItem('lastActiveCourse', cursoId); } catch (e) {}
+  applyCourseTheme(state.currentCourse);
+  renderCourseSelect();
+  document.getElementById('portalCurso').textContent = 'Curso ' + state.currentCourse;
+  updateUserBar();
+  closeCourseModal();
+  await listenToCourseData();
+  goInicio();
+}
+
 function renderCourseListModal() {
   const listEl = document.getElementById('courseListModal');
   if (!listEl) return;
@@ -2254,6 +2324,9 @@ function renderCourseListModal() {
           ${isProtected ? '<span class="protected-badge"><i class="fas fa-lock"></i> Original</span>' : ''}
         </div>
         <div class="course-list-actions">
+          <button class="course-action-btn set-current" ${isCurrent ? 'disabled title="Este ya es el curso actual"' : `onclick="setCurrentCourse('${jsEscape(curso)}')"`} title="Fijar como curso actual">
+            <i class="fas fa-check-circle"></i> ${isCurrent ? 'Actual' : 'Marcar como actual'}
+          </button>
           <button class="course-action-btn clear" ${isProtected ? 'disabled title="El curso original no se puede borrar"' : `onclick="confirmClearCourse('${jsEscape(curso)}')"`} title="Borrar todos los datos del curso">
             <i class="fas fa-eraser"></i> Borrar datos
           </button>
@@ -2309,12 +2382,15 @@ async function executeCourseAction() {
       if (state.currentCourse === courseId) {
         state.currentCourse = state.courses.length > 0 ? state.courses[state.courses.length - 1] : '';
         if (state.currentCourse) {
+          try { localStorage.setItem('lastActiveCourse', state.currentCourse); } catch (e) {}
           applyCourseTheme(state.currentCourse);
           renderCourseSelect();
+          updateUserBar();
           await listenToCourseData();
         }
       }
       renderCourseSelect();
+      updateUserBar();
       goInicio();
 
     } else if (type === 'clear') {
@@ -2378,8 +2454,10 @@ async function handleCreateCourse() {
     state.courses.push(name);
     state.courses.sort();
     state.currentCourse = name;
+    try { localStorage.setItem('lastActiveCourse', name); } catch (e) {}
     renderCourseSelect();
     applyCourseTheme(name);
+    updateUserBar();
     closeCourseModal();
     await listenToCourseData();
     goInicio();
@@ -4215,14 +4293,68 @@ async function handleImportJSON(event) {
 // restoreSession() (line ~1274) already handles showing auth overlay or restoring session.
 // No extra init needed here.
 
+// ==================== APP VERSION (desde sw.js) ====================
+// Obtiene la versión "viva" leyendo CACHE_NAME del Service Worker.
+// Así el chip muestra siempre la versión realmente desplegada en el SW activo.
+async function fetchAppVersion() {
+  const textEl = document.getElementById('versionChipText');
+  const fallback = () => { if (textEl) textEl.textContent = 'v?'; };
+  try {
+    // Evitar la caché del SW añadiendo un timestamp
+    const res = await fetch('./sw.js?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) { fallback(); return; }
+    const txt = await res.text();
+    // Busca: const CACHE_NAME = 'plan-digital-v2.21';
+    const m = txt.match(/CACHE_NAME\s*=\s*['\"]([^'\"]+)['\"]/);
+    if (m && m[1]) {
+      // Extrae la parte de versión: plan-digital-v2.21 -> v2.21
+      const raw = m[1];
+      const vMatch = raw.match(/(v[0-9][\w.\-]*)/i);
+      const version = vMatch ? vMatch[1] : raw;
+      if (textEl) textEl.textContent = version;
+      const chip = document.getElementById('versionChip');
+      if (chip) chip.title = 'Versión activa desplegada: ' + version + ' (CACHE_NAME=' + raw + ')';
+    } else {
+      fallback();
+    }
+  } catch (err) {
+    console.warn('No se pudo leer la versión desde sw.js:', err);
+    fallback();
+  }
+}
+
+// Lanza la lectura de la versión lo antes posible
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', fetchAppVersion);
+} else {
+  fetchAppVersion();
+}
+
+// Tras registrar el SW, si hay una nueva versión, refresca el chip
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    fetchAppVersion();
+  });
+}
+
 // ==================== SERVICE WORKER REGISTRATION ====================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
       .then((reg) => {
         console.log('Service Worker registrado. Ámbito:', reg.scope);
+        // Recargar versión al registrar el SW (por si es la primera carga)
+        fetchAppVersion();
         // Check for updates periodically
         setInterval(() => reg.update(), 60 * 60 * 1000); // cada hora
+        // Cuando el SW encuentre una nueva versión, refresca el chip
+        reg.addEventListener('updatefound', () => {
+          const nw = reg.installing;
+          if (!nw) return;
+          nw.addEventListener('statechange', () => {
+            if (nw.state === 'activated') fetchAppVersion();
+          });
+        });
       })
       .catch((err) => console.warn('Service Worker no registrado:', err));
   });
