@@ -39,7 +39,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames
-          .filter((name) => name !== CACHE_NAME)
+          .filter((name) => name !== CACHE_NAME && name.startsWith('plan-digital-'))
           .map((name) => caches.delete(name))
       );
     }).then(() => self.clients.claim())
