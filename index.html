@@ -4070,22 +4070,79 @@ async function loadUsersList() {
     html += '<div class="user-mgmt-username">@' + escapeHtml(data.username) + (created ? ' \u00b7 Registrado: ' + created : '') + '</div>';
     html += '</div>';
     html += '<div class="user-mgmt-actions">';
-
-    if (!isCurrentUser) {
-      if (data.role !== 'admin') {
-        html += '<button class="user-mgmt-btn promote" onclick="confirmToggleRole(\'' + jsEscape(uid) + '\',\'' + jsEscape(data.username) + '\',\'admin\')" title="Promover a Admin"><i class="fas fa-crown"></i> Hacer Admin</button>';
-
-      } else {
-        html += '<button class="user-mgmt-btn demote" onclick="confirmToggleRole(\'' + jsEscape(uid) + '\',\'' + jsEscape(data.username) + '\',\'viewer\')" title="Cambiar a Usuario"><i class="fas fa-eye"></i> Hacer Usuario</button>';
-      }
-      html += '<button class="user-mgmt-btn delete" onclick="confirmDeleteUser(\'' + jsEscape(uid) + '\',\'' + jsEscape(data.name || data.username) + '\')" title="Eliminar usuario"><i class="fas fa-trash"></i></button>';
-    } else {
-      html += '<span style="font-size:.75rem;color:#aaa;font-style:italic">Tu cuenta</span>';
-    }
+    html += '<button class="user-mgmt-btn demote" onclick="showEditUser(\'' + jsEscape(uid) + '\')" title="Editar usuario"><i class="fas fa-edit"></i> Editar</button>';
+    html += '<button class="user-mgmt-btn promote" onclick="showChangePassword(\'' + jsEscape(uid) + '\')" title="Cambiar contraseña"><i class="fas fa-key"></i> Contraseña</button>';
+    if (!isCurrentUser) html += '<button class="user-mgmt-btn delete" onclick="confirmDeleteUser(\'' + jsEscape(uid) + '\',\'' + jsEscape(data.name || data.username) + '\')" title="Eliminar usuario"><i class="fas fa-trash"></i></button>';
+    else html += '<span style="font-size:.75rem;color:#aaa;font-style:italic">Tu cuenta</span>';
     html += '</div></li>';
   });
   html += '</ul>';
   container.innerHTML = html;
+}
+
+function showEditUser(uid) {
+  if (!isAdmin()) return;
+  getUserDoc(uid).then(function(user) {
+    if (!user) return;
+    const div = document.getElementById('usersModalConfirm');
+    div.innerHTML = '<div class="user-mgmt-confirm" style="display:block"><strong>Editar @' + escapeHtml(user.username) + '</strong>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.6rem 0">' +
+      '<label>Nombre<input id="editUserName" class="info-edit-field" value="' + escapeAttr(user.name || '') + '"></label>' +
+      '<label>Perfil<select id="editUserRole" class="info-edit-field"><option value="viewer" ' + (user.role === 'viewer' ? 'selected' : '') + '>Usuario (solo lectura)</option><option value="admin" ' + (user.role === 'admin' ? 'selected' : '') + '>Admin</option></select></label></div>' +
+      '<div style="display:flex;justify-content:flex-end;gap:.4rem"><button style="background:#95a5a6;color:#fff" onclick="cancelUserAction()">Cancelar</button><button class="user-mgmt-btn promote" onclick="executeEditUser(\'' + jsEscape(uid) + '\')"><i class="fas fa-save"></i> Guardar</button></div></div>';
+    document.getElementById('usersModalMsg').innerHTML = '';
+  });
+}
+
+async function executeEditUser(uid) {
+  if (!isAdmin()) return;
+  const user = await getUserDoc(uid);
+  const name = document.getElementById('editUserName').value.trim();
+  const role = document.getElementById('editUserRole').value;
+  if (!user || !name) { showUserManagementError('Introduce un nombre para el usuario.'); return; }
+  user.name = name;
+  user.role = role;
+  await setUserDoc(uid, user);
+  if (state.user && state.user.uid === uid) {
+    state.user.name = name; state.user.role = role; state._userName = name; state.userRole = role;
+    sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(state.user)); updateUserBar(); applyRoleUI(); renderView();
+  }
+  cancelUserAction();
+  document.getElementById('usersModalMsg').innerHTML = '<div class="modal-message success">Datos del usuario actualizados.</div>';
+  await loadUsersList();
+}
+
+function showChangePassword(uid) {
+  if (!isAdmin()) return;
+  getUserDoc(uid).then(function(user) {
+    if (!user) return;
+    const div = document.getElementById('usersModalConfirm');
+    div.innerHTML = '<div class="user-mgmt-confirm" style="display:block"><strong>Cambiar contraseña de @' + escapeHtml(user.username) + '</strong>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.6rem 0">' +
+      '<label>Nueva contraseña (mín. 6)<input type="password" id="changePass1" class="info-edit-field" autocomplete="new-password"></label>' +
+      '<label>Repetir contraseña<input type="password" id="changePass2" class="info-edit-field" autocomplete="new-password"></label></div>' +
+      '<div style="display:flex;justify-content:flex-end;gap:.4rem"><button style="background:#95a5a6;color:#fff" onclick="cancelUserAction()">Cancelar</button><button class="user-mgmt-btn promote" onclick="executeChangePassword(\'' + jsEscape(uid) + '\')"><i class="fas fa-key"></i> Guardar contraseña</button></div></div>';
+    document.getElementById('usersModalMsg').innerHTML = '';
+  });
+}
+
+async function executeChangePassword(uid) {
+  if (!isAdmin()) return;
+  const first = document.getElementById('changePass1').value;
+  const second = document.getElementById('changePass2').value;
+  if (first.length < 6) { showUserManagementError('La contraseña debe tener al menos 6 caracteres.'); return; }
+  if (first !== second) { showUserManagementError('Las contraseñas no coinciden.'); return; }
+  const user = await getUserDoc(uid);
+  if (!user) { showUserManagementError('Usuario no encontrado.'); return; }
+  user.passwordHash = await hashPassword(first);
+  await setUserDoc(uid, user);
+  cancelUserAction();
+  document.getElementById('usersModalMsg').innerHTML = '<div class="modal-message success">Contraseña actualizada correctamente.</div>';
+}
+
+function showUserManagementError(message) {
+  const msg = document.getElementById('usersModalMsg');
+  msg.innerHTML = '<div class="modal-message error">' + escapeHtml(message) + '</div>';
 }
 
 function confirmToggleRole(uid, username, newRole) {
@@ -4127,6 +4184,7 @@ async function executeToggleRole(uid, newRole) {
 }
 
 function confirmDeleteUser(uid, displayName) {
+  if (!isAdmin() || (state.user && state.user.uid === uid)) return;
   const confirmDiv = document.getElementById('usersModalConfirm');
   if (!confirmDiv) return;
   confirmDiv.innerHTML = `
