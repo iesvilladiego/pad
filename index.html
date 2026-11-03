@@ -1043,6 +1043,51 @@ function isAdmin() {
 // Unified auth handler: detects if first setup or normal login
 state.needsAdminSetup = false;
 
+function resetUserSessionState() {
+  if (_portalTimer) { clearTimeout(_portalTimer); _portalTimer = null; }
+  unsubscribeFns.forEach(fn => { try { fn(); } catch (e) { console.warn('No se pudo cerrar un listener anterior:', e); } });
+  unsubscribeFns = [];
+  state.courses = [];
+  state.currentCourse = '';
+  state.planData = {};
+  state.estadosTareas = {};
+  state.comentariosTareas = {};
+  state.currentLinea = null;
+  state.currentAmbitoId = '';
+  state.viewState = 'inicio';
+  state.loading = true;
+}
+
+async function finishLogin(session, role, displayName) {
+  resetUserSessionState();
+  state.user = session;
+  state.userRole = role || 'viewer';
+  state._userName = displayName || '';
+  state.viewState = 'inicio';
+  try {
+    await loadCourses();
+    if (!state.currentCourse) throw new Error('No se ha podido seleccionar un curso.');
+    applyRoleUI();
+    hideAuthOverlay();
+    const portal = document.getElementById('portalInicio');
+    if (portal) { portal.style.display = 'flex'; portal.classList.remove('fade-out'); }
+    startPortalCountdown();
+  } catch (err) {
+    console.error('Error preparando la sesión:', err);
+    sessionStorage.removeItem(AUTH_SESSION_KEY);
+    state.user = null;
+    state.userRole = 'viewer';
+    state._userName = '';
+    showAuthOverlay();
+    const errorEl = document.getElementById('authError');
+    if (errorEl) {
+      errorEl.textContent = 'No se pudo cargar la aplicación: ' + (err.message || 'error de conexión.');
+      errorEl.style.display = 'flex';
+    }
+    throw err;
+  }
+}
+
 async function handleAuth() {
   const username = document.getElementById('authUsername').value.trim();
   const pass = document.getElementById('authPass').value;
@@ -1103,19 +1148,9 @@ async function handleAuth() {
       });
 
       const session = { uid: usernameKey, username: usernameKey, name: name, role: 'admin' };
-      sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
-      state.user = session;
-      state.userRole = 'admin';
-      state._userName = name;
       state.needsAdminSetup = false;
-
-      hideAuthOverlay();
-      if (state.courses.length === 0) {
-        await loadCourses();
-      } else {
-        applyRoleUI();
-        renderView();
-      }
+      sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
+      await finishLogin(session, 'admin', name);
     } else {
       // --- LOGIN NORMAL ---
       const userData = await getUserDoc(usernameKey, true);
@@ -1136,16 +1171,7 @@ async function handleAuth() {
       }
       const session = { uid: usernameKey, username: userData.username, name: userData.name, role: userData.role };
       sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
-      state.user = session;
-      state.userRole = userData.role || 'viewer';
-      state._userName = userData.name || '';
-      hideAuthOverlay();
-      if (state.courses.length === 0) {
-        await loadCourses();
-      } else {
-        applyRoleUI();
-        renderView();
-      }
+      await finishLogin(session, userData.role || 'viewer', userData.name || '');
     }
   } catch (err) {
     console.error('Auth error:', err);
@@ -1177,6 +1203,10 @@ function handleLogout() {
   state.comentariosTareas = {};
   state.currentCourse = '';
   state.currentLinea = null;
+  state.currentAmbitoId = '';
+  state.viewState = 'inicio';
+  state.courses = [];
+  state.loading = true;
   showAuthOverlay();
 }
 
@@ -1237,16 +1267,9 @@ async function restoreSession() {
       await checkUsersAndShowAuth();
       return;
     }
-    state.user = session;
-    state.userRole = session.role || userData.role || 'viewer';
-    state._userName = session.name || userData.name || '';
-    hideAuthOverlay();
-    if (state.courses.length === 0) {
-      await loadCourses();
-    } else {
-      applyRoleUI();
-      renderView();
-    }
+    const currentSession = { uid: session.uid, username: userData.username || session.username, name: userData.name || session.name || '', role: userData.role || session.role || 'viewer' };
+    sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(currentSession));
+    await finishLogin(currentSession, currentSession.role, currentSession.name);
   } catch (err) {
     console.error('Session restore error:', err);
     sessionStorage.removeItem(AUTH_SESSION_KEY);
@@ -1330,15 +1353,11 @@ async function loadCourses() {
     if (portal) portal.style.background = 'var(--gradient)';
     await loadGlobalCatalogos();
     await listenToCourseData();
-    // Show portal (it may have been hidden by showAuthOverlay during login)
-    if (portal) { portal.style.display = 'flex'; portal.classList.remove('fade-out'); }
-    // Show dynamic portal for 5 seconds, then auto-enter when available.
-    // On a repeated login, Firebase may briefly fail to load a course; keep
-    // the portal from becoming a dead end and allow entry once data is ready.
-    if (state.currentCourse) startPortalCountdown();
+    // The caller controls portal visibility/countdown after course loading.
   } catch (err) {
     console.error('Error loading courses:', err);
     setConnectionStatus(false);
+    throw err;
   }
 }
 
@@ -1439,8 +1458,11 @@ function startPortalCountdown() {
 function enterApp() {
   if (!state.user || !state.currentCourse) return;
   if (_portalTimer) { clearTimeout(_portalTimer); _portalTimer = null; }
+  const enteringUid = state.user.uid;
   document.getElementById('portalInicio').classList.add('fade-out');
   setTimeout(() => {
+    if (!state.user || state.user.uid !== enteringUid || !state.currentCourse) return;
+    document.getElementById('authOverlay').style.display = 'none';
     document.getElementById('portalInicio').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
     state.viewState = 'inicio';
@@ -1461,6 +1483,8 @@ function showAuthOverlay() {
   if (portal) { portal.style.display = 'none'; portal.classList.remove('fade-out'); }
   const mainApp = document.getElementById('mainApp');
   if (mainApp) mainApp.style.display = 'none';
+  const userBar = document.getElementById('userBar');
+  if (userBar) userBar.style.display = 'none';
   overlay.style.display = 'flex';
   // Reset form state
   document.getElementById('authError').style.display = 'none';
