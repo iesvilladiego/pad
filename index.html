@@ -1159,6 +1159,12 @@ async function handleAuth() {
 }
 
 function handleLogout() {
+  // Cancelar cualquier transición pendiente del portal antes de volver al login.
+  if (_portalTimer) { clearTimeout(_portalTimer); _portalTimer = null; }
+  const portal = document.getElementById('portalInicio');
+  const mainApp = document.getElementById('mainApp');
+  if (portal) { portal.style.display = 'none'; portal.classList.remove('fade-out'); }
+  if (mainApp) mainApp.style.display = 'none';
   sessionStorage.removeItem(AUTH_SESSION_KEY);
   state.user = null;
   state.userRole = 'viewer';
@@ -1171,9 +1177,6 @@ function handleLogout() {
   state.comentariosTareas = {};
   state.currentCourse = '';
   state.currentLinea = null;
-  document.getElementById('mainApp').style.display = 'none';
-  document.getElementById('portalInicio').style.display = 'flex';
-  document.getElementById('portalInicio').classList.remove('fade-out');
   showAuthOverlay();
 }
 
@@ -1329,8 +1332,10 @@ async function loadCourses() {
     await listenToCourseData();
     // Show portal (it may have been hidden by showAuthOverlay during login)
     if (portal) { portal.style.display = 'flex'; portal.classList.remove('fade-out'); }
-    // Show dynamic portal for 5 seconds, then auto-enter
-    startPortalCountdown();
+    // Show dynamic portal for 5 seconds, then auto-enter when available.
+    // On a repeated login, Firebase may briefly fail to load a course; keep
+    // the portal from becoming a dead end and allow entry once data is ready.
+    if (state.currentCourse) startPortalCountdown();
   } catch (err) {
     console.error('Error loading courses:', err);
     setConnectionStatus(false);
@@ -1422,11 +1427,17 @@ function startPortalCountdown() {
   // Auto-enter after 5 seconds
   _portalTimer = setTimeout(() => {
     _portalTimer = null;
-    if (state.currentCourse) enterApp();
+    if (state.user && state.currentCourse) enterApp();
+    else if (state.user) {
+      // Retry course loading once instead of leaving the user on a portal
+      // whose click handler cannot enter without a selected course.
+      loadCourses();
+    }
   }, 5000);
 }
 
 function enterApp() {
+  if (!state.user || !state.currentCourse) return;
   if (_portalTimer) { clearTimeout(_portalTimer); _portalTimer = null; }
   document.getElementById('portalInicio').classList.add('fade-out');
   setTimeout(() => {
@@ -1445,6 +1456,11 @@ document.getElementById('portalInicio').addEventListener('click', function() {
 function showAuthOverlay() {
   const overlay = document.getElementById('authOverlay');
   if (!overlay) return;
+  if (_portalTimer) { clearTimeout(_portalTimer); _portalTimer = null; }
+  const portal = document.getElementById('portalInicio');
+  if (portal) { portal.style.display = 'none'; portal.classList.remove('fade-out'); }
+  const mainApp = document.getElementById('mainApp');
+  if (mainApp) mainApp.style.display = 'none';
   overlay.style.display = 'flex';
   // Reset form state
   document.getElementById('authError').style.display = 'none';
