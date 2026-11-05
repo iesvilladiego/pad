@@ -597,37 +597,6 @@ nav::-webkit-scrollbar{display:none}
         Vinculada al Proyecto STEAM 4.0
       </label>
     </div>
-    <div id="editModalExtraFields" style="display:none">
-      <div class="form-group">
-        <label>Tareas de Formación (una por línea)</label>
-        <textarea class="form-textarea" id="formTareasFormacion" placeholder="Tarea 1&#10;Tarea 2"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Tareas de Intervención (una por línea)</label>
-        <textarea class="form-textarea" id="formTareasIntervencion" placeholder="Tarea 1&#10;Tarea 2"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Objeto de Evaluación</label>
-        <input class="form-input" type="text" id="formEvalObjeto" placeholder="Objeto de evaluación">
-      </div>
-      <div class="form-group">
-        <label>Herramientas de Evaluación</label>
-        <input class="form-input" type="text" id="formEvalHerr" placeholder="Herramientas">
-      </div>
-      <div class="form-group">
-        <label>Responsables <span style="font-weight:400;font-size:.8rem;color:#999">(haz clic para añadir/eliminar)</span></label>
-        <div id="responsablesChipsContainer" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem;min-height:32px"></div>
-        <div id="responsablesListContainer" style="display:flex;flex-wrap:wrap;gap:.3rem;max-height:120px;overflow-y:auto;padding:.5rem;background:#f8f9fa;border-radius:8px;border:1px solid #eee"></div>
-        <div style="display:flex;gap:.4rem;margin-top:.5rem">
-          <input class="form-input" type="text" id="newResponsableInput" placeholder="Nuevo responsable..." style="flex:1;padding:.5rem .7rem;font-size:.9rem" onkeydown="if(event.key==='Enter'){event.preventDefault();addNewResponsable()}">
-          <button type="button" class="btn-primary" onclick="addNewResponsable()" style="padding:.5rem .8rem;font-size:.85rem;white-space:nowrap"><i class="fas fa-plus"></i> Añadir</button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Temporalización (separados por coma)</label>
-        <input class="form-input" type="text" id="formTemporalizacion" placeholder="Primer trimestre, Segundo trimestre">
-      </div>
-    </div>
     <div id="editModalMessage"></div>
     <div class="btn-row">
       <button class="btn-secondary" onclick="closeEditModal()">Cancelar</button>
@@ -962,7 +931,6 @@ const state = {
   gestionOpen: false,
   loading: true,
   editingLinea: null,
-  formSelectedResponsables: [],
   isNewLinea: false,
   selectedTransferLines: [],
   // Auth
@@ -2527,11 +2495,9 @@ function openEditLinea(linea, isNew) {
   state.isNewLinea = isNew;
   state.editingLinea = null;
   document.getElementById('editModalMessage').innerHTML = '';
-  const extraFields = document.getElementById('editModalExtraFields');
 
   if (isNew) {
     document.getElementById('editModalTitle').textContent = 'Nueva Línea de Actuación';
-    extraFields.style.display = 'none';
     const ambitoData = state.planData[state.currentAmbitoId];
     const nextId = ambitoData ? Math.max(0, ...ambitoData.lineas.map(l => l.id)) + 1 : 1;
     state.editingLinea = { id: nextId };
@@ -2540,7 +2506,6 @@ function openEditLinea(linea, isNew) {
     document.getElementById('formSteam4').checked = false;
   } else if (linea) {
     document.getElementById('editModalTitle').textContent = 'Editar Línea de Actuación';
-    extraFields.style.display = 'none';
     state.editingLinea = linea;
     document.getElementById('formTitulo').value = linea.titulo;
     document.getElementById('formDescripcion').value = linea.descripcion;
@@ -3035,83 +3000,6 @@ async function generarPDF() {
     state.pdfMessage = { text: 'Error al generar el PDF. Asegúrate de tener conexión a internet para cargar jsPDF.', type: 'error' };
     renderView();
   }
-}
-
-// ==================== RESPONSABLES CHIP SELECTOR ====================
-function getFullResponsablesList() {
-  // Merge base list + any dynamically discovered from current plan data
-  const dynamic = getAllResponsables();
-  const combined = new Set(RESPONSABLES_BASE);
-  dynamic.forEach(r => combined.add(r));
-  return Array.from(combined).sort();
-}
-
-function renderResponsablesSelector() {
-  const chipsEl = document.getElementById('responsablesChipsContainer');
-  const listEl = document.getElementById('responsablesListContainer');
-  if (!chipsEl || !listEl) return;
-
-  const allResp = getFullResponsablesList();
-  const selected = state.formSelectedResponsables;
-
-  // Render selected chips (top area)
-  if (selected.length === 0) {
-    chipsEl.innerHTML = '<span style="color:#aaa;font-size:.85rem;font-style:italic">Ninguno seleccionado — haz clic abajo para añadir</span>';
-  } else {
-    chipsEl.innerHTML = selected.map(r =>
-      `<button type="button" class="resp-chip selected" onclick="toggleResponsable('${jsEscape(r)}')" title="Clic para eliminar">
-        ${escapeHtml(r)} <i class="fas fa-times"></i>
-      </button>`
-    ).join('');
-  }
-
-  // Render available list (bottom area) — show non-selected with label
-  const available = allResp.filter(r => !selected.includes(r));
-  let listHtml = '';
-  if (available.length > 0) {
-    listHtml += '<span class="resp-list-label"><i class="fas fa-plus-circle"></i> Añadir responsable:</span>';
-    listHtml += available.map(r =>
-      `<button type="button" class="resp-chip available" onclick="toggleResponsable('${jsEscape(r)}')" title="Clic para añadir">
-        ${escapeHtml(r)} <i class="fas fa-check"></i>
-      </button>`
-    ).join('');
-  }
-  listEl.innerHTML = listHtml;
-}
-
-function toggleResponsable(nombre) {
-  const idx = state.formSelectedResponsables.indexOf(nombre);
-  if (idx >= 0) {
-    state.formSelectedResponsables.splice(idx, 1);
-  } else {
-    state.formSelectedResponsables.push(nombre);
-  }
-  renderResponsablesSelector();
-}
-
-function addNewResponsable() {
-  const input = document.getElementById('newResponsableInput');
-  const nombre = (input.value || '').trim();
-  if (!nombre) return;
-  // Case-insensitive check: don't add duplicates
-  const exists = getFullResponsablesList().some(r => r.toLowerCase() === nombre.toLowerCase());
-  if (exists) {
-    // Already in the list — just select it
-    const normalized = getFullResponsablesList().find(r => r.toLowerCase() === nombre.toLowerCase());
-    if (!state.formSelectedResponsables.includes(normalized)) {
-      state.formSelectedResponsables.push(normalized);
-    }
-    input.value = '';
-    renderResponsablesSelector();
-    return;
-  }
-  // Add to the global base list so it persists for other lines too
-  RESPONSABLES_BASE.push(nombre);
-  saveGlobalCatalogoItem('responsables', nombre);
-  // Select it immediately
-  state.formSelectedResponsables.push(nombre);
-  input.value = '';
-  renderResponsablesSelector();
 }
 
 // ==================== HELPERS ====================
