@@ -1290,7 +1290,7 @@ async function checkUsersAndShowAuth() {
     showAuthOverlay();
     var errorEl = document.getElementById('authError');
     if (errorEl) {
-      errorEl.textContent = err.message || 'Error de conexi\\u00f3n a la nube.';
+      errorEl.textContent = err.message || 'Error de conexión a la nube.';
       errorEl.style.display = 'flex';
     }
   }
@@ -1314,7 +1314,7 @@ async function loadCourses() {
   try {
     const snapshot = await db.collection(PLANES_COLLECTION).get();
     const courseList = [];
-    snapshot.forEach(d => courseList.push(d.id));
+    snapshot.forEach(d => { if (d.id !== '_config') courseList.push(d.id); });
     courseList.sort();
     state.courses = courseList;
     renderCourseSelect();
@@ -1637,7 +1637,7 @@ function renderInicio(container) {
   AMBITOS.forEach(ambitoId => {
     const info = AMBITO_INFO[ambitoId];
     const data = state.planData[ambitoId];
-    const count = data ? data.lineas.length : 0;
+    const count = data && Array.isArray(data.lineas) ? data.lineas.length : 0;
     html += `
       <div class="ambito-card" onclick="goAmbito('${ambitoId}')">
         <h3><i class="${info.icon}"></i> ${info.titulo}</h3>
@@ -1653,7 +1653,7 @@ function renderInicio(container) {
 // ==================== RENDER: LINEAS ====================
 function renderLineas(container) {
   const ambitoData = state.planData[state.currentAmbitoId];
-  if (!ambitoData) {
+  if (!ambitoData || !Array.isArray(ambitoData.lineas)) {
     container.innerHTML = '<p>No hay datos disponibles para este ámbito.</p>';
     return;
   }
@@ -1709,6 +1709,8 @@ function renderDetalle(container) {
   });
   const linea = state.currentLinea;
   const ambitoId = state.currentAmbitoId;
+  const tareasFormacion = Array.isArray(linea.tareasFormacion) ? linea.tareasFormacion : [];
+  const tareasIntervencion = Array.isArray(linea.tareasIntervencion) ? linea.tareasIntervencion : [];
 
   let html = `
     <div class="seccion-cabecera">
@@ -1730,9 +1732,9 @@ function renderDetalle(container) {
 
   // Formation tasks
   const showFormacion = state.taskFilter === 'todas' || state.taskFilter === 'formacion';
-  if (showFormacion && linea.tareasFormacion.length > 0) {
+  if (showFormacion && tareasFormacion.length > 0) {
     html += `<div><h3 style="margin-top:1.5rem;margin-bottom:1rem;color:#2c3e50">Tareas de Formación</h3>`;
-    linea.tareasFormacion.forEach((tarea, idx) => {
+    tareasFormacion.forEach((tarea, idx) => {
       const taskId = `${ambitoId}-${linea.id}-formacion-${idx}`;
       const estado = state.estadosTareas[taskId] || 'no-iniciado';
       const texto = typeof tarea === 'string' ? tarea : tarea.texto;
@@ -1744,9 +1746,9 @@ function renderDetalle(container) {
 
   // Intervention tasks — now include per-actuación evaluation data
   const showIntervencion = state.taskFilter === 'todas' || state.taskFilter === 'intervencion';
-  if (showIntervencion && linea.tareasIntervencion.length > 0) {
+  if (showIntervencion && tareasIntervencion.length > 0) {
     html += `<div><h3 style="margin-top:1.5rem;margin-bottom:1rem;color:#2c3e50">Actuaciones en el centro</h3>`;
-    linea.tareasIntervencion.forEach((tarea, idx) => {
+    tareasIntervencion.forEach((tarea, idx) => {
       const taskId = `${ambitoId}-${linea.id}-intervencion-${idx}`;
       const estado = state.estadosTareas[taskId] || 'no-iniciado';
       const texto = typeof tarea === 'string' ? tarea : tarea.texto;
@@ -1757,8 +1759,8 @@ function renderDetalle(container) {
   }
 
   // Empty state when no tasks exist
-  const hasFormacion = (linea.tareasFormacion || []).length > 0;
-  const hasIntervencion = (linea.tareasIntervencion || []).length > 0;
+  const hasFormacion = tareasFormacion.length > 0;
+  const hasIntervencion = tareasIntervencion.length > 0;
   if (!hasFormacion && !hasIntervencion) {
     html += `<div style="text-align:center;padding:2rem 1rem;color:#999">
       <i class="fas fa-clipboard-list" style="font-size:2.5rem;margin-bottom:.8rem;opacity:.4;display:block"></i>
@@ -1792,8 +1794,9 @@ function renderDetalle(container) {
 
 function buildViewChip(text, chipClass, taskId, fieldType) {
   const canEdit = isAdmin();
-  const safeText = text.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-  const actions = canEdit ? `<i class="fas fa-pen eval-chip-edit" onclick="startEditEvalChip('${taskId.replace(/'/g, "\\'")}','${fieldType}','${safeText}')" title="Editar"></i><i class="fas fa-times eval-chip-del" onclick="deleteEvalChip('${taskId.replace(/'/g, "\\'")}','${fieldType}','${safeText}')" title="Eliminar"></i>` : '';
+  const safeTaskId = taskId.replace(/'/g, "\\'");
+  // El valor se lee del propio chip (data-value) para que comillas o apóstrofos no rompan el onclick
+  const actions = canEdit ? `<i class="fas fa-pen eval-chip-edit" onclick="startEditEvalChip('${safeTaskId}','${fieldType}',this.parentElement.dataset.value)" title="Editar"></i><i class="fas fa-times eval-chip-del" onclick="deleteEvalChip('${safeTaskId}','${fieldType}',this.parentElement.dataset.value)" title="Eliminar"></i>` : '';
   return `<span class="eval-chip ${chipClass}" data-value="${escapeAttr(text)}">${escapeHtml(text)}${actions}</span>`;
 }
 
@@ -2754,13 +2757,10 @@ async function deleteLinea() {
     const newEstados = { ...state.estadosTareas };
     const newComentarios = { ...state.comentariosTareas };
     // Delete estados for the removed line and renumber surviving lines
+    // Mapa id antiguo -> id nuevo por posición (los títulos pueden repetirse)
     const idMapping = {};
-    ambitoData.lineas.forEach(origLinea => {
-      if (origLinea.id === state.editingLinea.id) return;
-      const newId = renumbered.find(l => l.titulo === origLinea.titulo);
-      if (newId && origLinea.id !== newId.id) {
-        idMapping[origLinea.id] = newId.id;
-      }
+    newLineas.forEach((l, i) => {
+      if (l.id !== i + 1) idMapping[l.id] = i + 1;
     });
     Object.keys(newEstados).forEach(key => {
       const parts = key.split('-');
@@ -2822,6 +2822,8 @@ function closeTransferModal() {
 
 function renderTransferLines() {
   const ambitoId = document.getElementById('transferAmbitoSelect').value;
+  // Al cambiar de ámbito no debe conservarse la selección anterior: los ids se repiten entre ámbitos
+  state.selectedTransferLines = [];
   const ambitoData = state.planData[ambitoId];
   const listEl = document.getElementById('transferLineList');
 
@@ -2921,6 +2923,7 @@ async function generarPDF() {
   if (state.pdfIntervencion) tiposSel.push('intervencion');
 
   const rows = [];
+  const ESTADO_LABEL_PDF = { 'no-iniciado': 'No iniciada', 'en-proceso': 'En proceso', 'conseguido': 'Conseguida' };
 
   ambitosSel.forEach(ambitoId => {
     const ambito = state.planData[ambitoId];
@@ -2935,7 +2938,7 @@ async function generarPDF() {
             const ev = typeof tarea === 'object' && tarea.evaluacion ? tarea.evaluacion : {};
             const resp = Array.isArray(ev.responsables) ? ev.responsables.join(', ') : (linea.responsables || []).join(', ');
             const temp = Array.isArray(ev.temporalizacion) ? ev.temporalizacion.join(', ') : (linea.temporalizacion || []).join(', ');
-            rows.push([ambito.titulo, 'Línea ' + linea.id, texto, 'Formación', estado, resp, temp]);
+            rows.push([ambito.titulo, 'Línea ' + linea.id, texto, 'Formación', ESTADO_LABEL_PDF[estado] || estado, resp, temp]);
           }
         });
       }
@@ -2948,7 +2951,7 @@ async function generarPDF() {
             const ev = typeof tarea === 'object' && tarea.evaluacion ? tarea.evaluacion : {};
             const resp = Array.isArray(ev.responsables) ? ev.responsables.join(', ') : (linea.responsables || []).join(', ');
             const temp = Array.isArray(ev.temporalizacion) ? ev.temporalizacion.join(', ') : (linea.temporalizacion || []).join(', ');
-            rows.push([ambito.titulo, 'Línea ' + linea.id, texto, 'Actuación', estado, resp, temp]);
+            rows.push([ambito.titulo, 'Línea ' + linea.id, texto, 'Actuación', ESTADO_LABEL_PDF[estado] || estado, resp, temp]);
           }
         });
       }
@@ -2991,21 +2994,9 @@ async function generarPDF() {
       didParseCell: function(data) {
         if (data.section === 'body' && data.column.index === 4) {
           const valor = data.cell.raw;
-          if (valor === 'no-iniciado') data.cell.styles.textColor = [150, 150, 150];
-          else if (valor === 'en-proceso') data.cell.styles.textColor = [180, 130, 10];
-          else if (valor === 'conseguido') data.cell.styles.textColor = [39, 174, 96];
-        }
-      },
-      didDrawCell: function(data) {
-        if (data.section === 'body' && data.column.index === 4) {
-          const estadoLabelMap = { 'no-iniciado': 'No iniciada', 'en-proceso': 'En proceso', 'conseguido': 'Conseguida' };
-          const label = estadoLabelMap[data.cell.raw];
-          if (label && label !== data.cell.raw) {
-            const { x, y, width, height, styles } = data.cell;
-            const doc = data.doc;
-            doc.setFontSize(8);
-            doc.text(label, x + 3, y + height / 2 + 1, { baseline: 'middle' });
-          }
+          if (valor === 'No iniciada') data.cell.styles.textColor = [150, 150, 150];
+          else if (valor === 'En proceso') data.cell.styles.textColor = [180, 130, 10];
+          else if (valor === 'Conseguida') data.cell.styles.textColor = [39, 174, 96];
         }
       }
     });
@@ -4183,6 +4174,10 @@ async function executeEditUser(uid) {
   const name = document.getElementById('editUserName').value.trim();
   const role = document.getElementById('editUserRole').value;
   if (!user || !name) { showUserManagementError('Introduce un nombre para el usuario.'); return; }
+  if (state.user && state.user.uid === uid && role !== 'admin') {
+    showUserManagementError('No puedes quitarte a ti mismo el rol de administrador. Pídeselo a otra persona con permisos de administración.');
+    return;
+  }
   user.name = name;
   user.role = role;
   await setUserDoc(uid, user);
