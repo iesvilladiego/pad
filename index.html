@@ -1333,7 +1333,7 @@ async function loadCourses() {
       renderCourseSelect();
       applyCourseTheme(state.currentCourse);
       setConnectionStatus(true);
-    } else if (!state.currentCourse) {
+    } else if (!state.currentCourse || !courseList.includes(state.currentCourse)) {
       // 1ª prioridad: curso fijado manualmente por el usuario desde "Gestión de Cursos"
       let lastActive = null;
       try { lastActive = localStorage.getItem('lastActiveCourse'); } catch (e) {}
@@ -1413,8 +1413,13 @@ async function listenToCourseData() {
       if (state.currentLinea && state.viewState === 'detalle') {
         const ambitoData = state.planData[state.currentAmbitoId];
         if (ambitoData) {
-          const fresh = ambitoData.lineas.find(l => l.id === state.currentLinea.id);
+          const fresh = (ambitoData.lineas || []).find(l => l.id === state.currentLinea.id);
           if (fresh) state.currentLinea = fresh;
+          else {
+            // La línea se ha borrado (por este o por otro usuario): volvemos al listado
+            state.currentLinea = null;
+            state.viewState = 'lineas';
+          }
         }
       }
       setConnectionStatus(true);
@@ -2119,6 +2124,11 @@ function confirmDeleteSteamLinea(ambitoId, linea) {
 // ==================== RENDER: CONSULTAS ====================
 function renderConsultas(container) {
   const responsables = getAllResponsables();
+  // Si el responsable guardado ya no existe en el plan, volvemos a "todos" para que
+  // el filtro que se ve coincida con el que se aplica.
+  if (state.consultaResponsable !== 'todos' && !responsables.includes(state.consultaResponsable)) {
+    state.consultaResponsable = 'todos';
+  }
 
   let html = `
     <div class="seccion-cabecera">
@@ -2689,10 +2699,15 @@ async function saveNewActuacion() {
     return;
   }
 
-  // Parsear alumnado: nombres separados por comas, normalizados
-  const alumnado = alumnadoRaw
-    ? alumnadoRaw.split(',').map(s => s.trim()).filter(s => s.length > 0)
-    : [];
+  // Parsear alumnado: nombres separados por comas, normalizados y sin duplicados
+  const alumnadoVisto = new Set();
+  const alumnado = (alumnadoRaw ? alumnadoRaw.split(',').map(s => s.trim()).filter(s => s.length > 0) : [])
+    .filter(nombre => {
+      const clave = nombre.toLowerCase();
+      if (alumnadoVisto.has(clave)) return false;
+      alumnadoVisto.add(clave);
+      return true;
+    });
 
   const ambitoId = state.currentAmbitoId;
   const lineaId = state.currentLinea.id;
@@ -2931,6 +2946,19 @@ async function handleTransfer() {
 }
 
 // ==================== PDF EXPORT ====================
+// Reparte el ancho útil de la página entre las 7 columnas del PDF (antes sumaban
+// 292 mm en una A4 horizontal y la última columna se salía de la página).
+function ANCHOS_COLUMNAS_PDF() {
+  const MARGEN_PDF = 14;
+  const ANCHO_PAGINA = 297; // A4 horizontal en mm
+  const disponible = ANCHO_PAGINA - MARGEN_PDF * 2;
+  const pesos = [45, 18, 90, 22, 22, 50, 45];
+  const suma = pesos.reduce((a, b) => a + b, 0);
+  const estilos = {};
+  pesos.forEach((peso, i) => { estilos[i] = { cellWidth: disponible * peso / suma }; });
+  return estilos;
+}
+
 async function generarPDF() {
   state.pdfMessage = null;
 
@@ -3008,14 +3036,12 @@ async function generarPDF() {
 
     docPdf.autoTable({
       startY: 55,
+      margin: { left: 14, right: 14 },
       head: [['Ámbito', 'Línea', 'Tarea', 'Tipo', 'Estado', 'Responsables', 'Temporalización']],
       body: rows,
       styles: { fontSize: 8, cellPadding: 3 },
       headStyles: { fillColor: [52, 152, 219], textColor: 255, fontStyle: 'bold' },
-      columnStyles: {
-        0: { cellWidth: 45 }, 1: { cellWidth: 18 }, 2: { cellWidth: 90 },
-        3: { cellWidth: 22 }, 4: { cellWidth: 22 }, 5: { cellWidth: 50 }, 6: { cellWidth: 45 }
-      },
+      columnStyles: ANCHOS_COLUMNAS_PDF(),
       alternateRowStyles: { fillColor: [245, 247, 250] },
       didParseCell: function(data) {
         if (data.section === 'body' && data.column.index === 4) {
@@ -3527,7 +3553,7 @@ function getAlumnadoDuplicates() {
       const key = name.trim().toLowerCase();
       if (!key) continue;
       if (!nameMap[key]) nameMap[key] = { display: name.trim(), taskIds: [] };
-      nameMap[key].taskIds.push(taskId);
+      if (!nameMap[key].taskIds.includes(taskId)) nameMap[key].taskIds.push(taskId);
     }
   }
   const dupes = {};
