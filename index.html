@@ -493,7 +493,7 @@ nav::-webkit-scrollbar{display:none}
     <h1>PLAN DE ACTUACIÓN DIGITAL</h1>
     <h2>IES Virgen de Villadiego</h2>
     <div class="course-selector">
-      <span class="course-chip-bar" id="courseChipBar" title="Curso actual. Cámbialo desde 'Gestión de Cursos'.">
+      <span class="course-chip-bar" id="courseChipBar" title="Curso actual">
         <i class="fas fa-graduation-cap"></i>
         <span class="chip-label">Curso</span>
         <span id="courseChipText">—</span>
@@ -519,14 +519,14 @@ nav::-webkit-scrollbar{display:none}
       <span>GESTIÓN</span>
     </div>
     <div class="gestion-buttons" id="gestionButtons">
-      <button class="gestion-btn cursos" onclick="openCourseModal()"><i class="fas fa-calendar-plus"></i> Gestión de Cursos</button>
-      <button class="gestion-btn transferir" onclick="openTransferModal()"><i class="fas fa-exchange-alt"></i> Transferir líneas</button>
+      <button class="gestion-btn cursos solo-admin" onclick="openCourseModal()"><i class="fas fa-calendar-plus"></i> Gestión de Cursos</button>
+      <button class="gestion-btn transferir solo-admin" onclick="openTransferModal()"><i class="fas fa-exchange-alt"></i> Transferir líneas</button>
       <button class="gestion-btn consultas" onclick="goConsultas()"><i class="fas fa-search"></i> Consultas</button>
       <button class="gestion-btn pdf" onclick="goPdf()"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-      <button class="gestion-btn" style="background:#2c3e50;color:#fff" onclick="openUsersModal()"><i class="fas fa-users-cog"></i> Gestión de Usuarios</button>
-      <button class="gestion-btn" style="background:#16a085;color:#fff" onclick="exportJSON()"><i class="fas fa-download"></i> Exportar JSON</button>
-      <button class="gestion-btn" style="background:#8e44ad;color:#fff" onclick="triggerImportJSON()"><i class="fas fa-upload"></i> Importar JSON</button>
-      <input type="file" id="importJsonFile" accept=".json" style="display:none" onchange="handleImportJSON(event)">
+      <button class="gestion-btn solo-admin" style="background:#2c3e50;color:#fff" onclick="openUsersModal()"><i class="fas fa-users-cog"></i> Gestión de Usuarios</button>
+      <button class="gestion-btn solo-admin" style="background:#16a085;color:#fff" onclick="exportJSON()"><i class="fas fa-download"></i> Exportar JSON</button>
+      <button class="gestion-btn solo-admin" style="background:#8e44ad;color:#fff" onclick="triggerImportJSON()"><i class="fas fa-upload"></i> Importar JSON</button>
+      <input type="file" id="importJsonFile" class="solo-admin" accept=".json" style="display:none" onchange="handleImportJSON(event)">
     </div>
   </div>
 
@@ -837,6 +837,9 @@ const USERS_COLLECTION = APP_PREFIX + 'users';
 const PLANES_COLLECTION = APP_PREFIX + 'planes';
 
 async function hashPassword(password) {
+  if (!window.crypto || !window.crypto.subtle) {
+    throw new Error('Este navegador no permite cifrar contraseñas fuera de una dirección https://. Abre la aplicación desde su dirección web.');
+  }
   const encoder = new TextEncoder();
   const data = encoder.encode(password + '::planDigital_salt_2025');
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -965,7 +968,6 @@ const state = {
   // Auth
   user: null,
   userRole: 'viewer', // 'admin' or 'viewer'
-  authReady: false,
   // Consultas
   consultaAmbito: 'todos',
   consultaResponsable: 'todos',
@@ -982,7 +984,6 @@ const state = {
   pdfFormacion: true,
   pdfIntervencion: true,
   pdfMessage: null,
-  editingInfoCard: null,
   editingActEval: null,
   confirmDeleteTask: null // taskId pending deletion confirmation
 };
@@ -1004,15 +1005,6 @@ function setConnectionStatus(connected) {
   }
   if (text) {
     text.textContent = connected ? 'Conectado' : 'Desconectado';
-  }
-}
-
-async function checkConnection() {
-  try {
-    await db.collection(PLANES_COLLECTION).limit(1).get();
-    setConnectionStatus(true);
-  } catch (err) {
-    setConnectionStatus(false);
   }
 }
 
@@ -1069,8 +1061,8 @@ function resetUserSessionState() {
 async function finishLogin(session, role, displayName) {
   resetUserSessionState();
   state.user = session;
+  if (displayName) state.user.name = displayName;
   state.userRole = role || 'viewer';
-  state._userName = displayName || '';
   state.viewState = 'inicio';
   try {
     await loadCourses();
@@ -1085,7 +1077,6 @@ async function finishLogin(session, role, displayName) {
     sessionStorage.removeItem(AUTH_SESSION_KEY);
     state.user = null;
     state.userRole = 'viewer';
-    state._userName = '';
     showAuthOverlay();
     const errorEl = document.getElementById('authError');
     if (errorEl) {
@@ -1202,7 +1193,6 @@ function handleLogout() {
   sessionStorage.removeItem(AUTH_SESSION_KEY);
   state.user = null;
   state.userRole = 'viewer';
-  state._userName = '';
   unsubscribeFns.forEach(fn => fn());
   unsubscribeFns = [];
   if (state.currentCourse) { try { localStorage.setItem('lastActiveCourse', state.currentCourse); } catch (e) {} }
@@ -1230,7 +1220,7 @@ function updateUserBar() {
       badge.className = 'auth-role-badge ' + (isAdmin() ? 'admin' : 'viewer');
       badge.innerHTML = isAdmin() ? '<i class="fas fa-crown"></i> Admin' : '<i class="fas fa-eye"></i> Usuario';
     }
-    if (name) name.textContent = state._userName || state.user.name || '';
+    if (name) name.textContent = state.user.name || '';
     // El chip de curso en la barra superior se ha eliminado; solo queda el del banner.
     // Si en el futuro se reactiva, este bloque lo actualizará de forma segura.
     if (course) {
@@ -1248,11 +1238,17 @@ function updateUserBar() {
 }
 
 function applyRoleUI() {
-  const courseSel = document.querySelector('.course-selector');
-  if (courseSel) courseSel.style.display = isAdmin() ? '' : 'none';
+  const admin = isAdmin();
+  // La sección GESTIÓN se muestra siempre: Consultas y Exportar PDF son de solo lectura.
   const gestionSection = document.querySelector('.gestion-section');
-  if (gestionSection) gestionSection.style.display = isAdmin() ? '' : 'none';
-  // Hide STEAM nav edit capabilities for viewers
+  if (gestionSection) gestionSection.style.display = '';
+  // Solo se ocultan las acciones de administración
+  document.querySelectorAll('.gestion-section .solo-admin').forEach(el => {
+    el.style.display = admin ? '' : 'none';
+  });
+  // El chip del curso es informativo: lo ve todo el mundo
+  const courseSel = document.querySelector('.course-selector');
+  if (courseSel) courseSel.style.display = '';
   updateUserBar();
   // Note: renderView() will be called by the caller (enterApp)
 }
@@ -1536,7 +1532,6 @@ function goInicio() {
   state.viewState = 'inicio';
   state.currentAmbitoId = '';
   state.currentLinea = null;
-  state.editingInfoCard = null;
   state.editingActEval = null;
   renderView();
 }
@@ -1544,7 +1539,6 @@ function goInicio() {
 function goAmbito(ambitoId) {
   state.currentAmbitoId = ambitoId;
   state.currentLinea = null;
-  state.editingInfoCard = null;
   state.editingActEval = null;
   state.viewState = 'lineas';
   renderView();
@@ -1553,7 +1547,6 @@ function goAmbito(ambitoId) {
 function goLineaDetalle(linea) {
   state.currentLinea = linea;
   state.taskFilter = 'todas';
-  state.editingInfoCard = null;
   state.editingActEval = null;
   state.confirmDeleteTask = null;
   state.viewState = 'detalle';
@@ -1562,7 +1555,6 @@ function goLineaDetalle(linea) {
 
 function goSteam() {
   state.viewState = 'steam';
-  state.editingInfoCard = null;
   state.editingActEval = null;
   renderView();
 }
@@ -1570,7 +1562,6 @@ function goSteam() {
 function goConsultas() {
   state.viewState = 'consultas';
   state.consultaHasSearched = false;
-  state.editingInfoCard = null;
   state.editingActEval = null;
   state.gestionOpen = false;
   document.getElementById('gestionToggle').classList.remove('open');
@@ -2307,11 +2298,7 @@ async function handleEstadoChange(taskId, estado) {
     state.estadosTareas[taskId] = oldEstado;
     renderView();
     // Show error toast AFTER renderView so it's not destroyed
-    const fb = document.createElement('div');
-    fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.5rem 1rem;border-radius:8px;background:#f8d7da;color:#721c24;font-weight:600;font-size:.85rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2s ease forwards';
-    fb.innerHTML = '<i class="fas fa-times-circle"></i> Error al guardar estado';
-    document.body.appendChild(fb);
-    setTimeout(() => fb.remove(), 2200);
+    showToast('Error al guardar estado', 'error');
   }
 }
 
@@ -2331,11 +2318,8 @@ async function handleComentarioChange(taskId, value) {
     console.error('Error saving comentario:', err);
     const ta = document.getElementById('tareaComentario-' + taskId);
     if (ta) ta.style.borderColor = 'var(--accent-color)';
-    const fb = document.createElement('div');
-    fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.5rem 1rem;border-radius:8px;background:#f8d7da;color:#721c24;font-weight:600;font-size:.85rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2s ease forwards';
-    fb.innerHTML = '<i class="fas fa-times-circle"></i> Error al guardar comentario';
-    document.body.appendChild(fb);
-    setTimeout(() => { fb.remove(); if (ta) ta.style.borderColor = ''; }, 2200);
+    showToast('Error al guardar comentario', 'error');
+    setTimeout(() => { if (ta) ta.style.borderColor = ''; }, 2200);
   }
 }
 
@@ -2481,7 +2465,7 @@ async function executeCourseAction() {
 
   } catch (err) {
     console.error('Error executing course action:', err);
-    alert('Error al realizar la acción. Inténtalo de nuevo.');
+    showToast('Error al realizar la acción. Inténtalo de nuevo.', 'error');
   }
 }
 
@@ -2754,13 +2738,7 @@ async function saveNewActuacion() {
     closeNewActuacionModal();
     renderView();
 
-    // Show success feedback
-    const viewContainer = document.getElementById('viewContainer');
-    const fb = document.createElement('div');
-    fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:8px;background:#d4edda;color:#155724;font-weight:600;font-size:.9rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2.5s ease forwards';
-    fb.innerHTML = '<i class="fas fa-check-circle"></i> Actuación añadida correctamente';
-    viewContainer.appendChild(fb);
-    setTimeout(() => fb.remove(), 2600);
+    showToast('Actuación añadida correctamente', 'success');
   } catch (err) {
     console.error('Error saving actuación:', err);
     msgEl.innerHTML = '<div class="modal-message error">Error al guardar la actuación</div>';
@@ -2826,11 +2804,7 @@ async function deleteLinea() {
     }
   } catch (err) {
     console.error('Error deleting linea:', err);
-    const fb = document.createElement('div');
-    fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.5rem 1rem;border-radius:8px;background:#f8d7da;color:#721c24;font-weight:600;font-size:.85rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2s ease forwards';
-    fb.innerHTML = '<i class="fas fa-times-circle"></i> Error al eliminar la línea';
-    document.body.appendChild(fb);
-    setTimeout(() => fb.remove(), 2200);
+    showToast('Error al eliminar la línea', 'error');
   }
 }
 
@@ -3141,50 +3115,35 @@ function addNewResponsable() {
 }
 
 // ==================== HELPERS ====================
-function getAllResponsables() {
-  const responsables = new Set();
+// Normaliza un valor que puede venir como array (modelo nuevo) o como texto
+// separado por comas (modelo antiguo).
+function normalizarLista(valor) {
+  if (Array.isArray(valor)) return valor.filter(Boolean);
+  if (typeof valor === 'string') return valor.split(',').map(s => s.trim()).filter(Boolean);
+  return [];
+}
+
+// Recorre todas las líneas y actuaciones del plan y devuelve los valores distintos
+// de un campo de evaluación ("responsables", "herramientas" o "temporalizacion").
+function valoresDelPlan(campo) {
+  const valores = new Set();
   Object.values(state.planData).forEach(ambito => {
     (ambito.lineas || []).forEach(linea => {
-      // From linea-level responsables (backward compat)
-      (linea.responsables || []).forEach(r => responsables.add(r));
-      // From per-actuación evaluaciones (formacion)
-      (linea.tareasFormacion || []).forEach(t => {
-        if (typeof t === 'object' && t.evaluacion && t.evaluacion.responsables) {
-          t.evaluacion.responsables.forEach(r => responsables.add(r));
-        }
-      });
-      // From per-actuación evaluaciones (intervencion)
-      (linea.tareasIntervencion || []).forEach(t => {
-        if (typeof t === 'object' && t.evaluacion && t.evaluacion.responsables) {
-          t.evaluacion.responsables.forEach(r => responsables.add(r));
-        }
+      normalizarLista(linea[campo]).forEach(v => valores.add(v));
+      ['tareasFormacion', 'tareasIntervencion'].forEach(clave => {
+        (linea[clave] || []).forEach(tarea => {
+          if (tarea && typeof tarea === 'object' && tarea.evaluacion) {
+            normalizarLista(tarea.evaluacion[campo]).forEach(v => valores.add(v));
+          }
+        });
       });
     });
   });
-  return Array.from(responsables).sort();
+  return valores;
 }
 
-// ==================== EVALUACIONES MODEL ====================
-// Migration: ensure linea.evaluaciones exists; also keep linea.responsables and linea.temporalizacion for compat
-function ensureEvaluaciones(linea) {
-  if (!linea.evaluaciones || !Array.isArray(linea.evaluaciones) || linea.evaluaciones.length === 0) {
-    linea.evaluaciones = [{
-      objeto: (linea.evaluacion && linea.evaluacion.objeto) || '',
-      herramientas: (linea.evaluacion && linea.evaluacion.herramientas) || '',
-      responsables: [...(linea.responsables || [])],
-      temporalizacion: [...(linea.temporalizacion || [])]
-    }];
-  }
-  // Derive flat fields for backward compat
-  const allResp = new Set();
-  const allTemp = new Set();
-  linea.evaluaciones.forEach(ev => {
-    (ev.responsables || []).forEach(r => allResp.add(r));
-    (ev.temporalizacion || []).forEach(t => allTemp.add(t));
-  });
-  linea.responsables = Array.from(allResp);
-  linea.temporalizacion = Array.from(allTemp);
-  return linea.evaluaciones;
+function getAllResponsables() {
+  return Array.from(valoresDelPlan('responsables')).sort();
 }
 
 // ==================== GLOBAL CATALOG (cross-course) ====================
@@ -3252,66 +3211,17 @@ async function saveGlobalCatalogoItem(type, value) {
   }
 }
 
-async function removeGlobalCatalogoItem(type, value) {
-  if (!value) return;
-  try {
-    const docRef = db.collection(PLANES_COLLECTION).doc('_config').collection('catalogos').doc('global');
-    const doc = await docRef.get();
-    let data = doc.exists ? doc.data() : {};
-    let arr = data[type] || [];
-    arr = arr.filter(v => v !== value);
-    data[type] = arr;
-    await docRef.set(data);
-    // Update local
-    if (type === 'responsables') RESPONSABLES_BASE = RESPONSABLES_BASE.filter(v => v !== value);
-    else if (type === 'temporalizacion') TEMP_PREDEFINED = TEMP_PREDEFINED.filter(v => v !== value);
-    else if (type === 'herramientas') HERRAMIENTAS_BASE = HERRAMIENTAS_BASE.filter(v => v !== value);
-  } catch (err) {
-    console.error('Error removing global catalogo item:', err);
-  }
-}
-
 function getAvailableTempOptions(currentSelected) {
-  const all = new Set(TEMP_PREDEFINED);
-  // Also collect all temporizaciones used across the plan
-  Object.values(state.planData).forEach(ambito => {
-    ambito.lineas.forEach(linea => {
-      (linea.temporalizacion || []).forEach(t => all.add(t));
-      (linea.tareasFormacion || []).forEach(t => {
-        if (typeof t === 'object' && t.evaluacion && t.evaluacion.temporalizacion) {
-          t.evaluacion.temporalizacion.forEach(tp => all.add(tp));
-        }
-      });
-      (linea.tareasIntervencion || []).forEach(t => {
-        if (typeof t === 'object' && t.evaluacion && t.evaluacion.temporalizacion) {
-          t.evaluacion.temporalizacion.forEach(tp => all.add(tp));
-        }
-      });
-    });
-  });
+  const all = valoresDelPlan('temporalizacion');
+  TEMP_PREDEFINED.forEach(t => all.add(t));
   (currentSelected || []).forEach(t => all.delete(t));
   return Array.from(all).sort();
 }
 
-// Get all responsables across the plan, excluding already selected
+// Get all responsables across the plan (plus the global catalogue), excluding already selected
 function getAllInfoResponsables(currentSelected) {
-  const all = new Set();
+  const all = valoresDelPlan('responsables');
   RESPONSABLES_BASE.forEach(r => all.add(r));
-  Object.values(state.planData).forEach(ambito => {
-    ambito.lineas.forEach(linea => {
-      (linea.responsables || []).forEach(r => all.add(r));
-      (linea.tareasFormacion || []).forEach(t => {
-        if (typeof t === 'object' && t.evaluacion && t.evaluacion.responsables) {
-          t.evaluacion.responsables.forEach(r => all.add(r));
-        }
-      });
-      (linea.tareasIntervencion || []).forEach(t => {
-        if (typeof t === 'object' && t.evaluacion && t.evaluacion.responsables) {
-          t.evaluacion.responsables.forEach(r => all.add(r));
-        }
-      });
-    });
-  });
   (currentSelected || []).forEach(r => all.delete(r));
   return Array.from(all).sort();
 }
@@ -3338,16 +3248,17 @@ function cancelDeleteActuacion() {
   renderView();
 }
 
+// Extrae el tipo y el índice de un id de tarea con formato ambito-linea-tipo-indice
+function parseTaskId(taskId) {
+  const coincidencia = String(taskId).match(/-(formacion|intervencion)-(\d+)$/);
+  if (!coincidencia) return { taskType: 'intervencion', idx: -1 };
+  return { taskType: coincidencia[1], idx: parseInt(coincidencia[2], 10) };
+}
+
 function showDeleteActuacionError(mensaje) {
   state.confirmDeleteTask = null;
   renderView();
-  const viewContainer = document.getElementById('viewContainer');
-  if (!viewContainer) return;
-  const fb = document.createElement('div');
-  fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:8px;background:#f8d7da;color:#721c24;font-weight:600;font-size:.9rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2.5s ease forwards';
-  fb.innerHTML = '<i class="fas fa-times-circle"></i> ' + escapeHtml(mensaje);
-  viewContainer.appendChild(fb);
-  setTimeout(() => fb.remove(), 2600);
+  showToast(mensaje, 'error');
 }
 
 async function executeDeleteActuacion(taskId) {
@@ -3357,17 +3268,7 @@ async function executeDeleteActuacion(taskId) {
   state.confirmDeleteTask = null;
 
   // Parse taskId: ambitoId-lineaId-TIPO-idx
-  let taskType = 'intervencion';
-  let idx = -1;
-  if (taskId.includes('-formacion-')) {
-    const parts = taskId.split('-formacion-');
-    idx = parseInt(parts[parts.length - 1]);
-    taskType = 'formacion';
-  } else if (taskId.includes('-intervencion-')) {
-    const parts = taskId.split('-intervencion-');
-    idx = parseInt(parts[parts.length - 1]);
-    taskType = 'intervencion';
-  }
+  const { taskType, idx } = parseTaskId(taskId);
   if (idx < 0) {
     showDeleteActuacionError('No se ha podido identificar la actuación que quieres eliminar. Recarga la página e inténtalo de nuevo.');
     return;
@@ -3429,23 +3330,12 @@ async function executeDeleteActuacion(taskId) {
     state.currentLinea = lineas[lineaIdx];
     renderView();
 
-    // Show success feedback
-    const viewContainer = document.getElementById('viewContainer');
-    const fb = document.createElement('div');
-    fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:8px;background:#d4edda;color:#155724;font-weight:600;font-size:.9rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2.5s ease forwards';
-    fb.innerHTML = '<i class="fas fa-check-circle"></i> Actuación eliminada';
-    viewContainer.appendChild(fb);
-    setTimeout(() => fb.remove(), 2600);
+    showToast('Actuación eliminada', 'success');
   } catch (err) {
     console.error('Error deleting actuación:', err);
     state.confirmDeleteTask = null;
     renderView();
-    const viewContainer = document.getElementById('viewContainer');
-    const fb = document.createElement('div');
-    fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:8px;background:#f8d7da;color:#721c24;font-weight:600;font-size:.9rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2.5s ease forwards';
-    fb.innerHTML = '<i class="fas fa-times-circle"></i> Error al eliminar';
-    viewContainer.appendChild(fb);
-    setTimeout(() => fb.remove(), 2600);
+    showToast('Error al eliminar', 'error');
   } finally {
     _deletingTask = false;
   }
@@ -3459,17 +3349,7 @@ async function saveActEval(taskId) {
   const lineaId = state.currentLinea.id;
 
   // Parse taskId: ambitoId-lineaId-TIPO-idx (TIPO = "formacion" or "intervencion")
-  let taskType = 'intervencion';
-  let idx = -1;
-  if (taskId.includes('-formacion-')) {
-    const parts = taskId.split('-formacion-');
-    idx = parseInt(parts[parts.length - 1]);
-    taskType = 'formacion';
-  } else if (taskId.includes('-intervencion-')) {
-    const parts = taskId.split('-intervencion-');
-    idx = parseInt(parts[parts.length - 1]);
-    taskType = 'intervencion';
-  }
+  const { taskType, idx } = parseTaskId(taskId);
   if (idx < 0) return;
 
   // Read chips
@@ -3776,50 +3656,13 @@ function addActTempNew(taskId) {
 
 // ==================== HERRAMIENTAS CHIP FUNCTIONS (per actuación) ====================
 function getAvailableHerrOptions(currentSelected) {
-  const all = new Set();
-  // Include global HERRAMIENTAS_BASE (cross-course)
+  const all = valoresDelPlan('herramientas');
   HERRAMIENTAS_BASE.forEach(h => all.add(h));
-  // Collect all herramientas from existing tasks across the plan
+  // Herramientas del modelo antiguo, guardadas a nivel de línea
   Object.values(state.planData).forEach(ambito => {
-    ambito.lineas.forEach(linea => {
-      // From linea-level evaluacion (legacy)
-      const lineHerr = (linea.evaluacion && linea.evaluacion.herramientas) || '';
-      if (typeof lineHerr === 'string' && lineHerr) {
-        lineHerr.split(',').map(s => s.trim()).filter(Boolean).forEach(h => all.add(h));
-      } else if (Array.isArray(lineHerr)) {
-        lineHerr.forEach(h => all.add(h));
-      }
-      // From linea.evaluaciones
-      (linea.evaluaciones || []).forEach(ev => {
-        const eHerr = ev.herramientas || '';
-        if (typeof eHerr === 'string' && eHerr) {
-          eHerr.split(',').map(s => s.trim()).filter(Boolean).forEach(h => all.add(h));
-        } else if (Array.isArray(eHerr)) {
-          eHerr.forEach(h => all.add(h));
-        }
-      });
-      // From per-actuación evaluaciones (formacion)
-      (linea.tareasFormacion || []).forEach(t => {
-        if (typeof t === 'object' && t.evaluacion && t.evaluacion.herramientas) {
-          const h = t.evaluacion.herramientas;
-          if (typeof h === 'string' && h) {
-            h.split(',').map(s => s.trim()).filter(Boolean).forEach(x => all.add(x));
-          } else if (Array.isArray(h)) {
-            h.forEach(x => all.add(x));
-          }
-        }
-      });
-      // From per-actuación evaluaciones (intervencion)
-      (linea.tareasIntervencion || []).forEach(t => {
-        if (typeof t === 'object' && t.evaluacion && t.evaluacion.herramientas) {
-          const h = t.evaluacion.herramientas;
-          if (typeof h === 'string' && h) {
-            h.split(',').map(s => s.trim()).filter(Boolean).forEach(x => all.add(x));
-          } else if (Array.isArray(h)) {
-            h.forEach(x => all.add(x));
-          }
-        }
-      });
+    (ambito.lineas || []).forEach(linea => {
+      normalizarLista(linea.evaluacion && linea.evaluacion.herramientas).forEach(h => all.add(h));
+      (linea.evaluaciones || []).forEach(ev => normalizarLista(ev && ev.herramientas).forEach(h => all.add(h)));
     });
   });
   (currentSelected || []).forEach(h => all.delete(h));
@@ -3971,17 +3814,7 @@ async function saveEvalChipChange(taskId, fieldType, oldValue, newValue) {
   const lineaId = state.currentLinea.id;
 
   // Parse taskId
-  let taskType = 'intervencion';
-  let idx = -1;
-  if (taskId.includes('-formacion-')) {
-    const parts = taskId.split('-formacion-');
-    idx = parseInt(parts[parts.length - 1]);
-    taskType = 'formacion';
-  } else if (taskId.includes('-intervencion-')) {
-    const parts = taskId.split('-intervencion-');
-    idx = parseInt(parts[parts.length - 1]);
-    taskType = 'intervencion';
-  }
+  const { taskType, idx } = parseTaskId(taskId);
   if (idx < 0) return;
 
   const mapping = getFieldMapping(fieldType);
@@ -4033,42 +3866,12 @@ async function saveEvalChipChange(taskId, fieldType, oldValue, newValue) {
     renderView();
 
     // Show feedback
-    const viewContainer = document.getElementById('viewContainer');
-    if (viewContainer) {
-      const fb = document.createElement('div');
-      const msg = newValue === null ? 'Eliminado' : 'Actualizado';
-      fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.5rem 1rem;border-radius:8px;background:#d4edda;color:#155724;font-weight:600;font-size:.85rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2s ease forwards';
-      fb.innerHTML = '<i class="fas fa-check-circle"></i> ' + msg;
-      viewContainer.appendChild(fb);
-      setTimeout(() => fb.remove(), 2200);
-    }
+    showToast(newValue === null ? 'Eliminado' : 'Actualizado', 'success');
   } catch (err) {
     console.error('Error saving chip change:', err);
     renderView();
-    const viewContainer = document.getElementById('viewContainer');
-    if (viewContainer) {
-      const fb = document.createElement('div');
-      fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.5rem 1rem;border-radius:8px;background:#f8d7da;color:#721c24;font-weight:600;font-size:.85rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2s ease forwards';
-      fb.innerHTML = '<i class="fas fa-times-circle"></i> Error al guardar';
-      viewContainer.appendChild(fb);
-      setTimeout(() => fb.remove(), 2200);
-    }
+    showToast('Error al guardar', 'error');
   }
-}
-
-// ==================== NAV STATE HELPERS ====================
-function startEditInfoCard(cardType) {
-  state.editingInfoCard = cardType;
-  renderView();
-}
-
-function cancelEditInfoCard() {
-  state.editingInfoCard = null;
-  renderView();
-}
-
-async function saveInfoCard(cardType) {
-  // Legacy function kept for compatibility; no-op in new model
 }
 
 // ==================== UTILITY FUNCTIONS ====================
@@ -4150,26 +3953,31 @@ async function handleCreateUser() {
     return;
   }
 
-  var hashedPass = await hashPassword(pass);
-  await setUserDoc(usernameKey, {
-    name: name,
-    username: usernameKey,
-    passwordHash: hashedPass,
-    role: role,
-    createdAt: Date.now()
-  });
+  try {
+    var hashedPass = await hashPassword(pass);
+    await setUserDoc(usernameKey, {
+      name: name,
+      username: usernameKey,
+      passwordHash: hashedPass,
+      role: role,
+      createdAt: Date.now()
+    });
 
-  document.getElementById('newUserName').value = '';
-  document.getElementById('newUserUsername').value = '';
-  document.getElementById('newUserPass').value = '';
-  document.getElementById('newUserRole').value = 'viewer';
-  document.getElementById('createUserForm').style.display = 'none';
-  var toggleBtn = document.getElementById('toggleCreateBtn');
-  if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Crear';
+    document.getElementById('newUserName').value = '';
+    document.getElementById('newUserUsername').value = '';
+    document.getElementById('newUserPass').value = '';
+    document.getElementById('newUserRole').value = 'viewer';
+    document.getElementById('createUserForm').style.display = 'none';
+    var toggleBtn = document.getElementById('toggleCreateBtn');
+    if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i> Crear';
 
-  var roleText = role === 'admin' ? 'Admin' : 'Usuario';
-  msgEl.innerHTML = '<div style="padding:.5rem;border-radius:8px;text-align:center;background:#d4edda;color:#155724;font-size:.85rem"><i class="fas fa-check"></i> Usuario <strong>' + escapeHtml(name) + '</strong> creado como <strong>' + roleText + '</strong>.</div>';
-  await loadUsersList();
+    var roleText = role === 'admin' ? 'Admin' : 'Usuario';
+    msgEl.innerHTML = '<div style="padding:.5rem;border-radius:8px;text-align:center;background:#d4edda;color:#155724;font-size:.85rem"><i class="fas fa-check"></i> Usuario <strong>' + escapeHtml(name) + '</strong> creado como <strong>' + roleText + '</strong>.</div>';
+    await loadUsersList();
+  } catch (err) {
+    console.error('Error creando usuario:', err);
+    showUserManagementError('No se ha podido crear el usuario: ' + err.message);
+  }
 }
 
 async function loadUsersList() {
@@ -4238,7 +4046,7 @@ async function executeEditUser(uid) {
   user.role = role;
   await setUserDoc(uid, user);
   if (state.user && state.user.uid === uid) {
-    state.user.name = name; state.user.role = role; state._userName = name; state.userRole = role;
+    state.user.name = name; state.user.role = role; state.userRole = role;
     sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(state.user)); updateUserBar(); applyRoleUI(); renderView();
   }
   cancelUserAction();
@@ -4268,53 +4076,20 @@ async function executeChangePassword(uid) {
   if (first !== second) { showUserManagementError('Las contraseñas no coinciden.'); return; }
   const user = await getUserDoc(uid);
   if (!user) { showUserManagementError('Usuario no encontrado.'); return; }
-  user.passwordHash = await hashPassword(first);
-  await setUserDoc(uid, user);
-  cancelUserAction();
-  document.getElementById('usersModalMsg').innerHTML = '<div class="modal-message success">Contraseña actualizada correctamente.</div>';
+  try {
+    user.passwordHash = await hashPassword(first);
+    await setUserDoc(uid, user);
+    cancelUserAction();
+    document.getElementById('usersModalMsg').innerHTML = '<div class="modal-message success">Contraseña actualizada correctamente.</div>';
+  } catch (err) {
+    console.error('Error cambiando contraseña:', err);
+    showUserManagementError('No se ha podido cambiar la contraseña: ' + err.message);
+  }
 }
 
 function showUserManagementError(message) {
   const msg = document.getElementById('usersModalMsg');
   msg.innerHTML = '<div class="modal-message error">' + escapeHtml(message) + '</div>';
-}
-
-function confirmToggleRole(uid, username, newRole) {
-  const confirmDiv = document.getElementById('usersModalConfirm');
-  const msgDiv = document.getElementById('usersModalMsg');
-  if (!confirmDiv) return;
-  const roleText = newRole === 'admin' ? 'Admin (control total)' : 'Usuario (solo lectura)';
-  const btnClass = newRole === 'admin' ? 'promote' : 'demote';
-  const btnText = newRole === 'admin' ? '<i class="fas fa-crown"></i> Confirmar' : '<i class="fas fa-eye"></i> Confirmar';
-  confirmDiv.innerHTML = `
-    <div class="user-mgmt-confirm">
-      <span><i class="fas fa-exclamation-triangle"></i> ¿Cambiar <strong>@${escapeHtml(username)}</strong> a <strong>${roleText}</strong>?</span>
-      <div style="display:flex;gap:.4rem">
-        <button style="background:#95a5a6;color:#fff" onclick="cancelUserAction()">Cancelar</button>
-        <button class="user-mgmt-btn ${btnClass}" onclick="executeToggleRole('${uid}','${newRole}')">${btnText}</button>
-      </div>
-    </div>`;
-  msgDiv.innerHTML = '';
-}
-
-async function executeToggleRole(uid, newRole) {
-  const userData = await getUserDoc(uid);
-  if (!userData) {
-    document.getElementById('usersModalMsg').innerHTML = '<div style="padding:.5rem;border-radius:8px;text-align:center;background:#f8d7da;color:#721c24;font-size:.85rem"><i class="fas fa-times"></i> Usuario no encontrado.</div>';
-    return;
-  }
-  userData.role = newRole;
-  await setUserDoc(uid, userData);
-  if (state.user && state.user.uid === uid) {
-    state.userRole = newRole;
-    state.user.role = newRole;
-    sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(state.user));
-    applyRoleUI();
-    renderView();
-  }
-  document.getElementById('usersModalConfirm').innerHTML = '';
-  document.getElementById('usersModalMsg').innerHTML = '<div style="padding:.5rem;border-radius:8px;text-align:center;background:#d4edda;color:#155724;font-size:.85rem"><i class="fas fa-check"></i> Rol actualizado correctamente.</div>';
-  await loadUsersList();
 }
 
 function confirmDeleteUser(uid, displayName) {
@@ -4333,10 +4108,16 @@ function confirmDeleteUser(uid, displayName) {
 }
 
 async function executeDeleteUser(uid) {
-  await removeUserDoc(uid);
-  document.getElementById('usersModalConfirm').innerHTML = '';
-  document.getElementById('usersModalMsg').innerHTML = '<div style="padding:.5rem;border-radius:8px;text-align:center;background:#d4edda;color:#155724;font-size:.85rem"><i class="fas fa-check"></i> Usuario eliminado correctamente.</div>';
-  await loadUsersList();
+  if (!isAdmin() || (state.user && state.user.uid === uid)) return;
+  try {
+    await removeUserDoc(uid);
+    document.getElementById('usersModalConfirm').innerHTML = '';
+    document.getElementById('usersModalMsg').innerHTML = '<div style="padding:.5rem;border-radius:8px;text-align:center;background:#d4edda;color:#155724;font-size:.85rem"><i class="fas fa-check"></i> Usuario eliminado correctamente.</div>';
+    await loadUsersList();
+  } catch (err) {
+    console.error('Error eliminando usuario:', err);
+    showUserManagementError('No se ha podido eliminar el usuario: ' + err.message);
+  }
 }
 
 function cancelUserAction() {
@@ -4349,9 +4130,13 @@ function showToast(message, type) {
   const textColors = { success: '#155724', error: '#721c24', info: '#0c5460' };
   const bg = colors[type] || colors.info;
   const fg = textColors[type] || textColors.info;
+  const iconos = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
   const fb = document.createElement('div');
-  fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:8px;background:' + bg + ';color:' + fg + ';font-weight:600;font-size:.9rem;z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2.5s ease forwards;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis';
-  fb.textContent = message;
+  fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:8px;background:' + bg + ';color:' + fg + ';font-weight:600;font-size:.9rem;z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2.5s ease forwards;max-width:90vw;text-align:center';
+  const icono = document.createElement('i');
+  icono.className = 'fas ' + (iconos[type] || iconos.info);
+  fb.appendChild(icono);
+  fb.appendChild(document.createTextNode(' ' + message));
   document.body.appendChild(fb);
   setTimeout(() => { if (fb.parentNode) fb.parentNode.removeChild(fb); }, 3000);
 }

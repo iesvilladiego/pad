@@ -1,5 +1,5 @@
 // ==================== Service Worker - Plan de Actuación Digital ====================
-const CACHE_NAME = 'plan-digital-v2.30';
+const CACHE_NAME = 'plan-digital-v2.31';
 const BASE_URL = '/pad/';
 
 const PRECACHE_URLS = [
