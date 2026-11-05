@@ -225,8 +225,9 @@ nav::-webkit-scrollbar{display:none}
 .eval-table tbody td .eval-chip.resp{background:rgba(52,152,219,.12);color:#2980b9}
 .eval-table tbody td .eval-chip.herr{background:rgba(243,156,18,.12);color:#e67e22}
 .eval-table tbody td .eval-chip.temp{background:rgba(46,204,113,.12);color:#27ae60}
-.eval-chip-edit,.eval-chip-del{font-size:.6rem;opacity:0;cursor:pointer;margin-left:2px;padding:1px 2px;border-radius:50%;transition:all .2s}
-.eval-chip:hover .eval-chip-edit,.eval-chip:hover .eval-chip-del{opacity:.7}
+.eval-chip-edit,.eval-chip-del{font-size:.6rem;opacity:.45;cursor:pointer;margin-left:2px;padding:1px 2px;border-radius:50%;transition:all .2s}
+.eval-chip:hover .eval-chip-edit,.eval-chip:hover .eval-chip-del,.eval-chip:focus-within .eval-chip-edit,.eval-chip:focus-within .eval-chip-del{opacity:1}
+@media(hover:none){.eval-chip-edit,.eval-chip-del{opacity:.7}}
 .eval-chip-edit:hover{opacity:1!important;color:var(--primary-color);background:rgba(52,152,219,.15)}
 .eval-chip-del:hover{opacity:1!important;color:var(--accent-color);background:rgba(231,76,60,.15)}
 .eval-chip-input{width:70px;padding:1px 4px;border:1px solid var(--primary-color);border-radius:8px;font-size:.75rem;font-weight:600;background:#fff;outline:none;box-shadow:0 0 0 2px rgba(52,152,219,.2);font-family:inherit}
@@ -987,6 +988,11 @@ const state = {
 };
 
 let unsubscribeFns = [];
+// Guardas para evitar acciones duplicadas por doble clic o doble toque
+let _savingLinea = false;
+let _savingActuacion = false;
+let _deletingTask = false;
+let _transferring = false;
 
 // ==================== FIREBASE CONNECTION ====================
 function setConnectionStatus(connected) {
@@ -1199,7 +1205,7 @@ function handleLogout() {
   state._userName = '';
   unsubscribeFns.forEach(fn => fn());
   unsubscribeFns = [];
-  if (state.currentCourse) localStorage.setItem('lastActiveCourse', state.currentCourse);
+  if (state.currentCourse) { try { localStorage.setItem('lastActiveCourse', state.currentCourse); } catch (e) {} }
   state.planData = {};
   state.estadosTareas = {};
   state.comentariosTareas = {};
@@ -1503,7 +1509,8 @@ function showAuthOverlay() {
     btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
   }
   // Show last active course if available
-  const lastCourse = localStorage.getItem('lastActiveCourse');
+  let lastCourse = null;
+  try { lastCourse = localStorage.getItem('lastActiveCourse'); } catch (e) {}
   const lastCourseEl = document.getElementById('authLastCourse');
   if (lastCourseEl && lastCourse) {
     lastCourseEl.textContent = 'Curso ' + lastCourse;
@@ -2003,7 +2010,7 @@ function renderSteam(container) {
     const ambito = state.planData[ambitoId];
     if (!ambito) return;
     const info = AMBITO_INFO[ambitoId];
-    const filtered = ambito.lineas.filter(l => l.steam4);
+    const filtered = (ambito.lineas || []).filter(l => l.steam4);
     if (filtered.length > 0) {
       steamLineas.push({ ambitoId, info, lineas: filtered });
       totalSteamLines += filtered.length;
@@ -2134,7 +2141,7 @@ function renderConsultas(container) {
         <div class="filtro-group">
           <label>Responsable:</label>
           <select class="filtro-select" id="consultaRespSel" onchange="state.consultaResponsable=this.value">
-            <option value="todos">Todos los responsables</option>
+            <option value="todos" ${state.consultaResponsable==='todos'?'selected':''}>Todos los responsables</option>
             ${responsables.map(r => `<option value="${escapeAttr(r)}" ${state.consultaResponsable===r?'selected':''}>${escapeHtml(r)}</option>`).join('')}
           </select>
         </div>
@@ -2182,12 +2189,12 @@ function renderConsultaResultados() {
 
   Object.entries(state.planData).forEach(([ambitoId, ambito]) => {
     if (state.consultaAmbito !== 'todos' && state.consultaAmbito !== ambitoId) return;
-    ambito.lineas.forEach(linea => {
-      const matchResp = state.consultaResponsable === 'todos' || linea.responsables.includes(state.consultaResponsable) || linea.tareasFormacion.some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.responsables && t.evaluacion.responsables.includes(state.consultaResponsable)) || linea.tareasIntervencion.some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.responsables && t.evaluacion.responsables.includes(state.consultaResponsable));
-      const matchTrim = state.consultaTrimestre === 'todos' || linea.temporalizacion.includes(state.consultaTrimestre) || linea.tareasFormacion.some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.temporalizacion && t.evaluacion.temporalizacion.includes(state.consultaTrimestre)) || linea.tareasIntervencion.some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.temporalizacion && t.evaluacion.temporalizacion.includes(state.consultaTrimestre));
+    (ambito.lineas || []).forEach(linea => {
+      const matchResp = state.consultaResponsable === 'todos' || (linea.responsables || []).includes(state.consultaResponsable) || (linea.tareasFormacion || []).some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.responsables && t.evaluacion.responsables.includes(state.consultaResponsable)) || (linea.tareasIntervencion || []).some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.responsables && t.evaluacion.responsables.includes(state.consultaResponsable));
+      const matchTrim = state.consultaTrimestre === 'todos' || (linea.temporalizacion || []).includes(state.consultaTrimestre) || (linea.tareasFormacion || []).some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.temporalizacion && t.evaluacion.temporalizacion.includes(state.consultaTrimestre)) || (linea.tareasIntervencion || []).some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.temporalizacion && t.evaluacion.temporalizacion.includes(state.consultaTrimestre));
       if (matchResp && matchTrim) {
         if (state.consultaTipo === 'todos' || state.consultaTipo === 'formacion') {
-          linea.tareasFormacion.forEach(tarea => {
+          (linea.tareasFormacion || []).forEach(tarea => {
             const texto = typeof tarea === 'string' ? tarea : (tarea.texto || '');
             const ev = typeof tarea === 'object' && tarea.evaluacion ? tarea.evaluacion : {};
             const respList = (ev.responsables && ev.responsables.length > 0) ? ev.responsables : linea.responsables;
@@ -2206,7 +2213,7 @@ function renderConsultaResultados() {
           });
         }
         if (state.consultaTipo === 'todos' || state.consultaTipo === 'intervencion') {
-          linea.tareasIntervencion.forEach(tarea => {
+          (linea.tareasIntervencion || []).forEach(tarea => {
             const texto = typeof tarea === 'string' ? tarea : tarea.texto;
             const ev = typeof tarea === 'object' && tarea.evaluacion ? tarea.evaluacion : {};
             const respList = (ev.responsables && ev.responsables.length > 0) ? ev.responsables : linea.responsables;
@@ -2444,9 +2451,11 @@ async function executeCourseAction() {
     } else if (type === 'clear') {
       // Clear all lineas and estados, keep ambito documents with empty arrays
       for (const ambitoId of AMBITOS) {
-        await db.collection(PLANES_COLLECTION).doc(courseId).collection('ambitos').doc(ambitoId).update({
+        // set con merge: crea el ámbito si no existía, en vez de fallar con update
+        await db.collection(PLANES_COLLECTION).doc(courseId).collection('ambitos').doc(ambitoId).set({
+          titulo: AMBITO_INFO[ambitoId].titulo,
           lineas: []
-        });
+        }, { merge: true });
       }
       await db.collection(PLANES_COLLECTION).doc(courseId).collection('estadosTareas').doc('global').set({ estados: {}, comentarios: {} });
 
@@ -2550,7 +2559,7 @@ function closeEditModal() {
 }
 
 async function saveLinea() {
-  if (!state.editingLinea) return;
+  if (!state.editingLinea || _savingLinea) return;
   const titulo = document.getElementById('formTitulo').value.trim();
   const descripcion = document.getElementById('formDescripcion').value.trim();
   if (!titulo) {
@@ -2590,6 +2599,8 @@ async function saveLinea() {
       steam4: steam4
     };
     const newLineas = [...ambitoData.lineas, newLinea].sort((a, b) => a.id - b.id);
+    if (_savingLinea) return;
+    _savingLinea = true;
     try {
       await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(state.currentAmbitoId).update({ lineas: newLineas });
       closeEditModal();
@@ -2605,9 +2616,13 @@ async function saveLinea() {
       }
     } catch (err) {
       document.getElementById('editModalMessage').innerHTML = '<div class="modal-message error">Error al guardar la línea</div>';
+    } finally {
+      _savingLinea = false;
     }
   } else {
     // Editing existing line: only update título, descripción, steam4 — preserve existing tasks
+    if (_savingLinea) return;
+    _savingLinea = true;
     const newLineas = ambitoData.lineas.map(l => {
       if (l.id === state.editingLinea.id) {
         return { ...l, titulo: titulo, descripcion: descripcion, steam4: steam4 };
@@ -2625,6 +2640,8 @@ async function saveLinea() {
       renderView();
     } catch (err) {
       document.getElementById('editModalMessage').innerHTML = '<div class="modal-message error">Error al guardar la línea</div>';
+    } finally {
+      _savingLinea = false;
     }
   }
 }
@@ -2662,7 +2679,7 @@ function updateTipoStyle() {
 }
 
 async function saveNewActuacion() {
-  if (!state.currentLinea) return;
+  if (!state.currentLinea || _savingActuacion) return;
   const tipo = document.querySelector('input[name="actTipo"]:checked').value;
   const enunciado = document.getElementById('actEnunciado').value.trim();
   const alumnadoRaw = document.getElementById('actAlumnado').value.trim();
@@ -2681,6 +2698,8 @@ async function saveNewActuacion() {
   const lineaId = state.currentLinea.id;
   const msgEl = document.getElementById('actuacionModalMessage');
 
+  if (_savingActuacion) return;
+  _savingActuacion = true;
   try {
     // Read latest from Firestore to avoid conflicts
     const ambitoDoc = await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).get();
@@ -2730,6 +2749,8 @@ async function saveNewActuacion() {
   } catch (err) {
     console.error('Error saving actuación:', err);
     msgEl.innerHTML = '<div class="modal-message error">Error al guardar la actuación</div>';
+  } finally {
+    _savingActuacion = false;
   }
 }
 
@@ -2846,6 +2867,7 @@ function toggleTransferLine(id) {
 }
 
 async function handleTransfer() {
+  if (_transferring) return;
   const targetCourse = document.getElementById('transferTargetSelect').value;
   const ambitoId = document.getElementById('transferAmbitoSelect').value;
   const msgEl = document.getElementById('transferModalMessage');
@@ -2855,6 +2877,8 @@ async function handleTransfer() {
     return;
   }
 
+  if (_transferring) return;
+  _transferring = true;
   try {
     // Get source ambito data
     const srcDoc = await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).get();
@@ -2901,6 +2925,8 @@ async function handleTransfer() {
     setTimeout(() => closeTransferModal(), 1500);
   } catch (err) {
     msgEl.innerHTML = '<div class="modal-message error">Error al transferir</div>';
+  } finally {
+    _transferring = false;
   }
 }
 
@@ -2928,9 +2954,9 @@ async function generarPDF() {
   ambitosSel.forEach(ambitoId => {
     const ambito = state.planData[ambitoId];
     if (!ambito) return;
-    ambito.lineas.forEach(linea => {
+    (ambito.lineas || []).forEach(linea => {
       if (tiposSel.includes('formacion')) {
-        linea.tareasFormacion.forEach((tarea, index) => {
+        (linea.tareasFormacion || []).forEach((tarea, index) => {
           const idTarea = `${ambitoId}-${linea.id}-formacion-${index}`;
           const estado = state.estadosTareas[idTarea] || 'no-iniciado';
           if (estadosSel.includes(estado)) {
@@ -2943,7 +2969,7 @@ async function generarPDF() {
         });
       }
       if (tiposSel.includes('intervencion')) {
-        linea.tareasIntervencion.forEach((tarea, index) => {
+        (linea.tareasIntervencion || []).forEach((tarea, index) => {
           const idTarea = `${ambitoId}-${linea.id}-intervencion-${index}`;
           const estado = state.estadosTareas[idTarea] || 'no-iniciado';
           if (estadosSel.includes(estado)) {
@@ -3092,7 +3118,7 @@ function addNewResponsable() {
 function getAllResponsables() {
   const responsables = new Set();
   Object.values(state.planData).forEach(ambito => {
-    ambito.lineas.forEach(linea => {
+    (ambito.lineas || []).forEach(linea => {
       // From linea-level responsables (backward compat)
       (linea.responsables || []).forEach(r => responsables.add(r));
       // From per-actuación evaluaciones (formacion)
@@ -3299,7 +3325,7 @@ function showDeleteActuacionError(mensaje) {
 }
 
 async function executeDeleteActuacion(taskId) {
-  if (!state.currentLinea) return;
+  if (!state.currentLinea || _deletingTask) return;
   const ambitoId = state.currentAmbitoId;
   const lineaId = state.currentLinea.id;
   state.confirmDeleteTask = null;
@@ -3320,6 +3346,8 @@ async function executeDeleteActuacion(taskId) {
     showDeleteActuacionError('No se ha podido identificar la actuación que quieres eliminar. Recarga la página e inténtalo de nuevo.');
     return;
   }
+  if (_deletingTask) return;
+  _deletingTask = true;
 
   try {
     const ambitoDoc = await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).get();
@@ -3392,6 +3420,8 @@ async function executeDeleteActuacion(taskId) {
     fb.innerHTML = '<i class="fas fa-times-circle"></i> Error al eliminar';
     viewContainer.appendChild(fb);
     setTimeout(() => fb.remove(), 2600);
+  } finally {
+    _deletingTask = false;
   }
 }
 
@@ -4146,7 +4176,7 @@ async function loadUsersList() {
     html += '<div class="user-mgmt-actions">';
     html += '<button class="user-mgmt-btn demote" onclick="showEditUser(\'' + jsEscape(uid) + '\')" title="Editar usuario"><i class="fas fa-edit"></i> Editar</button>';
     html += '<button class="user-mgmt-btn promote" onclick="showChangePassword(\'' + jsEscape(uid) + '\')" title="Cambiar contraseña"><i class="fas fa-key"></i> Contraseña</button>';
-    if (!isCurrentUser) html += '<button class="user-mgmt-btn delete" onclick="confirmDeleteUser(\'' + jsEscape(uid) + '\',\'' + jsEscape(data.name || data.username) + '\')" title="Eliminar usuario"><i class="fas fa-trash"></i></button>';
+    if (!isCurrentUser) html += '<button class="user-mgmt-btn delete" data-uid="' + escapeAttr(uid) + '" data-name="' + escapeAttr(data.name || data.username) + '" onclick="confirmDeleteUser(this.dataset.uid, this.dataset.name)" title="Eliminar usuario"><i class="fas fa-trash"></i></button>';
     else html += '<span style="font-size:.75rem;color:#aaa;font-style:italic">Tu cuenta</span>';
     html += '</div></li>';
   });
