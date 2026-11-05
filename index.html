@@ -115,8 +115,9 @@ nav::-webkit-scrollbar{display:none}
 .linea-item:hover{background:#f8f9fa;transform:translateX(5px);box-shadow:0 4px 8px rgba(0,0,0,.05)}
 .linea-item:last-child{border-bottom:none}
 .linea-badge{background:var(--primary-color);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
-.linea-actions{display:flex;gap:.5rem;opacity:0;transition:opacity .2s;flex-shrink:0}
-.linea-item:hover .linea-actions{opacity:1}
+.linea-actions{display:flex;gap:.5rem;opacity:.55;transition:opacity .2s;flex-shrink:0}
+.linea-item:hover .linea-actions,.linea-item:focus-within .linea-actions{opacity:1}
+@media(hover:none){.linea-actions{opacity:1}}
 .linea-action-btn{background:none;border:none;cursor:pointer;font-size:1rem;padding:.3rem;border-radius:4px;transition:all .2s}
 .linea-action-btn.edit{color:var(--primary-color)}
 .linea-action-btn.edit:hover{background:rgba(52,152,219,.1)}
@@ -135,7 +136,7 @@ nav::-webkit-scrollbar{display:none}
 .tarea-delete-btn{background:none;border:none;cursor:pointer;padding:.3rem .5rem;border-radius:4px;color:#bbb;font-size:.85rem;margin-left:auto;transition:all .2s;flex-shrink:0;line-height:1}
 .tarea-delete-btn:hover{color:var(--accent-color);background:rgba(231,76,60,.08)}
 .tarea-deleting{border-left-color:var(--accent-color);background:#fff5f5}
-.tarea-delete-confirm{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.6rem .8rem;border-radius:6px;background:#fff3cd;color:#856404;font-size:.85rem;font-weight:500;margin-bottom:.8rem;flex-wrap:wrap;animation:feedbackFade .2s ease forwards;border:1px solid #ffc107}
+.tarea-delete-confirm{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.6rem .8rem;border-radius:6px;background:#fff3cd;color:#856404;font-size:.85rem;font-weight:500;margin-bottom:.8rem;flex-wrap:wrap;animation:deleteConfirmIn .18s ease-out;border:1px solid #ffc107}
 .estado-tarea{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
 .tarea-comentario{margin-top:.7rem}
 .tarea-comentario-label{display:block;font-size:.78rem;font-weight:600;color:var(--secondary-color);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.3px}
@@ -171,6 +172,7 @@ nav::-webkit-scrollbar{display:none}
 .info-save-feedback.success{background:#d4edda;color:#155724}
 .info-save-feedback.error{background:#f8d7da;color:#721c24}
 @keyframes feedbackFade{0%{opacity:0;transform:translateY(-5px)}15%{opacity:1;transform:translateY(0)}75%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+@keyframes deleteConfirmIn{0%{opacity:0;transform:translateY(-4px)}100%{opacity:1;transform:translateY(0)}}
 .info-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.6rem;min-height:28px}
 .info-chip{display:inline-flex;align-items:center;gap:.25rem;padding:.25rem .6rem;border-radius:14px;font-size:.8rem;font-weight:600;background:var(--primary-color);color:#fff;transition:all .2s;user-select:none;animation:chipIn .25s ease}
 .info-chip i{font-size:.65rem;opacity:.8;cursor:pointer;padding:1px}
@@ -1392,6 +1394,7 @@ async function listenToCourseData() {
               return { texto: t.texto || '', evaluacion: { ...ev, alumnado: ev.alumnado || [] } };
             }),
             evaluacion: l.evaluacion || { objeto: '', herramientas: '' },
+            evaluaciones: Array.isArray(l.evaluaciones) ? l.evaluaciones : [],
             responsables: l.responsables || [],
             temporalizacion: l.temporalizacion || [],
             steam4: l.steam4 || false
@@ -1710,7 +1713,10 @@ function renderDetalle(container) {
   let html = `
     <div class="seccion-cabecera">
       <h2 class="section-title">Línea ${linea.id}: ${escapeHtml(linea.titulo)}</h2>
-      <button class="volver-btn" onclick="goAmbito('${ambitoId}')"><i class="fas fa-arrow-left"></i> Volver a líneas</button>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        ${isAdmin() ? `<button class="volver-btn" onclick="editCurrentLinea()"><i class="fas fa-edit"></i> Editar nombre</button>` : ''}
+        <button class="volver-btn" onclick="goAmbito('${ambitoId}')"><i class="fas fa-arrow-left"></i> Volver a líneas</button>
+      </div>
     </div>
     <div class="detalle-linea">
       <p style="margin-bottom:1.5rem;font-size:1.1rem;color:#555">${escapeHtml(linea.descripcion)}</p>
@@ -2506,6 +2512,11 @@ async function handleCreateCourse() {
 }
 
 // ==================== EDIT LINE MODAL ====================
+function editCurrentLinea() {
+  if (!state.currentLinea) return;
+  openEditLinea(state.currentLinea, false);
+}
+
 function openEditLinea(linea, isNew) {
   state.isNewLinea = isNew;
   state.editingLinea = null;
@@ -2548,8 +2559,12 @@ async function saveLinea() {
     return;
   }
 
-  const ambitoData = state.planData[state.currentAmbitoId];
-  if (!ambitoData) return;
+  const ambitoId = state.currentAmbitoId;
+  const ambitoData = state.planData[ambitoId];
+  if (!ambitoData) {
+    document.getElementById('editModalMessage').innerHTML = '<div class="modal-message error">No se ha podido identificar el ámbito de esta línea. Cierra la ventana y vuelve a abrirla desde el listado de líneas.</div>';
+    return;
+  }
 
   if (state.isNewLinea && ambitoData.lineas.length >= 5) {
     document.getElementById('editModalMessage').innerHTML = '<div class="modal-message error">No se pueden añadir más de 5 líneas por ámbito</div>';
@@ -2597,8 +2612,9 @@ async function saveLinea() {
       return l;
     });
     try {
-      await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(state.currentAmbitoId).update({ lineas: newLineas });
-      // Update local state
+      await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).update({ lineas: newLineas });
+      // Update local state right away so the new name is visible without waiting for the snapshot
+      if (state.planData[ambitoId]) state.planData[ambitoId].lineas = newLineas;
       if (state.currentLinea && state.currentLinea.id === state.editingLinea.id) {
         state.currentLinea = { ...state.currentLinea, titulo: titulo, descripcion: descripcion, steam4: steam4 };
       }
@@ -3279,6 +3295,18 @@ function cancelDeleteActuacion() {
   renderView();
 }
 
+function showDeleteActuacionError(mensaje) {
+  state.confirmDeleteTask = null;
+  renderView();
+  const viewContainer = document.getElementById('viewContainer');
+  if (!viewContainer) return;
+  const fb = document.createElement('div');
+  fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:8px;background:#f8d7da;color:#721c24;font-weight:600;font-size:.9rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2.5s ease forwards';
+  fb.innerHTML = '<i class="fas fa-times-circle"></i> ' + escapeHtml(mensaje);
+  viewContainer.appendChild(fb);
+  setTimeout(() => fb.remove(), 2600);
+}
+
 async function executeDeleteActuacion(taskId) {
   if (!state.currentLinea) return;
   const ambitoId = state.currentAmbitoId;
@@ -3297,17 +3325,30 @@ async function executeDeleteActuacion(taskId) {
     idx = parseInt(parts[parts.length - 1]);
     taskType = 'intervencion';
   }
-  if (idx < 0) return;
+  if (idx < 0) {
+    showDeleteActuacionError('No se ha podido identificar la actuación que quieres eliminar. Recarga la página e inténtalo de nuevo.');
+    return;
+  }
 
   try {
     const ambitoDoc = await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).get();
     const ambitoSnap = ambitoDoc.data();
-    if (!ambitoSnap || !ambitoSnap.lineas) return;
+    if (!ambitoSnap || !Array.isArray(ambitoSnap.lineas)) {
+      showDeleteActuacionError('No se han podido cargar las líneas del ámbito.');
+      return;
+    }
     const lineas = ambitoSnap.lineas;
     const lineaIdx = lineas.findIndex(l => l.id === lineaId);
-    if (lineaIdx === -1) return;
+    if (lineaIdx === -1) {
+      showDeleteActuacionError('La línea de actuación ya no existe. Recarga la página.');
+      return;
+    }
 
     const fieldKey = taskType === 'formacion' ? 'tareasFormacion' : 'tareasIntervencion';
+    if (!Array.isArray(lineas[lineaIdx][fieldKey]) || idx >= lineas[lineaIdx][fieldKey].length) {
+      showDeleteActuacionError('Esta actuación ya no existe. Recarga la página.');
+      return;
+    }
     lineas[lineaIdx][fieldKey].splice(idx, 1);
 
     await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).update({ lineas });
@@ -3352,6 +3393,8 @@ async function executeDeleteActuacion(taskId) {
     setTimeout(() => fb.remove(), 2600);
   } catch (err) {
     console.error('Error deleting actuación:', err);
+    state.confirmDeleteTask = null;
+    renderView();
     const viewContainer = document.getElementById('viewContainer');
     const fb = document.createElement('div');
     fb.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%);padding:.6rem 1.2rem;border-radius:8px;background:#f8d7da;color:#721c24;font-weight:600;font-size:.9rem;z-index:5000;box-shadow:0 4px 12px rgba(0,0,0,.15);animation:feedbackFade 2.5s ease forwards';
