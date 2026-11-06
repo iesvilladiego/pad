@@ -114,7 +114,7 @@ nav::-webkit-scrollbar{display:none}
 .linea-item{padding:1.2rem;border-bottom:1px solid #eee;cursor:pointer;transition:all .2s ease;border-radius:8px;margin-bottom:.5rem;display:flex;align-items:center;gap:1rem;position:relative}
 .linea-item:hover{background:#f8f9fa;transform:translateX(5px);box-shadow:0 4px 8px rgba(0,0,0,.05)}
 .linea-item:last-child{border-bottom:none}
-.linea-badge{background:var(--primary-color);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.linea-badge{background:var(--primary-color);color:#fff;min-width:30px;height:30px;padding:0 .55rem;border-radius:15px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:.78rem;white-space:nowrap}
 .linea-actions{display:flex;gap:.5rem;opacity:.55;transition:opacity .2s;flex-shrink:0}
 .linea-item:hover .linea-actions,.linea-item:focus-within .linea-actions{opacity:1}
 @media(hover:none){.linea-actions{opacity:1}}
@@ -145,6 +145,29 @@ nav::-webkit-scrollbar{display:none}
 .tarea-comentario-textarea::placeholder{color:#aaa;font-style:italic}
 .tarea-comentario-readonly{background:#f0f7ff;border:1px solid #d0e3f7;border-radius:6px;padding:.5rem .7rem}
 .tarea-comentario-texto{font-size:.82rem;color:#555;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+/* Tarjeta de tarea: elementos */
+.tarea-num-badge{display:inline-flex;align-items:center;background:var(--primary-color);color:#fff;border-radius:14px;padding:.15rem .6rem;font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0}
+.tarea-texto{flex:1;min-width:0}
+.tarea-edit-btn{background:none;border:none;cursor:pointer;padding:.3rem .5rem;border-radius:4px;color:#bbb;font-size:.85rem;transition:all .2s;flex-shrink:0;line-height:1}
+.tarea-edit-btn:hover{color:var(--primary-color);background:rgba(52,152,219,.08)}
+.tarea-card-cuerpo,.tarea-edit-form{margin-top:.8rem;display:flex;flex-direction:column;gap:.8rem}
+.tarea-elemento{background:#fff;border:1px solid #e8ecef;border-radius:8px;padding:.7rem .9rem}
+.tarea-elemento-label{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:600;color:var(--secondary-color);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.3px}
+.tarea-elemento-label i{font-size:.75rem;color:var(--primary-color)}
+.tarea-elemento-valor{font-size:.88rem;color:#444;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.tarea-vacio{color:#aaa;font-style:italic;font-size:.82rem}
+.tarea-chip{display:inline-flex;align-items:center;padding:.18rem .6rem;border-radius:12px;font-size:.78rem;font-weight:500;margin:.1rem .25rem .1rem 0}
+.tarea-chip.herr{background:rgba(243,156,18,.15);color:#e67e22}
+.tarea-chip.resp{background:rgba(52,152,219,.12);color:#2980b9}
+.tarea-chip.temp{background:rgba(46,204,113,.15);color:#27ae60}
+.tarea-detalle-texto{margin-top:.35rem;font-size:.82rem;color:#555;line-height:1.5}
+.tarea-opts{display:flex;flex-wrap:wrap;gap:.45rem}
+.tarea-opt{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .75rem;border:1.5px solid #d5dbdf;border-radius:20px;font-size:.85rem;cursor:pointer;background:#fff;user-select:none;transition:all .2s;color:#444}
+.tarea-opt:hover{border-color:var(--primary-color)}
+.tarea-opt.checked{border-color:var(--primary-color);background:rgba(52,152,219,.08);color:var(--secondary-color);font-weight:600}
+.tarea-opt input{width:15px;height:15px;margin:0;cursor:pointer;accent-color:var(--primary-color);flex-shrink:0}
+.tarea-detalle{margin-top:.55rem}
+.tarea-detalle-label{display:block;font-size:.75rem;font-weight:600;color:var(--secondary-color);margin-bottom:.25rem}
 .estado-btn{padding:.5rem 1rem;border:none;border-radius:4px;cursor:pointer;font-weight:500;transition:all .2s}
 .estado-btn.no-iniciado{background:#e0e0e0;color:#666}
 .estado-btn.en-proceso{background:#fff3cd;color:#856404}
@@ -386,7 +409,7 @@ nav::-webkit-scrollbar{display:none}
 .user-bar .logout-btn{background:none;border:1.5px solid #e74c3c;color:#e74c3c;padding:.3rem .7rem;border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:.3rem}
 .user-bar .logout-btn:hover{background:#e74c3c;color:#fff}
 @media(max-width:480px){.auth-card{padding:1.8rem;width:95%}.auth-card h2{font-size:1.3rem}.user-bar{padding:.3rem .6rem;font-size:.75rem}.user-bar-right{gap:.3rem}.user-bar .logout-btn{font-size:.65rem;padding:.2rem .4rem}.version-chip{font-size:.62rem;padding:.2rem .5rem}.course-chip-top{font-size:.65rem;padding:.2rem .5rem}.course-chip-top i{font-size:.6rem}}
-@media(max-width:480px){.portal-titulo{font-size:2rem}.portal-subtitulo{font-size:1.4rem}.portal-curso{font-size:1.2rem}header{padding:.5rem .6rem}h1{font-size:.85rem;display:inline;margin-right:.4rem}h2{font-size:.65rem;display:inline}.course-select{font-size:.65rem;padding:.15rem 2rem .15rem .4rem}.course-chip-bar{font-size:.7rem;padding:.25rem .7rem}.container{padding:0 .6rem;margin:.6rem auto}.ambito-card{padding:.8rem}.ambito-card h3{font-size:1rem}.linea-item{padding:.7rem;flex-direction:column;align-items:flex-start;gap:.4rem}.linea-badge{width:20px;height:20px;font-size:.7rem}.linea-actions{opacity:1}.detalle-linea{padding:.8rem}.tarea-item{padding:.7rem}.estado-tarea{flex-direction:column;align-items:stretch}.estado-btn{width:100%;margin-bottom:.3rem;padding:.4rem;font-size:.75rem}.info-grid{grid-template-columns:1fr}.info-card{padding:.7rem}.info-edit-btn{font-size:.6rem;padding:.1rem .25rem}.info-edit-row .btn-primary,.info-edit-row .btn-secondary{padding:.25rem .4rem;font-size:.65rem}.eval-block{padding:.5rem}.eval-block-header h5{font-size:.75rem}.eval-table thead th,.eval-table tbody td{padding:.25rem .2rem;font-size:.6rem}.eval-chip{font-size:.6rem;padding:.1rem .25rem}.consultas-section,.pdf-section{padding:.8rem}.filtros-avanzados,.filtros-pdf{grid-template-columns:1fr}.steam-hero{padding:1rem .6rem}.steam-hero h2{font-size:1.2rem}.steam-card{padding:.8rem}.steam-integration{padding:.8rem}.modal-content{width:96%;padding:.8rem}.nav-btn .nav-label{display:none}.nav-btn{padding:.35rem .5rem;border-radius:16px;gap:0}.nav-btn i{font-size:.85rem}.gestion-btn{padding:.4rem .45rem;font-size:.68rem;gap:.15rem}.gestion-btn i{font-size:.65rem}.volver-btn{padding:.4rem .7rem;font-size:.75rem}.task-comment-box{font-size:.75rem}}
+@media(max-width:480px){.portal-titulo{font-size:2rem}.portal-subtitulo{font-size:1.4rem}.portal-curso{font-size:1.2rem}header{padding:.5rem .6rem}h1{font-size:.85rem;display:inline;margin-right:.4rem}h2{font-size:.65rem;display:inline}.course-select{font-size:.65rem;padding:.15rem 2rem .15rem .4rem}.course-chip-bar{font-size:.7rem;padding:.25rem .7rem}.container{padding:0 .6rem;margin:.6rem auto}.ambito-card{padding:.8rem}.ambito-card h3{font-size:1rem}.linea-item{padding:.7rem;flex-direction:column;align-items:flex-start;gap:.4rem}.linea-badge{min-width:20px;height:20px;font-size:.58rem;padding:0 .4rem;border-radius:10px}.linea-actions{opacity:1}.detalle-linea{padding:.8rem}.tarea-item{padding:.7rem}.estado-tarea{flex-direction:column;align-items:stretch}.estado-btn{width:100%;margin-bottom:.3rem;padding:.4rem;font-size:.75rem}.info-grid{grid-template-columns:1fr}.info-card{padding:.7rem}.info-edit-btn{font-size:.6rem;padding:.1rem .25rem}.info-edit-row .btn-primary,.info-edit-row .btn-secondary{padding:.25rem .4rem;font-size:.65rem}.eval-block{padding:.5rem}.eval-block-header h5{font-size:.75rem}.eval-table thead th,.eval-table tbody td{padding:.25rem .2rem;font-size:.6rem}.eval-chip{font-size:.6rem;padding:.1rem .25rem}.consultas-section,.pdf-section{padding:.8rem}.filtros-avanzados,.filtros-pdf{grid-template-columns:1fr}.steam-hero{padding:1rem .6rem}.steam-hero h2{font-size:1.2rem}.steam-card{padding:.8rem}.steam-integration{padding:.8rem}.modal-content{width:96%;padding:.8rem}.nav-btn .nav-label{display:none}.nav-btn{padding:.35rem .5rem;border-radius:16px;gap:0}.nav-btn i{font-size:.85rem}.gestion-btn{padding:.4rem .45rem;font-size:.68rem;gap:.15rem}.gestion-btn i{font-size:.65rem}.volver-btn{padding:.4rem .7rem;font-size:.75rem}.task-comment-box{font-size:.75rem}}
 @media(max-width:768px){
   .user-bar{padding:.3rem .8rem;font-size:.78rem}
   .user-bar-right{gap:.4rem}
@@ -521,12 +544,11 @@ nav::-webkit-scrollbar{display:none}
     <div class="gestion-buttons" id="gestionButtons">
       <button class="gestion-btn cursos solo-admin" onclick="openCourseModal()"><i class="fas fa-calendar-plus"></i> Gestión de Cursos</button>
       <button class="gestion-btn transferir solo-admin" onclick="openTransferModal()"><i class="fas fa-exchange-alt"></i> Transferir líneas</button>
-      <button class="gestion-btn consultas" onclick="goConsultas()"><i class="fas fa-search"></i> Consultas</button>
-      <button class="gestion-btn pdf" onclick="goPdf()"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+      <button class="gestion-btn consultas" onclick="goConsultas()"><i class="fas fa-search"></i> Consultas e informes</button>
       <button class="gestion-btn solo-admin" style="background:#2c3e50;color:#fff" onclick="openUsersModal()"><i class="fas fa-users-cog"></i> Gestión de Usuarios</button>
       <button class="gestion-btn solo-admin" style="background:#16a085;color:#fff" onclick="exportJSON()"><i class="fas fa-download"></i> Exportar JSON</button>
       <button class="gestion-btn solo-admin" style="background:#8e44ad;color:#fff" onclick="triggerImportJSON()"><i class="fas fa-upload"></i> Importar JSON</button>
-      <input type="file" id="importJsonFile" class="solo-admin" accept=".json" style="display:none" onchange="handleImportJSON(event)">
+      <input type="file" id="importJsonFile" accept=".json" style="display:none" onchange="handleImportJSON(event)">
     </div>
   </div>
 
@@ -592,6 +614,22 @@ nav::-webkit-scrollbar{display:none}
       <textarea class="form-textarea" id="formDescripcion" placeholder="Descripción de la línea"></textarea>
     </div>
     <div class="form-group">
+      <label>Tipo de línea *</label>
+      <div style="display:flex;gap:1rem;margin-top:.5rem;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;padding:.8rem 1.2rem;border:2px solid #ddd;border-radius:8px;flex:1;transition:all .2s" id="lineaTipoFormLabel">
+          <input type="radio" name="formTipo" value="formacion" id="formTipoFormacion" checked onchange="updateLineaTipoStyle()" style="accent-color:var(--primary-color)">
+          <i class="fas fa-chalkboard-teacher" style="color:var(--primary-color);font-size:1.1rem"></i>
+          <span style="font-weight:600;color:#333">Formación del profesorado</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;padding:.8rem 1.2rem;border:2px solid #ddd;border-radius:8px;flex:1;transition:all .2s" id="lineaTipoIntervLabel">
+          <input type="radio" name="formTipo" value="intervencion" id="formTipoIntervencion" onchange="updateLineaTipoStyle()" style="accent-color:var(--primary-color)">
+          <i class="fas fa-tasks" style="color:var(--success-color);font-size:1.1rem"></i>
+          <span style="font-weight:600;color:#333">A realizar en el centro</span>
+        </label>
+      </div>
+      <span style="font-size:.78rem;color:#888;margin-top:.35rem;display:block">Si cambias el tipo de una línea existente, todas sus tareas pasarán al nuevo grupo.</span>
+    </div>
+    <div class="form-group">
       <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
         <input type="checkbox" id="formSteam4">
         Vinculada al Proyecto STEAM 4.0
@@ -609,42 +647,83 @@ nav::-webkit-scrollbar{display:none}
 <div class="modal-overlay" id="actuacionModal">
   <div class="modal-content">
     <div class="modal-header">
-      <h3 class="modal-title"><i class="fas fa-plus-circle" style="color:var(--primary-color)"></i> Introducir nueva actuación</h3>
+      <h3 class="modal-title"><i class="fas fa-plus-circle" style="color:var(--primary-color)"></i> Introducir nueva tarea</h3>
       <button class="modal-close" onclick="closeNewActuacionModal()">&times;</button>
     </div>
     <div class="form-group">
-      <label>Tipo de actuación *</label>
-      <div style="display:flex;gap:1rem;margin-top:.5rem">
+      <label>Grupo de clasificación *</label>
+      <div style="display:flex;gap:1rem;margin-top:.5rem;flex-wrap:wrap">
         <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;padding:.8rem 1.2rem;border:2px solid #ddd;border-radius:8px;flex:1;transition:all .2s" id="actTipoFormLabel">
           <input type="radio" name="actTipo" value="formacion" id="actTipoFormacion" checked onchange="updateTipoStyle()" style="accent-color:var(--primary-color)">
           <i class="fas fa-chalkboard-teacher" style="color:var(--primary-color);font-size:1.1rem"></i>
-          <span style="font-weight:600;color:#333">Formación</span>
+          <span style="font-weight:600;color:#333">Formación del profesorado</span>
         </label>
         <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;padding:.8rem 1.2rem;border:2px solid #ddd;border-radius:8px;flex:1;transition:all .2s" id="actTipoIntervLabel">
           <input type="radio" name="actTipo" value="intervencion" id="actTipoIntervencion" onchange="updateTipoStyle()" style="accent-color:var(--primary-color)">
           <i class="fas fa-tasks" style="color:var(--success-color);font-size:1.1rem"></i>
-          <span style="font-weight:600;color:#333">Actuaciones en el centro</span>
+          <span style="font-weight:600;color:#333">A realizar en el centro</span>
         </label>
       </div>
     </div>
     <div class="form-group">
-      <label>Enunciado de la actuación *</label>
-      <textarea class="form-textarea" id="actEnunciado" placeholder="Describe la actuación..." style="min-height:100px"></textarea>
+      <label for="actTexto-nueva">Enunciado de la tarea *</label>
+      <textarea class="form-textarea" id="actTexto-nueva" placeholder="Describe la tarea..." style="min-height:80px"></textarea>
     </div>
     <div class="form-group">
-      <label><i class="fas fa-user-graduate" style="color:var(--primary-color)"></i> Alumnado participante</label>
-      <input class="form-input" type="text" id="actAlumnado" placeholder="Nombres separados por comas (ej: Ana García, Pedro López)">
-      <span style="font-size:.78rem;color:#888;margin-top:.25rem;display:block">Introduce los nombres de los alumnos y alumnas que participan en esta actuación, separados por comas.</span>
+      <label for="actObjeto-nueva" id="actObjetoLabel-nueva"><i class="fas fa-bullseye" style="color:var(--primary-color)"></i> Evaluación tarea 1. Objeto</label>
+      <textarea class="form-textarea" id="actObjeto-nueva" placeholder="Objeto de evaluación de la tarea..." style="min-height:55px"></textarea>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-clipboard-check" style="color:var(--primary-color)"></i> Evaluación</label>
+      <div class="tarea-opts">
+        <label class="tarea-opt"><input type="checkbox" name="actHerr-nueva" value="Formulario" onchange="onTareaOptChange(this)">Formulario</label>
+        <label class="tarea-opt"><input type="checkbox" name="actHerr-nueva" value="Encuesta" onchange="onTareaOptChange(this)">Encuesta</label>
+        <label class="tarea-opt"><input type="checkbox" name="actHerr-nueva" value="Estadística" onchange="onTareaOptChange(this)">Estadística</label>
+        <label class="tarea-opt"><input type="checkbox" name="actHerr-nueva" value="Otras" data-detalle="actHerrDetalleWrap-nueva" onchange="onTareaOptChange(this)">Otras</label>
+      </div>
+      <div class="tarea-detalle" id="actHerrDetalleWrap-nueva" style="display:none">
+        <label class="tarea-detalle-label" for="actHerrDetalle-nueva">Detalle</label>
+        <input class="form-input" type="text" id="actHerrDetalle-nueva" placeholder="Indica otras herramientas de evaluación...">
+      </div>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-users" style="color:var(--primary-color)"></i> Grupos responsables / participantes</label>
+      <div class="tarea-opts">
+        <label class="tarea-opt"><input type="checkbox" name="actGrupo-nueva" value="Equipo Directivo" onchange="onTareaOptChange(this)">Equipo Directivo</label>
+        <label class="tarea-opt"><input type="checkbox" name="actGrupo-nueva" value="Equipo de Coordinación" onchange="onTareaOptChange(this)">Equipo de Coordinación</label>
+        <label class="tarea-opt"><input type="checkbox" name="actGrupo-nueva" value="Profesorado" onchange="onTareaOptChange(this)">Profesorado</label>
+        <label class="tarea-opt"><input type="checkbox" name="actGrupo-nueva" value="Alumnado" onchange="onTareaOptChange(this)">Alumnado</label>
+        <label class="tarea-opt"><input type="checkbox" name="actGrupo-nueva" value="PAS" onchange="onTareaOptChange(this)">PAS</label>
+        <label class="tarea-opt"><input type="checkbox" name="actGrupo-nueva" value="Familias" onchange="onTareaOptChange(this)">Familias</label>
+        <label class="tarea-opt"><input type="checkbox" name="actGrupo-nueva" value="CEP" onchange="onTareaOptChange(this)">CEP</label>
+        <label class="tarea-opt"><input type="checkbox" name="actGrupo-nueva" value="Otros" data-detalle="actGrupoDetalleWrap-nueva" onchange="onTareaOptChange(this)">Otros</label>
+      </div>
+      <div class="tarea-detalle" id="actGrupoDetalleWrap-nueva" style="display:none">
+        <label class="tarea-detalle-label" for="actGrupoDetalle-nueva">Detalle</label>
+        <input class="form-input" type="text" id="actGrupoDetalle-nueva" placeholder="Indica otros grupos responsables o participantes...">
+      </div>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-calendar-alt" style="color:var(--primary-color)"></i> Temporalización</label>
+      <div class="tarea-opts">
+        <label class="tarea-opt"><input type="checkbox" name="actTemp-nueva" value="1er trimestre" onchange="onTareaOptChange(this)">1er trimestre</label>
+        <label class="tarea-opt"><input type="checkbox" name="actTemp-nueva" value="2º trimestre" onchange="onTareaOptChange(this)">2º trimestre</label>
+        <label class="tarea-opt"><input type="checkbox" name="actTemp-nueva" value="3er trimestre" onchange="onTareaOptChange(this)">3er trimestre</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="actObs-nueva">Observaciones</label>
+      <textarea class="form-textarea" id="actObs-nueva" placeholder="Observaciones sobre la tarea..." style="min-height:55px"></textarea>
     </div>
     <div id="actuacionModalMessage"></div>
     <div class="btn-row">
       <button class="btn-secondary" onclick="closeNewActuacionModal()">Cancelar</button>
-      <button class="btn-primary" onclick="saveNewActuacion()"><i class="fas fa-save"></i> Añadir actuación</button>
+      <button class="btn-primary" onclick="saveNewActuacion()"><i class="fas fa-save"></i> Añadir tarea</button>
     </div>
   </div>
 </div>
 
-<!-- Delete Modal -->
+<!-- Delete Modal --><!-- Delete Modal -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -764,6 +843,18 @@ const AMBITO_INFO = {
   informacion: { titulo: 'Información y Comunicación', icon: 'fas fa-comments', descripcion: 'Líneas de actuación relacionadas con la comunicación interna y externa del centro.' },
   procesos: { titulo: 'Procesos de Enseñanza Aprendizaje', icon: 'fas fa-graduation-cap', descripcion: 'Líneas de actuación relacionadas con metodologías, recursos y evaluación educativa.' }
 };
+
+// Prefijo de numeración de líneas según el ámbito al que pertenecen
+const PREFIJOS_LINEA = {
+  organizacion: 'OC',
+  informacion: 'IC',
+  procesos: 'PPEA'
+};
+
+// Código visible de una línea: inicial del ámbito + número (OC-1, IC-2, PPEA-3...)
+function codigoLinea(ambitoId, lineaId) {
+  return (PREFIJOS_LINEA[ambitoId] || '') + '-' + lineaId;
+}
 
 // ==================== COURSE THEMES ====================
 const COURSE_THEMES = [
@@ -886,6 +977,141 @@ const TEMP_PREDEFINED_BASE = ['Primer trimestre', 'Segundo trimestre', 'Tercer t
 let TEMP_PREDEFINED = [...TEMP_PREDEFINED_BASE];
 let HERRAMIENTAS_BASE = [];
 
+// ==================== MODELO DE TAREAS ====================
+// Opciones fijas de los elementos de la tarjeta de tarea
+const HERRAMIENTAS_EVALUACION = ['Formulario', 'Encuesta', 'Estadística', 'Otras'];
+const GRUPOS_RESPONSABLES = ['Equipo Directivo', 'Equipo de Coordinación', 'Profesorado', 'Alumnado', 'PAS', 'Familias', 'CEP', 'Otros'];
+const TRIMESTRES_TAREA = ['1er trimestre', '2º trimestre', '3er trimestre'];
+
+// Claves normalizadas (sin acentos y en minúsculas) de los alias legacy de los trimestres
+const ALIAS_TRIMESTRE = {
+  '1er trimestre': '1er trimestre', 'primer trimestre': '1er trimestre', '1 trimestre': '1er trimestre',
+  '2º trimestre': '2º trimestre', 'segundo trimestre': '2º trimestre', '2 trimestre': '2º trimestre',
+  '3er trimestre': '3er trimestre', 'tercer trimestre': '3er trimestre', '3 trimestre': '3er trimestre'
+};
+
+function normalizarTexto(s) {
+  return String(s || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+// Convierte las herramientas de evaluación (modelo nuevo u antiguo) en las opciones
+// fijas; cualquier herramienta que no sea Formulario/Encuesta/Estadística se
+// interpreta como "Otras" y se conserva su texto en el detalle.
+function normalizarHerramientasTarea(raw, detalleActual) {
+  const items = normalizarLista(raw);
+  const seleccion = [];
+  const otras = [];
+  items.forEach(item => {
+    const clave = normalizarTexto(item);
+    if (clave === 'formulario') seleccion.push('Formulario');
+    else if (clave === 'encuesta') seleccion.push('Encuesta');
+    else if (clave === 'estadistica' || clave === 'estadisticas') seleccion.push('Estadística');
+    else if (clave === 'otras' || clave === 'otra' || clave === 'otros') seleccion.push('Otras');
+    else otras.push(String(item).trim());
+  });
+  if (otras.length > 0 && !seleccion.includes('Otras')) seleccion.push('Otras');
+  return {
+    herramientas: HERRAMIENTAS_EVALUACION.filter(h => seleccion.includes(h)),
+    herramientasDetalle: (detalleActual && String(detalleActual).trim()) ? String(detalleActual).trim() : otras.join(', ')
+  };
+}
+
+// Convierte los responsables (modelo nuevo u antiguo) en los grupos fijos; los
+// nombres que no encajan con ningún grupo se interpretan como "Otros" y se
+// conservan en el detalle. El alumnado del modelo antiguo marca el grupo "Alumnado".
+function normalizarGruposTarea(raw, detalleActual, alumnadoLegacy) {
+  const items = normalizarLista(raw);
+  const seleccion = [];
+  const otros = [];
+  items.forEach(item => {
+    const clave = normalizarTexto(item);
+    const canonico = GRUPOS_RESPONSABLES.find(g => g !== 'Otros' && normalizarTexto(g) === clave);
+    if (canonico) seleccion.push(canonico);
+    else if (clave === 'otros' || clave === 'otra' || clave === 'otro') seleccion.push('Otros');
+    else otros.push(String(item).trim());
+  });
+  if (Array.isArray(alumnadoLegacy) && alumnadoLegacy.length > 0 && !seleccion.includes('Alumnado')) seleccion.push('Alumnado');
+  if (otros.length > 0 && !seleccion.includes('Otros')) seleccion.push('Otros');
+  return {
+    responsables: GRUPOS_RESPONSABLES.filter(g => seleccion.includes(g)),
+    responsablesDetalle: (detalleActual && String(detalleActual).trim()) ? String(detalleActual).trim() : otros.join(', ')
+  };
+}
+
+function normalizarTemporTarea(raw) {
+  const out = [];
+  normalizarLista(raw).forEach(item => {
+    const m = ALIAS_TRIMESTRE[normalizarTexto(item)];
+    if (m && !out.includes(m)) out.push(m);
+  });
+  return TRIMESTRES_TAREA.filter(t => out.includes(t));
+}
+
+// Normaliza una tarea al modelo nuevo. Si la tarea no tiene evaluación propia
+// (modelo antiguo con tareas como cadenas de texto) hereda los datos de la
+// evaluación de la línea, como hacía el modelo anterior en las consultas.
+function normalizarTarea(t, evLinea) {
+  if (typeof t === 'string') t = { texto: t };
+  if (!t || typeof t !== 'object') t = {};
+  const ev = (t.evaluacion && typeof t.evaluacion === 'object') ? t.evaluacion : null;
+  const src = ev || evLinea || {};
+  const herr = normalizarHerramientasTarea(src.herramientas, ev ? (ev.herramientasDetalle || '') : '');
+  const resp = normalizarGruposTarea(src.responsables, ev ? (ev.responsablesDetalle || '') : '', ev ? ev.alumnado : undefined);
+  const objeto = (ev && ev.objeto !== undefined) ? ev.objeto : ((evLinea && evLinea.objeto) || '');
+  return {
+    texto: t.texto || '',
+    evaluacion: {
+      objeto: objeto || '',
+      herramientas: herr.herramientas,
+      herramientasDetalle: herr.herramientasDetalle,
+      responsables: resp.responsables,
+      responsablesDetalle: resp.responsablesDetalle,
+      temporalizacion: normalizarTemporTarea(src.temporalizacion),
+      observaciones: (ev && ev.observaciones) || ''
+    }
+  };
+}
+
+// Normaliza una línea completa (tareas y campos heredables de la línea).
+// El tipo de línea ("formacion" o "intervencion") se conserva si ya existe y,
+// si no, se deduce de las tareas: solo tareas de intervención => "intervencion".
+function normalizarLineaDatos(l) {
+  if (!l || typeof l !== 'object') l = {};
+  const evLinea = {
+    objeto: (l.evaluacion && l.evaluacion.objeto) || '',
+    herramientas: (l.evaluacion && l.evaluacion.herramientas) || [],
+    responsables: l.responsables || [],
+    temporalizacion: l.temporalizacion || []
+  };
+  const gruposLinea = normalizarGruposTarea(evLinea.responsables, '', null);
+  let tipo = (l.tipo === 'formacion' || l.tipo === 'intervencion') ? l.tipo : null;
+  if (!tipo) {
+    const nF = (l.tareasFormacion || []).length;
+    const nI = (l.tareasIntervencion || []).length;
+    tipo = (nI > 0 && nF === 0) ? 'intervencion' : 'formacion';
+  }
+  return {
+    id: l.id,
+    tipo: tipo,
+    titulo: l.titulo || '',
+    descripcion: l.descripcion || '',
+    tareasFormacion: (l.tareasFormacion || []).map(t => normalizarTarea(t, evLinea)),
+    tareasIntervencion: (l.tareasIntervencion || []).map(t => normalizarTarea(t, evLinea)),
+    evaluacion: l.evaluacion || { objeto: '', herramientas: '' },
+    evaluaciones: Array.isArray(l.evaluaciones) ? l.evaluaciones : [],
+    responsables: gruposLinea.responsables,
+    temporalizacion: normalizarTemporTarea(evLinea.temporalizacion),
+    steam4: l.steam4 || false
+  };
+}
+
+function normalizarAmbitoData(d) {
+  return {
+    titulo: (d && d.titulo) || '',
+    lineas: ((d && d.lineas) || []).map(normalizarLineaDatos)
+  };
+}
+
 const SEED_DATA = {
   organizacion: {
     titulo: 'ÁMBITO: Organización del Centro',
@@ -936,22 +1162,18 @@ const state = {
   // Auth
   user: null,
   userRole: 'viewer', // 'admin' or 'viewer'
-  // Consultas
-  consultaAmbito: 'todos',
-  consultaResponsable: 'todos',
-  consultaTrimestre: 'todos',
-  consultaTipo: 'todos',
-  consultaHasSearched: false,
-  // PDF
-  pdfNoIniciado: true,
-  pdfEnProceso: true,
-  pdfConseguido: true,
-  pdfOrganizacion: true,
-  pdfInformacion: true,
-  pdfProcesos: true,
-  pdfFormacion: true,
-  pdfIntervencion: true,
-  pdfMessage: null,
+  // Consultas e informes: filtros de selección múltiple compartidos entre la
+  // vista en pantalla y la exportación a PDF. Las listas de responsables y
+  // trimestres vacías significan "todos".
+  informe: {
+    ambitos: ['organizacion', 'informacion', 'procesos'],
+    tiposLinea: ['formacion', 'intervencion'],
+    responsables: [],
+    trimestres: [],
+    estados: ['no-iniciado', 'en-proceso', 'conseguido'],
+    hasSearched: false
+  },
+  informeMessage: null,
   editingActEval: null,
   confirmDeleteTask: null // taskId pending deletion confirmation
 };
@@ -984,7 +1206,7 @@ async function seedCourse(cursoId) {
     if (ambitoData) {
       await db.collection(PLANES_COLLECTION).doc(cursoId).collection('ambitos').doc(ambitoId).set({
         titulo: ambitoData.titulo,
-        lineas: ambitoData.lineas
+        lineas: ambitoData.lineas.map(normalizarLineaDatos)
       });
     }
   }
@@ -1347,29 +1569,7 @@ async function listenToCourseData() {
       const data = {};
       snapshot.forEach(doc => {
         const d = doc.data();
-        data[doc.id] = {
-          titulo: d.titulo || '',
-          lineas: (d.lineas || []).map(l => ({
-            id: l.id,
-            titulo: l.titulo || '',
-            descripcion: l.descripcion || '',
-            tareasFormacion: (l.tareasFormacion || []).map(t => {
-              if (typeof t === 'string') return { texto: t, evaluacion: { responsables: [], herramientas: [], temporalizacion: [], alumnado: [] } };
-              const ev = t.evaluacion || { responsables: [], herramientas: [], temporalizacion: [] };
-              return { texto: t.texto || '', evaluacion: { ...ev, alumnado: ev.alumnado || [] } };
-            }),
-            tareasIntervencion: (l.tareasIntervencion || []).map(t => {
-              if (typeof t === 'string') return { texto: t, evaluacion: { responsables: [], herramientas: [], temporalizacion: [], alumnado: [] } };
-              const ev = t.evaluacion || { responsables: [], herramientas: [], temporalizacion: [] };
-              return { texto: t.texto || '', evaluacion: { ...ev, alumnado: ev.alumnado || [] } };
-            }),
-            evaluacion: l.evaluacion || { objeto: '', herramientas: '' },
-            evaluaciones: Array.isArray(l.evaluaciones) ? l.evaluaciones : [],
-            responsables: l.responsables || [],
-            temporalizacion: l.temporalizacion || [],
-            steam4: l.steam4 || false
-          }))
-        };
+        data[doc.id] = normalizarAmbitoData(d);
       });
       state.planData = data;
       state.loading = false;
@@ -1529,17 +1729,9 @@ function goSteam() {
 
 function goConsultas() {
   state.viewState = 'consultas';
-  state.consultaHasSearched = false;
+  state.informe.hasSearched = false;
+  state.informeMessage = null;
   state.editingActEval = null;
-  state.gestionOpen = false;
-  document.getElementById('gestionToggle').classList.remove('open');
-  document.getElementById('gestionButtons').classList.remove('open');
-  renderView();
-}
-
-function goPdf() {
-  state.viewState = 'pdf';
-  state.pdfMessage = null;
   state.gestionOpen = false;
   document.getElementById('gestionToggle').classList.remove('open');
   document.getElementById('gestionButtons').classList.remove('open');
@@ -1594,7 +1786,6 @@ function renderView() {
     case 'detalle': renderDetalle(container); break;
     case 'steam': renderSteam(container); break;
     case 'consultas': renderConsultas(container); break;
-    case 'pdf': renderPdf(container); break;
   }
 }
 
@@ -1639,10 +1830,11 @@ function renderLineas(container) {
   ambitoData.lineas.forEach(linea => {
     html += `
       <li class="linea-item" onclick="goLineaDetalle(${escapeAttr(JSON.stringify(linea))})">
-        <div class="linea-badge">${linea.id}</div>
+        <div class="linea-badge">${codigoLinea(state.currentAmbitoId, linea.id)}</div>
         <div style="flex:1">
           <div style="font-weight:600;margin-bottom:.3rem">${escapeHtml(linea.titulo)}</div>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <span class="badge ${linea.tipo === 'intervencion' ? 'badge-tipo' : 'badge-ambito'}" onclick="event.stopPropagation();goLineaDetalle(${escapeAttr(JSON.stringify(linea))})"><i class="fas ${linea.tipo === 'intervencion' ? 'fa-tasks' : 'fa-chalkboard-teacher'}"></i> ${linea.tipo === 'intervencion' ? 'A realizar en el centro' : 'Formación del profesorado'}</span>
             ${linea.steam4 ? `<span class="badge badge-steam" onclick="event.stopPropagation();goSteam()"><i class="fas fa-robot"></i> STEAM 4.0</span>` : ''}
           </div>
         </div>
@@ -1668,16 +1860,6 @@ function renderDetalle(container) {
     container.innerHTML = '';
     return;
   }
-  // Preserve unsaved comment text across re-renders (e.g. remote snapshot updates)
-  container.querySelectorAll('.tarea-comentario-textarea').forEach(ta => {
-    const match = ta.id.match(/^tareaComentario-(.+)$/);
-    if (match) {
-      const val = ta.value.trim();
-      if (val !== (state.comentariosTareas[match[1]] || '')) {
-        state.comentariosTareas[match[1]] = val;
-      }
-    }
-  });
   const linea = state.currentLinea;
   const ambitoId = state.currentAmbitoId;
   const tareasFormacion = Array.isArray(linea.tareasFormacion) ? linea.tareasFormacion : [];
@@ -1685,46 +1867,45 @@ function renderDetalle(container) {
 
   let html = `
     <div class="seccion-cabecera">
-      <h2 class="section-title">Línea ${linea.id}: ${escapeHtml(linea.titulo)}</h2>
+      <h2 class="section-title">Línea ${codigoLinea(ambitoId, linea.id)}: ${escapeHtml(linea.titulo)}</h2>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-        ${isAdmin() ? `<button class="volver-btn" onclick="editCurrentLinea()"><i class="fas fa-edit"></i> Editar nombre</button>` : ''}
+        ${isAdmin() ? `<button class="volver-btn" onclick="editCurrentLinea()"><i class="fas fa-edit"></i> Editar línea</button>` : ''}
         <button class="volver-btn" onclick="goAmbito('${ambitoId}')"><i class="fas fa-arrow-left"></i> Volver a líneas</button>
       </div>
     </div>
     <div class="detalle-linea">
       <p style="margin-bottom:1.5rem;font-size:1.1rem;color:#555">${escapeHtml(linea.descripcion)}</p>
-      ${linea.steam4 ? `<div class="badge badge-steam" style="font-size:1rem;padding:.7rem 1.2rem;margin-bottom:1.5rem;cursor:pointer" onclick="goSteam()"><i class="fas fa-robot"></i> Esta línea está vinculada al Proyecto STEAM 4.0</div>` : ''}
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem">
+        <span class="badge ${linea.tipo === 'intervencion' ? 'badge-tipo' : 'badge-ambito'}" style="font-size:1rem;padding:.7rem 1.2rem"><i class="fas ${linea.tipo === 'intervencion' ? 'fa-tasks' : 'fa-chalkboard-teacher'}"></i> ${linea.tipo === 'intervencion' ? 'A realizar en el centro' : 'Formación del profesorado'}</span>
+        ${linea.steam4 ? `<span class="badge badge-steam" style="font-size:1rem;padding:.7rem 1.2rem;cursor:pointer" onclick="goSteam()"><i class="fas fa-robot"></i> Proyecto STEAM 4.0</span>` : ''}
+      </div>
 
       <div class="filtros">
         <button class="filtro-btn ${state.taskFilter==='todas'?'active':''}" onclick="setTaskFilter('todas')"><i class="fas fa-list"></i> Todas las tareas</button>
-        <button class="filtro-btn ${state.taskFilter==='formacion'?'active':''}" onclick="setTaskFilter('formacion')"><i class="fas fa-chalkboard-teacher"></i> Formación</button>
-        <button class="filtro-btn ${state.taskFilter==='intervencion'?'active':''}" onclick="setTaskFilter('intervencion')"><i class="fas fa-tasks"></i> Actuaciones en el centro</button>
+        <button class="filtro-btn ${state.taskFilter==='formacion'?'active':''}" onclick="setTaskFilter('formacion')"><i class="fas fa-chalkboard-teacher"></i> Formación del profesorado</button>
+        <button class="filtro-btn ${state.taskFilter==='intervencion'?'active':''}" onclick="setTaskFilter('intervencion')"><i class="fas fa-tasks"></i> A realizar en el centro</button>
       </div>`;
 
-  // Formation tasks
+  // Tareas de formación del profesorado (ordinal propio dentro de la línea)
   const showFormacion = state.taskFilter === 'todas' || state.taskFilter === 'formacion';
   if (showFormacion && tareasFormacion.length > 0) {
-    html += `<div><h3 style="margin-top:1.5rem;margin-bottom:1rem;color:#2c3e50">Tareas de Formación</h3>`;
+    html += `<div><h3 style="margin-top:1.5rem;margin-bottom:1rem;color:#2c3e50">Formación del profesorado</h3>`;
     tareasFormacion.forEach((tarea, idx) => {
       const taskId = `${ambitoId}-${linea.id}-formacion-${idx}`;
       const estado = state.estadosTareas[taskId] || 'no-iniciado';
-      const texto = typeof tarea === 'string' ? tarea : tarea.texto;
-      const evalData = typeof tarea === 'object' ? tarea.evaluacion : null;
-      html += renderTaskItem(taskId, texto, 'fas fa-chalkboard-teacher', 'Tarea de formación', estado, true, evalData);
+      html += renderTaskItem(taskId, tarea, idx + 1, 'formacion', estado);
     });
     html += `</div>`;
   }
 
-  // Intervention tasks — now include per-actuación evaluation data
+  // Tareas a realizar en el centro (la numeración continúa tras las de formación)
   const showIntervencion = state.taskFilter === 'todas' || state.taskFilter === 'intervencion';
   if (showIntervencion && tareasIntervencion.length > 0) {
-    html += `<div><h3 style="margin-top:1.5rem;margin-bottom:1rem;color:#2c3e50">Actuaciones en el centro</h3>`;
+    html += `<div><h3 style="margin-top:1.5rem;margin-bottom:1rem;color:#2c3e50">A realizar en el centro</h3>`;
     tareasIntervencion.forEach((tarea, idx) => {
       const taskId = `${ambitoId}-${linea.id}-intervencion-${idx}`;
       const estado = state.estadosTareas[taskId] || 'no-iniciado';
-      const texto = typeof tarea === 'string' ? tarea : tarea.texto;
-      const evalData = typeof tarea === 'object' ? tarea.evaluacion : null;
-      html += renderTaskItem(taskId, texto, 'fas fa-tasks', 'Actuación en el centro', estado, true, evalData);
+      html += renderTaskItem(taskId, tarea, tareasFormacion.length + idx + 1, 'intervencion', estado);
     });
     html += `</div>`;
   }
@@ -1735,23 +1916,23 @@ function renderDetalle(container) {
   if (!hasFormacion && !hasIntervencion) {
     html += `<div style="text-align:center;padding:2rem 1rem;color:#999">
       <i class="fas fa-clipboard-list" style="font-size:2.5rem;margin-bottom:.8rem;opacity:.4;display:block"></i>
-      <p style="font-size:1rem;margin-bottom:.3rem">No hay actuaciones registradas aún</p>
-      <p style="font-size:.85rem">Añade la primera actuación usando el botón de abajo</p>
+      <p style="font-size:1rem;margin-bottom:.3rem">No hay tareas registradas aún</p>
+      <p style="font-size:.85rem">Añade la primera tarea usando el botón de abajo</p>
     </div>`;
-  } else if (showFormacion && !hasFormacion && hasIntervencion) {
+  } else if (state.taskFilter === 'formacion' && !hasFormacion) {
     html += `<div style="text-align:center;padding:1.5rem 1rem;color:#999;font-size:.9rem">
-      <i class="fas fa-chalkboard-teacher" style="margin-right:.4rem"></i> No hay tareas de formación
+      <i class="fas fa-chalkboard-teacher" style="margin-right:.4rem"></i> No hay tareas de formación del profesorado
     </div>`;
-  } else if (showIntervencion && hasFormacion && !hasIntervencion) {
+  } else if (state.taskFilter === 'intervencion' && !hasIntervencion) {
     html += `<div style="text-align:center;padding:1.5rem 1rem;color:#999;font-size:.9rem">
-      <i class="fas fa-tasks" style="margin-right:.4rem"></i> No hay actuaciones en el centro
+      <i class="fas fa-tasks" style="margin-right:.4rem"></i> No hay tareas a realizar en el centro
     </div>`;
   }
 
-  // "Introducir nueva actuación" button (only for admins)
+  // "Introducir nueva tarea" button (only for admins)
   if (isAdmin()) {
     html += `<button class="add-linea-btn" onclick="openNewActuacionModal()" style="margin-top:1.5rem;border-color:var(--success-color);color:var(--success-color)">
-      <i class="fas fa-plus-circle"></i> Introducir nueva actuación
+      <i class="fas fa-plus-circle"></i> Introducir nueva tarea
     </button>`;
   }
 
@@ -1759,204 +1940,185 @@ function renderDetalle(container) {
   </div>`;
 
   container.innerHTML = html;
-  // Attach chip remove handlers after render
-  attachChipRemoveHandlers();
 }
 
-function buildViewChip(text, chipClass, taskId, fieldType) {
-  const canEdit = isAdmin();
-  const safeTaskId = taskId.replace(/'/g, "\\'");
-  // El valor se lee del propio chip (data-value) para que comillas o apóstrofos no rompan el onclick
-  const actions = canEdit ? `<i class="fas fa-pen eval-chip-edit" onclick="startEditEvalChip('${safeTaskId}','${fieldType}',this.parentElement.dataset.value)" title="Editar"></i><i class="fas fa-times eval-chip-del" onclick="deleteEvalChip('${safeTaskId}','${fieldType}',this.parentElement.dataset.value)" title="Eliminar"></i>` : '';
-  return `<span class="eval-chip ${chipClass}" data-value="${escapeAttr(text)}">${escapeHtml(text)}${actions}</span>`;
+function onTareaOptChange(checkbox) {
+  const opt = checkbox.closest('.tarea-opt');
+  if (opt) opt.classList.toggle('checked', checkbox.checked);
+  if (checkbox.dataset.detalle) toggleTareaDetalle(checkbox.dataset.detalle, checkbox);
 }
 
-function renderTaskItem(taskId, texto, icono, titulo, estado, isActuacion, evalData) {
-  const editing = state.editingActEval === taskId;
-  // Normalize herramientas: can be string (legacy) or array
-  let herrArray = [];
-  if (evalData && Array.isArray(evalData.herramientas)) {
-    herrArray = evalData.herramientas;
-  } else if (evalData && evalData.herramientas && typeof evalData.herramientas === 'string') {
-    herrArray = evalData.herramientas.split(',').map(s => s.trim()).filter(Boolean);
+function toggleTareaDetalle(wrapId, checkbox) {
+  const wrap = document.getElementById(wrapId);
+  if (wrap) wrap.style.display = checkbox.checked ? 'block' : 'none';
+}
+
+// Actualiza un ámbito del estado local a partir de una instantánea en crudo de
+// Firestore (normalizándola) y refresca la línea que se está visitando.
+function actualizarAmbitoLocal(ambitoId, ambitoSnap) {
+  state.planData[ambitoId] = normalizarAmbitoData(ambitoSnap);
+  if (state.currentLinea) {
+    const fresh = (state.planData[ambitoId].lineas || []).find(l => l.id === state.currentLinea.id);
+    if (fresh) state.currentLinea = fresh;
   }
-  const ev = {
-    responsables: (evalData && evalData.responsables) || [],
-    herramientas: herrArray,
-    temporalizacion: (evalData && evalData.temporalizacion) || [],
-    alumnado: (evalData && evalData.alumnado) || []
+}
+
+// Lee los campos del formulario de una tarea. El sufijo es el identificador de
+// la tarjeta (p. ej. "organizacion-1-formacion-0") o "nueva" en el modal de alta.
+function leerFormTarea(sufijo) {
+  const val = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const marcados = nombre => Array.from(document.querySelectorAll('input[name="' + nombre + '"]:checked')).map(i => i.value);
+  return {
+    texto: val('actTexto-' + sufijo),
+    objeto: val('actObjeto-' + sufijo),
+    herramientas: marcados('actHerr-' + sufijo),
+    herramientasDetalle: val('actHerrDetalle-' + sufijo),
+    responsables: marcados('actGrupo-' + sufijo),
+    responsablesDetalle: val('actGrupoDetalle-' + sufijo),
+    temporalizacion: marcados('actTemp-' + sufijo),
+    observaciones: val('actObs-' + sufijo)
   };
-  const hasEval = ev.responsables.length > 0 || ev.herramientas.length > 0 || ev.temporalizacion.length > 0;
-  const hasAlumnado = ev.alumnado.length > 0;
-  const safeTaskId = taskId.replace(/'/g, "\\'");
-  const canEdit = isAdmin();
+}
 
-  // Sorted chips for view mode
-  const sortedResp = [...ev.responsables].sort();
-  const sortedHerr = [...ev.herramientas].sort();
-  const sortedTemp = [...ev.temporalizacion].sort();
-  const sortedAlum = [...ev.alumnado].sort();
-
-  let evalHtml = '';
-  {
-    if (editing) {
-      evalHtml = `
-        <div class="tarea-eval-section editing" id="actEvalBlock-${safeTaskId}">
-          <div class="tarea-eval-header">
-            <h5><i class="fas fa-clipboard-check"></i> Evaluación</h5>
-          </div>
-          <div class="eval-table-edit-row">
-            <div class="eval-table-edit-field">
-              <label><i class="fas fa-user" style="color:var(--primary-color)"></i> Responsables</label>
-              <div class="info-chips" id="actRespChips-${safeTaskId}">
-                ${(ev.responsables||[]).sort().map(r => '<span class="info-chip resp-chip">' + escapeHtml(r) + '<i class="fas fa-times"></i></span>').join('')}
-              </div>
-              <div class="info-add-row">
-                <select id="actRespSelect-${safeTaskId}">
-                  <option value="">-- Seleccionar --</option>
-                  ${getAllInfoResponsables(ev.responsables||[]).map(r => '<option value="' + escapeAttr(r) + '">' + escapeHtml(r) + '</option>').join('')}
-                </select>
-                <button class="info-add-btn" onclick="addActRespFromSelect('${safeTaskId}')"><i class="fas fa-plus"></i></button>
-              </div>
-              <div class="info-new-row">
-                <input class="info-new-input" type="text" id="actRespNewInput-${safeTaskId}" placeholder="Nuevo responsable..." onkeydown="if(event.key==='Enter'){event.preventDefault();addActRespNew('${safeTaskId}')}">
-                <button class="info-new-btn" onclick="addActRespNew('${safeTaskId}')"><i class="fas fa-user-plus"></i> Crear</button>
-              </div>
-            </div>
-            <div class="eval-table-edit-field">
-              <label><i class="fas fa-tools" style="color:var(--warning-color)"></i> Herramientas de evaluación</label>
-              <div class="info-chips" id="actHerrChips-${safeTaskId}">
-                ${sortedHerr.map(h => '<span class="info-chip" style="background:rgba(243,156,18,.15);color:#e67e22">' + escapeHtml(h) + '<i class="fas fa-times"></i></span>').join('')}
-              </div>
-              <div class="info-add-row">
-                <select id="actHerrSelect-${safeTaskId}">
-                  <option value="">-- Seleccionar --</option>
-                  ${getAvailableHerrOptions(ev.herramientas||[]).map(h => '<option value="' + escapeAttr(h) + '">' + escapeHtml(h) + '</option>').join('')}
-                </select>
-                <button class="info-add-btn" onclick="addActHerrFromSelect('${safeTaskId}')"><i class="fas fa-plus"></i></button>
-              </div>
-              <div class="info-new-row">
-                <input class="info-new-input" type="text" id="actHerrNewInput-${safeTaskId}" placeholder="Nueva herramienta..." onkeydown="if(event.key==='Enter'){event.preventDefault();addActHerrNew('${safeTaskId}')}">
-                <button class="info-new-btn" onclick="addActHerrNew('${safeTaskId}')"><i class="fas fa-plus"></i> Añadir herramienta</button>
-              </div>
-            </div>
-            <div class="eval-table-edit-field">
-              <label><i class="fas fa-calendar-alt" style="color:var(--success-color)"></i> Temporalización</label>
-              <div class="info-chips" id="actTempChips-${safeTaskId}">
-                ${(ev.temporalizacion||[]).sort().map(t => '<span class="info-chip temp-chip">' + escapeHtml(t) + '<i class="fas fa-times"></i></span>').join('')}
-              </div>
-              <div class="info-add-row">
-                <select id="actTempSelect-${safeTaskId}">
-                  <option value="">-- Seleccionar --</option>
-                  ${getAvailableTempOptions(ev.temporalizacion||[]).map(t => '<option value="' + escapeAttr(t) + '">' + escapeHtml(t) + '</option>').join('')}
-                </select>
-                <button class="info-add-btn" onclick="addActTempFromSelect('${safeTaskId}')"><i class="fas fa-plus"></i></button>
-              </div>
-              <div class="info-new-row">
-                <input class="info-new-input" type="text" id="actTempNewInput-${safeTaskId}" placeholder="Otro período..." onkeydown="if(event.key==='Enter'){event.preventDefault();addActTempNew('${safeTaskId}')}">
-                <button class="info-new-btn" onclick="addActTempNew('${safeTaskId}')"><i class="fas fa-plus"></i> Añadir</button>
-              </div>
-            </div>
-          </div>
-          <!-- Sección de Alumnado -->
-          <div class="eval-table-edit-row" style="margin-top:.8rem">
-            <div class="eval-table-edit-field" style="flex:1 1 100%">
-              <label><i class="fas fa-user-graduate" style="color:#8e44ad"></i> Alumnado participante</label>
-              <div class="info-chips" id="actAlumChips-${safeTaskId}">
-                ${sortedAlum.map(a => buildAlumnadoChip(a, safeTaskId, true)).join('')}
-              </div>
-              <div class="info-new-row">
-                <input class="info-new-input" type="text" id="actAlumNewInput-${safeTaskId}" placeholder="Nombres separados por comas..." onkeydown="if(event.key==='Enter'){event.preventDefault();parseAlumnadoFromInput('${safeTaskId}')}">
-                <button class="info-new-btn" onclick="parseAlumnadoFromInput('${safeTaskId}')" style="background:rgba(142,68,173,.12);color:#8e44ad"><i class="fas fa-user-plus"></i> Añadir</button>
-              </div>
-            </div>
-          </div>
-          <div class="info-edit-row" style="margin-top:1rem">
-            <button class="btn-secondary" onclick="cancelEditActEval()">Cancelar</button>
-            <button class="btn-primary" onclick="saveActEval('${safeTaskId}')"><i class="fas fa-save"></i> Guardar</button>
-          </div>
-        </div>`;
-    } else {
-      evalHtml = `
-        <div class="tarea-eval-section" id="actEvalBlock-${safeTaskId}">
-          <div class="tarea-eval-header">
-            <h5><i class="fas fa-clipboard-check"></i> Evaluación</h5>
-            ${canEdit ? `<button class="info-edit-btn" onclick="startEditActEval('${safeTaskId}')"><i class="fas fa-pen"></i> Editar</button>` : ''}
-          </div>
-          ${hasEval || hasAlumnado ? `
-            <table class="eval-table">
-              <thead>
-                <tr>
-                  <th><i class="fas fa-user" style="color:var(--primary-color)"></i> Responsables</th>
-                  <th><i class="fas fa-tools" style="color:var(--warning-color)"></i> Herramientas</th>
-                  <th><i class="fas fa-calendar-alt" style="color:var(--success-color)"></i> Temporalización</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="eval-cell-chips" id="actViewResp-${safeTaskId}">
-                      ${sortedResp.map(r => buildViewChip(r, 'resp', safeTaskId, 'responsable')).join('')}
-                    </div>
-                  </td>
-                  <td>
-                    <div class="eval-cell-chips" id="actViewHerr-${safeTaskId}">
-                      ${sortedHerr.map(h => buildViewChip(h, 'herr', safeTaskId, 'herramienta')).join('')}
-                    </div>
-                  </td>
-                  <td>
-                    <div class="eval-cell-chips" id="actViewTemp-${safeTaskId}">
-                      ${sortedTemp.map(t => buildViewChip(t, 'temp', safeTaskId, 'temporalizacion')).join('')}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            ${hasAlumnado ? `
-              <div class="alumnado-view-section">
-                <div class="alumnado-view-label"><i class="fas fa-user-graduate" style="color:#8e44ad"></i> Alumnado participante</div>
-                <div class="eval-cell-chips">
-                  ${sortedAlum.map(a => buildAlumnadoChip(a, safeTaskId, false)).join('')}
-                </div>
-              </div>
-            ` : ''}
-          ` : `<table class="eval-table"><tbody><tr class="eval-empty-row"><td colspan="3">Sin datos de evaluación</td></tr></tbody></table>`}
-        </div>`;
+function construirTareaDesdeForm(datos) {
+  return {
+    texto: datos.texto,
+    evaluacion: {
+      objeto: datos.objeto,
+      herramientas: datos.herramientas,
+      herramientasDetalle: datos.herramientasDetalle,
+      responsables: datos.responsables,
+      responsablesDetalle: datos.responsablesDetalle,
+      temporalizacion: datos.temporalizacion,
+      observaciones: datos.observaciones
     }
-  }
+  };
+}
 
+function renderTaskItem(taskId, tarea, ordinal, tipoKey, estado) {
+  const editing = state.editingActEval === taskId;
+  const canEdit = isAdmin();
+  const ev = (tarea && tarea.evaluacion) || {};
+  const texto = (tarea && tarea.texto) || '';
+  const safeTaskId = taskId.replace(/'/g, "\\'");
+  const esFormacion = tipoKey === 'formacion';
+  const icono = esFormacion ? 'fas fa-chalkboard-teacher' : 'fas fa-tasks';
+  const tipoLabel = esFormacion ? 'Formación del profesorado' : 'A realizar en el centro';
   const deleting = state.confirmDeleteTask === taskId;
+  const herrList = Array.isArray(ev.herramientas) ? ev.herramientas : [];
+  const grupList = Array.isArray(ev.responsables) ? ev.responsables : [];
+  const tempList = Array.isArray(ev.temporalizacion) ? ev.temporalizacion : [];
+
+  let cuerpoHtml = '';
+  if (editing) {
+    const optCheck = (lista, valor) => lista.includes(valor) ? ' checked' : '';
+    cuerpoHtml = `
+      <div class="tarea-edit-form">
+        <div class="tarea-elemento">
+          <label class="tarea-elemento-label" for="actTexto-${safeTaskId}"><i class="fas fa-pen-nib"></i> Enunciado de la tarea</label>
+          <textarea class="form-textarea" id="actTexto-${safeTaskId}" placeholder="Enunciado de la tarea..." style="min-height:70px">${escapeHtml(texto)}</textarea>
+        </div>
+        <div class="tarea-elemento">
+          <label class="tarea-elemento-label" for="actObjeto-${safeTaskId}"><i class="fas fa-bullseye"></i> Evaluación tarea ${ordinal}. Objeto</label>
+          <textarea class="form-textarea" id="actObjeto-${safeTaskId}" placeholder="Objeto de evaluación de la tarea ${ordinal}..." style="min-height:55px">${escapeHtml(ev.objeto || '')}</textarea>
+        </div>
+        <div class="tarea-elemento">
+          <div class="tarea-elemento-label"><i class="fas fa-clipboard-check"></i> Evaluación</div>
+          <div class="tarea-opts">
+            ${HERRAMIENTAS_EVALUACION.map(h => `
+            <label class="tarea-opt${optCheck(herrList, h) ? ' checked' : ''}"><input type="checkbox" name="actHerr-${safeTaskId}" value="${escapeAttr(h)}"${optCheck(herrList, h)}${h === 'Otras' ? ` data-detalle="actHerrDetalleWrap-${safeTaskId}"` : ''} onchange="onTareaOptChange(this)">${escapeHtml(h)}</label>`).join('')}
+          </div>
+          <div class="tarea-detalle" id="actHerrDetalleWrap-${safeTaskId}" style="display:${herrList.includes('Otras') ? 'block' : 'none'}">
+            <label class="tarea-detalle-label" for="actHerrDetalle-${safeTaskId}">Detalle</label>
+            <input class="form-input" type="text" id="actHerrDetalle-${safeTaskId}" placeholder="Indica otras herramientas de evaluación..." value="${escapeAttr(ev.herramientasDetalle || '')}">
+          </div>
+        </div>
+        <div class="tarea-elemento">
+          <div class="tarea-elemento-label"><i class="fas fa-users"></i> Grupos responsables / participantes</div>
+          <div class="tarea-opts">
+            ${GRUPOS_RESPONSABLES.map(g => `
+            <label class="tarea-opt${optCheck(grupList, g) ? ' checked' : ''}"><input type="checkbox" name="actGrupo-${safeTaskId}" value="${escapeAttr(g)}"${optCheck(grupList, g)}${g === 'Otros' ? ` data-detalle="actGrupoDetalleWrap-${safeTaskId}"` : ''} onchange="onTareaOptChange(this)">${escapeHtml(g)}</label>`).join('')}
+          </div>
+          <div class="tarea-detalle" id="actGrupoDetalleWrap-${safeTaskId}" style="display:${grupList.includes('Otros') ? 'block' : 'none'}">
+            <label class="tarea-detalle-label" for="actGrupoDetalle-${safeTaskId}">Detalle</label>
+            <input class="form-input" type="text" id="actGrupoDetalle-${safeTaskId}" placeholder="Indica otros grupos responsables o participantes..." value="${escapeAttr(ev.responsablesDetalle || '')}">
+          </div>
+        </div>
+        <div class="tarea-elemento">
+          <div class="tarea-elemento-label"><i class="fas fa-calendar-alt"></i> Temporalización</div>
+          <div class="tarea-opts">
+            ${TRIMESTRES_TAREA.map(t => `
+            <label class="tarea-opt${optCheck(tempList, t) ? ' checked' : ''}"><input type="checkbox" name="actTemp-${safeTaskId}" value="${escapeAttr(t)}"${optCheck(tempList, t)} onchange="onTareaOptChange(this)">${escapeHtml(t)}</label>`).join('')}
+          </div>
+        </div>
+        <div class="tarea-elemento">
+          <label class="tarea-elemento-label" for="actObs-${safeTaskId}"><i class="fas fa-comments"></i> Observaciones</label>
+          <textarea class="form-textarea" id="actObs-${safeTaskId}" placeholder="Observaciones sobre la tarea..." style="min-height:55px">${escapeHtml(ev.observaciones || '')}</textarea>
+        </div>
+        <div class="info-edit-row">
+          <button class="btn-secondary" onclick="cancelEditActEval()">Cancelar</button>
+          <button class="btn-primary" onclick="saveActEval('${safeTaskId}')"><i class="fas fa-save"></i> Guardar</button>
+        </div>
+      </div>`;
+  } else {
+    const chips = (lista, clase) => lista.length > 0
+      ? lista.map(v => `<span class="tarea-chip ${clase}">${escapeHtml(v)}</span>`).join('')
+      : '<span class="tarea-vacio">Sin especificar</span>';
+    cuerpoHtml = `
+      <div class="tarea-card-cuerpo">
+        <div class="tarea-elemento">
+          <div class="tarea-elemento-label"><i class="fas fa-bullseye"></i> Evaluación tarea ${ordinal}. Objeto</div>
+          <div class="tarea-elemento-valor">${ev.objeto ? escapeHtml(ev.objeto) : '<span class="tarea-vacio">Sin especificar</span>'}</div>
+        </div>
+        <div class="tarea-elemento">
+          <div class="tarea-elemento-label"><i class="fas fa-clipboard-check"></i> Evaluación</div>
+          <div class="tarea-elemento-valor">${chips(herrList, 'herr')}</div>
+          ${herrList.includes('Otras') && ev.herramientasDetalle ? `<div class="tarea-detalle-texto"><strong>Detalle:</strong> ${escapeHtml(ev.herramientasDetalle)}</div>` : ''}
+        </div>
+        <div class="tarea-elemento">
+          <div class="tarea-elemento-label"><i class="fas fa-users"></i> Grupos responsables / participantes</div>
+          <div class="tarea-elemento-valor">${chips(grupList, 'resp')}</div>
+          ${grupList.includes('Otros') && ev.responsablesDetalle ? `<div class="tarea-detalle-texto"><strong>Detalle:</strong> ${escapeHtml(ev.responsablesDetalle)}</div>` : ''}
+        </div>
+        <div class="tarea-elemento">
+          <div class="tarea-elemento-label"><i class="fas fa-calendar-alt"></i> Temporalización</div>
+          <div class="tarea-elemento-valor">${chips(tempList, 'temp')}</div>
+        </div>
+        <div class="tarea-elemento">
+          <div class="tarea-elemento-label"><i class="fas fa-comments"></i> Observaciones</div>
+          <div class="tarea-elemento-valor">${ev.observaciones ? escapeHtml(ev.observaciones) : '<span class="tarea-vacio">Sin especificar</span>'}</div>
+        </div>
+      </div>`;
+  }
 
   return `
     <div class="tarea-item${deleting ? ' tarea-deleting' : ''}">
       <h4>
-        <i class="${icono}"></i> ${escapeHtml(texto)}
-        ${canEdit ? `<button class="tarea-delete-btn" onclick="confirmDeleteActuacion('${safeTaskId}')" title="Eliminar actuación"><i class="fas fa-trash-alt"></i></button>` : ''}
+        <i class="${icono}" title="${tipoLabel}"></i>
+        <span class="tarea-num-badge" title="${tipoLabel}">Tarea ${ordinal}</span>
+        <span class="tarea-texto">${escapeHtml(texto)}</span>
+        ${canEdit ? `<button class="tarea-edit-btn" onclick="startEditActEval('${safeTaskId}')" title="Editar tarea"><i class="fas fa-pen"></i></button>
+        <button class="tarea-delete-btn" onclick="confirmDeleteActuacion('${safeTaskId}')" title="Eliminar tarea"><i class="fas fa-trash-alt"></i></button>` : ''}
       </h4>
-      ${evalHtml}
       ${deleting ? `
         <div class="tarea-delete-confirm">
-          <span><i class="fas fa-exclamation-triangle" style="color:var(--accent-color)"></i> ¿Eliminar esta actuación?</span>
+          <span><i class="fas fa-exclamation-triangle" style="color:var(--accent-color)"></i> ¿Eliminar esta tarea?</span>
           <div style="display:flex;gap:.4rem">
             <button class="btn-secondary" onclick="cancelDeleteActuacion()" style="padding:.35rem .8rem;font-size:.8rem">Cancelar</button>
             <button class="btn-danger" onclick="executeDeleteActuacion('${safeTaskId}')" style="padding:.35rem .8rem;font-size:.8rem"><i class="fas fa-trash"></i> Eliminar</button>
           </div>
         </div>
       ` : ''}
+      ${cuerpoHtml}
       ${canEdit ? `<div class="estado-tarea">
         <button class="estado-btn no-iniciado ${estado==='no-iniciado'?'active':''}" onclick="handleEstadoChange('${taskId}','no-iniciado')">No iniciada</button>
         <button class="estado-btn en-proceso ${estado==='en-proceso'?'active':''}" onclick="handleEstadoChange('${taskId}','en-proceso')">En proceso</button>
         <button class="estado-btn conseguido ${estado==='conseguido'?'active':''}" onclick="handleEstadoChange('${taskId}','conseguido')">Conseguida</button>
-      </div>
-      <div class="tarea-comentario">
-        <label class="tarea-comentario-label" for="tareaComentario-${safeTaskId}">Comentario (opcional)</label>
-        <textarea class="tarea-comentario-textarea" id="tareaComentario-${safeTaskId}" placeholder="Escribe un comentario..." onblur="handleComentarioChange('${taskId}',this.value)">${escapeHtml(state.comentariosTareas[taskId] || '')}</textarea>
       </div>` : `<div class="estado-tarea">
         <button class="estado-btn no-iniciado ${estado==='no-iniciado'?'active':''}" style="pointer-events:none;opacity:.7">No iniciada</button>
         <button class="estado-btn en-proceso ${estado==='en-proceso'?'active':''}" style="pointer-events:none;opacity:.7">En proceso</button>
         <button class="estado-btn conseguido ${estado==='conseguido'?'active':''}" style="pointer-events:none;opacity:.7">Conseguida</button>
-      </div>
-      ${(state.comentariosTareas[taskId] || '') ? `<div class="tarea-comentario tarea-comentario-readonly"><label class="tarea-comentario-label">Comentario</label><div class="tarea-comentario-texto">${escapeHtml(state.comentariosTareas[taskId])}</div></div>` : ''}`}
+      </div>`}
     </div>`;
 }
 
@@ -1988,10 +2150,11 @@ function renderSteam(container) {
       <ul class="lineas-list" style="margin-top:1rem">
         ${group.lineas.map(linea => `
         <li class="linea-item" onclick="goSteamLineaDetalle('${group.ambitoId}', ${escapeAttr(JSON.stringify(linea))})">
-          <div class="linea-badge" style="background:var(--steam-color)">${linea.id}</div>
+          <div class="linea-badge" style="background:var(--steam-color)">${codigoLinea(group.ambitoId, linea.id)}</div>
           <div style="flex:1">
             <div style="font-weight:600;margin-bottom:.3rem">${escapeHtml(linea.titulo)}</div>
             <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+              <span class="badge ${linea.tipo === 'intervencion' ? 'badge-tipo' : 'badge-ambito'}"><i class="fas ${linea.tipo === 'intervencion' ? 'fa-tasks' : 'fa-chalkboard-teacher'}"></i> ${linea.tipo === 'intervencion' ? 'A realizar en el centro' : 'Formación del profesorado'}</span>
               <span class="badge badge-steam"><i class="fas fa-robot"></i> STEAM 4.0</span>
             </div>
           </div>
@@ -2081,175 +2244,236 @@ function confirmDeleteSteamLinea(ambitoId, linea) {
 }
 
 // ==================== RENDER: CONSULTAS ====================
-function renderConsultas(container) {
-  const responsables = getAllResponsables();
-  // Si el responsable guardado ya no existe en el plan, volvemos a "todos" para que
-  // el filtro que se ve coincida con el que se aplica.
-  if (state.consultaResponsable !== 'todos' && !responsables.includes(state.consultaResponsable)) {
-    state.consultaResponsable = 'todos';
-  }
+const TIPOS_LINEA_INFO = {
+  formacion: { label: 'Formación del profesorado', icon: 'fa-chalkboard-teacher', clase: 'badge-ambito' },
+  intervencion: { label: 'A realizar en el centro', icon: 'fa-tasks', clase: 'badge-tipo' }
+};
 
-  let html = `
-    <div class="seccion-cabecera">
-      <h2 class="section-title">Consultas del Plan de Actuación Digital</h2>
-      <button class="volver-btn" onclick="goInicio()"><i class="fas fa-arrow-left"></i> Volver al inicio</button>
-    </div>
-    <p>Utiliza los filtros para buscar tareas específicas por responsables o trimestres.</p>
-    <div class="consultas-section">
-      <h3><i class="fas fa-filter"></i> Filtros de búsqueda</h3>
-      <div class="filtros-avanzados">
-        <div class="filtro-group">
-          <label>Ámbito:</label>
-          <select class="filtro-select" id="consultaAmbitoSel" onchange="state.consultaAmbito=this.value">
-            <option value="todos" ${state.consultaAmbito==='todos'?'selected':''}>Todos los ámbitos</option>
-            <option value="organizacion" ${state.consultaAmbito==='organizacion'?'selected':''}>Organización del Centro</option>
-            <option value="informacion" ${state.consultaAmbito==='informacion'?'selected':''}>Información y Comunicación</option>
-            <option value="procesos" ${state.consultaAmbito==='procesos'?'selected':''}>Procesos de Enseñanza Aprendizaje</option>
-          </select>
-        </div>
-        <div class="filtro-group">
-          <label>Responsable:</label>
-          <select class="filtro-select" id="consultaRespSel" onchange="state.consultaResponsable=this.value">
-            <option value="todos" ${state.consultaResponsable==='todos'?'selected':''}>Todos los responsables</option>
-            ${responsables.map(r => `<option value="${escapeAttr(r)}" ${state.consultaResponsable===r?'selected':''}>${escapeHtml(r)}</option>`).join('')}
-          </select>
-        </div>
-        <div class="filtro-group">
-          <label>Trimestre:</label>
-          <select class="filtro-select" id="consultaTrimSel" onchange="state.consultaTrimestre=this.value">
-            <option value="todos" ${state.consultaTrimestre==='todos'?'selected':''}>Todos los trimestres</option>
-            <option value="Primer trimestre" ${state.consultaTrimestre==='Primer trimestre'?'selected':''}>Primer trimestre</option>
-            <option value="Segundo trimestre" ${state.consultaTrimestre==='Segundo trimestre'?'selected':''}>Segundo trimestre</option>
-            <option value="Tercer trimestre" ${state.consultaTrimestre==='Tercer trimestre'?'selected':''}>Tercer trimestre</option>
-          </select>
-        </div>
-        <div class="filtro-group">
-          <label>Tipo de tarea:</label>
-          <select class="filtro-select" id="consultaTipoSel" onchange="state.consultaTipo=this.value">
-            <option value="todos" ${state.consultaTipo==='todos'?'selected':''}>Todos los tipos</option>
-            <option value="formacion" ${state.consultaTipo==='formacion'?'selected':''}>Formación</option>
-            <option value="intervencion" ${state.consultaTipo==='intervencion'?'selected':''}>Actuaciones en el centro</option>
-          </select>
-        </div>
-      </div>
-      <button class="volver-btn" style="background:var(--success-color)" onclick="realizarBusqueda()"><i class="fas fa-search"></i> Buscar</button>
-      <div class="resultados-consulta" id="consultaResultados">
-        ${!state.consultaHasSearched ? '<p>No se encontraron tareas que coincidan con los criterios de búsqueda.</p>' : ''}
-      </div>
-    </div>`;
+const ESTADOS_TAREA_INFO = {
+  'no-iniciado': { label: 'No iniciada', color: '#95a5a6' },
+  'en-proceso': { label: 'En proceso', color: '#f39c12' },
+  'conseguido': { label: 'Conseguida', color: '#27ae60' }
+};
 
-  container.innerHTML = html;
-
-  if (state.consultaHasSearched) {
-    renderConsultaResultados();
-  }
+function ESTADO_LABEL(estado) {
+  return ESTADOS_TAREA_INFO[estado] ? ESTADOS_TAREA_INFO[estado].label : estado;
 }
 
-function realizarBusqueda() {
-  state.consultaHasSearched = true;
-  renderConsultaResultados();
+// Añade o quita un valor de una lista de filtro del informe (selección múltiple)
+function toggleInformeLista(campo, valor, marcado) {
+  const lista = state.informe[campo];
+  const i = lista.indexOf(valor);
+  if (marcado && i === -1) lista.push(valor);
+  else if (!marcado && i !== -1) lista.splice(i, 1);
 }
 
-function renderConsultaResultados() {
-  const container = document.getElementById('consultaResultados');
-  if (!container) return;
+// Marca o desmarca de golpe todos los valores de una lista de filtro
+function marcarTodosInforme(campo, valores, marcado) {
+  state.informe[campo] = marcado ? valores.slice() : [];
+  renderView();
+}
 
-  let results = '';
-
-  Object.entries(state.planData).forEach(([ambitoId, ambito]) => {
-    if (state.consultaAmbito !== 'todos' && state.consultaAmbito !== ambitoId) return;
+// Devuelve las tareas del plan que cumplen los filtros del informe, en orden
+// ámbito -> línea -> grupo de tarea, con su contexto (ámbito, línea, tipo,
+// estado y listas efectivas de responsables y temporalización).
+function obtenerTareasInforme() {
+  const f = state.informe;
+  const resultados = [];
+  AMBITOS.forEach(ambitoId => {
+    if (!f.ambitos.includes(ambitoId)) return;
+    const ambito = state.planData[ambitoId];
+    if (!ambito) return;
     (ambito.lineas || []).forEach(linea => {
-      const matchResp = state.consultaResponsable === 'todos' || (linea.responsables || []).includes(state.consultaResponsable) || (linea.tareasFormacion || []).some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.responsables && t.evaluacion.responsables.includes(state.consultaResponsable)) || (linea.tareasIntervencion || []).some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.responsables && t.evaluacion.responsables.includes(state.consultaResponsable));
-      const matchTrim = state.consultaTrimestre === 'todos' || (linea.temporalizacion || []).includes(state.consultaTrimestre) || (linea.tareasFormacion || []).some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.temporalizacion && t.evaluacion.temporalizacion.includes(state.consultaTrimestre)) || (linea.tareasIntervencion || []).some(t => typeof t === 'object' && t.evaluacion && t.evaluacion.temporalizacion && t.evaluacion.temporalizacion.includes(state.consultaTrimestre));
-      if (matchResp && matchTrim) {
-        if (state.consultaTipo === 'todos' || state.consultaTipo === 'formacion') {
-          (linea.tareasFormacion || []).forEach(tarea => {
-            const texto = typeof tarea === 'string' ? tarea : (tarea.texto || '');
-            const ev = typeof tarea === 'object' && tarea.evaluacion ? tarea.evaluacion : {};
-            const respList = (ev.responsables && ev.responsables.length > 0) ? ev.responsables : linea.responsables;
-            const tempList = (ev.temporalizacion && ev.temporalizacion.length > 0) ? ev.temporalizacion : linea.temporalizacion;
-            results += `<div class="resultado-item">
-              <h4>${escapeHtml(texto)}</h4>
-              <div style="margin-top:.8rem">
-                <span class="badge badge-ambito">${escapeHtml(ambito.titulo)}</span>
-                <span class="badge badge-tipo">Formación</span>
-                ${linea.steam4 ? '<span class="badge badge-steam"><i class="fas fa-robot"></i> STEAM 4.0</span>' : ''}
-                ${tempList.map(t => `<span class="badge badge-trimestre">${escapeHtml(t)}</span>`).join('')}
-              </div>
-              <p style="margin-top:.8rem"><strong>Línea:</strong> Línea ${linea.id}: ${escapeHtml(linea.titulo)}</p>
-              <p style="margin-top:.5rem"><strong>Responsables:</strong> ${escapeHtml(respList.join(', '))}</p>
-            </div>`;
+      const tipoLinea = linea.tipo === 'intervencion' ? 'intervencion' : 'formacion';
+      if (!f.tiposLinea.includes(tipoLinea)) return;
+      const grupos = [
+        { lista: linea.tareasFormacion || [], tipoId: 'formacion' },
+        { lista: linea.tareasIntervencion || [], tipoId: 'intervencion' }
+      ];
+      grupos.forEach(({ lista, tipoId }) => {
+        lista.forEach((tarea, index) => {
+          const ev = (tarea && tarea.evaluacion) || {};
+          const idTarea = `${ambitoId}-${linea.id}-${tipoId}-${index}`;
+          const estado = state.estadosTareas[idTarea] || 'no-iniciado';
+          if (!f.estados.includes(estado)) return;
+          const respArr = (Array.isArray(ev.responsables) && ev.responsables.length > 0) ? ev.responsables : (linea.responsables || []);
+          const tempArr = (Array.isArray(ev.temporalizacion) && ev.temporalizacion.length > 0) ? ev.temporalizacion : (linea.temporalizacion || []);
+          if (f.responsables.length > 0 && !f.responsables.some(r => respArr.includes(r))) return;
+          if (f.trimestres.length > 0 && !f.trimestres.some(t => tempArr.includes(t))) return;
+          resultados.push({
+            ambitoId: ambitoId,
+            ambito: ambito,
+            linea: linea,
+            tipoId: tipoId,
+            tipoLabel: TIPOS_LINEA_INFO[tipoId].label,
+            tarea: tarea,
+            estado: estado,
+            respArr: respArr,
+            tempArr: tempArr
           });
-        }
-        if (state.consultaTipo === 'todos' || state.consultaTipo === 'intervencion') {
-          (linea.tareasIntervencion || []).forEach(tarea => {
-            const texto = typeof tarea === 'string' ? tarea : tarea.texto;
-            const ev = typeof tarea === 'object' && tarea.evaluacion ? tarea.evaluacion : {};
-            const respList = (ev.responsables && ev.responsables.length > 0) ? ev.responsables : linea.responsables;
-            const tempList = (ev.temporalizacion && ev.temporalizacion.length > 0) ? ev.temporalizacion : linea.temporalizacion;
-            results += `<div class="resultado-item">
-              <h4>${escapeHtml(texto)}</h4>
-              <div style="margin-top:.8rem">
-                <span class="badge badge-ambito">${escapeHtml(ambito.titulo)}</span>
-                <span class="badge badge-tipo">Actuación en el centro</span>
-                ${linea.steam4 ? '<span class="badge badge-steam"><i class="fas fa-robot"></i> STEAM 4.0</span>' : ''}
-                ${tempList.map(t => `<span class="badge badge-trimestre">${escapeHtml(t)}</span>`).join('')}
-              </div>
-              <p style="margin-top:.8rem"><strong>Línea:</strong> Línea ${linea.id}: ${escapeHtml(linea.titulo)}</p>
-              <p style="margin-top:.5rem"><strong>Responsables:</strong> ${escapeHtml(respList.join(', '))}</p>
-              ${ev.herramientas ? '<p style="margin-top:.3rem"><strong>Herramientas:</strong> ' + escapeHtml(Array.isArray(ev.herramientas) ? ev.herramientas.join(', ') : ev.herramientas) + '</p>' : ''}
-            </div>`;
-          });
-        }
-      }
+        });
+      });
     });
   });
-
-  container.innerHTML = results || '<p>No se encontraron tareas que coincidan con los criterios de búsqueda.</p>';
+  return resultados;
 }
 
-// ==================== RENDER: PDF ====================
-function renderPdf(container) {
-  const msgHtml = state.pdfMessage ? `<div class="modal-message ${state.pdfMessage.type}">${escapeHtml(state.pdfMessage.text)}</div>` : '';
+// Texto resumido de los criterios aplicados, para el encabezado del PDF
+function criteriosInformeTexto() {
+  const f = state.informe;
+  const ambitosTxt = f.ambitos.length === AMBITOS.length ? 'Todos los ámbitos' : AMBITOS.filter(a => f.ambitos.includes(a)).map(a => AMBITO_INFO[a].titulo).join(', ');
+  const tiposTxt = f.tiposLinea.length === Object.keys(TIPOS_LINEA_INFO).length ? 'Todos los tipos de línea' : f.tiposLinea.map(t => TIPOS_LINEA_INFO[t].label).join(', ');
+  const respTxt = f.responsables.length === 0 ? 'Todos los responsables' : f.responsables.join(', ');
+  const trimTxt = f.trimestres.length === 0 ? 'Todos los trimestres' : f.trimestres.join(', ');
+  const estadosTxt = f.estados.length === 3 ? 'Todos los estados' : f.estados.map(e => ESTADO_LABEL(e)).join(', ');
+  return ['Ámbitos: ' + ambitosTxt, 'Tipos de línea: ' + tiposTxt, 'Responsables: ' + respTxt, 'Trimestres: ' + trimTxt, 'Estados: ' + estadosTxt];
+}
+
+function renderConsultas(container) {
+  const f = state.informe;
+  const responsables = getAllResponsables();
+  // Los responsables marcados que ya no existen en el plan se ignoran
+  f.responsables = f.responsables.filter(r => responsables.includes(r));
+  const msgHtml = state.informeMessage ? `<div class="modal-message ${state.informeMessage.type}">${escapeHtml(state.informeMessage.text)}</div>` : '';
+
+  const chk = (campo, valor, label) =>
+    `<div class="checkbox-item"><input type="checkbox" id="inf-${campo}-${escapeAttr(valor)}" ${f[campo].includes(valor)?'checked':''} onchange="toggleInformeLista('${campo}', '${escapeAttr(jsEscape(valor))}', this.checked)"><label for="inf-${campo}-${escapeAttr(valor)}">${escapeHtml(label)}</label></div>`;
 
   container.innerHTML = `
     <div class="seccion-cabecera">
-      <h2 class="section-title">Exportar tareas a PDF</h2>
+      <h2 class="section-title">Consultas e informes del Plan de Actuación Digital</h2>
       <button class="volver-btn" onclick="goInicio()"><i class="fas fa-arrow-left"></i> Volver al inicio</button>
     </div>
-    <p>Selecciona los filtros para generar un PDF con las tareas del plan de actuación digital.</p>
-    <div class="pdf-section">
-      <h3><i class="fas fa-filter"></i> Filtros de exportación</h3>
-      <div class="filtros-pdf">
-        <div class="filtro-pdf-group">
-          <h4>Estados de tareas</h4>
+    <p>Combina los criterios que necesites (todos admiten selección múltiple) y genera el informe en pantalla o expórtalo a PDF. Si no marcas ningún responsable o trimestre, se incluyen todos.</p>
+    <div class="consultas-section">
+      <h3><i class="fas fa-filter"></i> Criterios del informe</h3>
+      <div class="filtros-avanzados">
+        <div class="filtro-group">
+          <label>Ámbitos:</label>
           <div class="checkbox-group">
-            <div class="checkbox-item"><input type="checkbox" id="pdfNI" ${state.pdfNoIniciado?'checked':''} onchange="state.pdfNoIniciado=this.checked"><label>No iniciada</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="pdfEP" ${state.pdfEnProceso?'checked':''} onchange="state.pdfEnProceso=this.checked"><label>En proceso</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="pdfCS" ${state.pdfConseguido?'checked':''} onchange="state.pdfConseguido=this.checked"><label>Conseguida</label></div>
+            ${chk('ambitos', 'organizacion', 'Organización del Centro')}
+            ${chk('ambitos', 'informacion', 'Información y Comunicación')}
+            ${chk('ambitos', 'procesos', 'Procesos de Enseñanza Aprendizaje')}
           </div>
         </div>
-        <div class="filtro-pdf-group">
-          <h4>Ámbitos</h4>
+        <div class="filtro-group">
+          <label>Tipos de línea de actuación:</label>
           <div class="checkbox-group">
-            <div class="checkbox-item"><input type="checkbox" id="pdfOrg" ${state.pdfOrganizacion?'checked':''} onchange="state.pdfOrganizacion=this.checked"><label>Organización del Centro</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="pdfInf" ${state.pdfInformacion?'checked':''} onchange="state.pdfInformacion=this.checked"><label>Información y Comunicación</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="pdfProc" ${state.pdfProcesos?'checked':''} onchange="state.pdfProcesos=this.checked"><label>Procesos de Enseñanza Aprendizaje</label></div>
+            ${chk('tiposLinea', 'formacion', 'Formación del profesorado')}
+            ${chk('tiposLinea', 'intervencion', 'A realizar en el centro')}
           </div>
         </div>
-        <div class="filtro-pdf-group">
-          <h4>Tipo de tarea</h4>
+        <div class="filtro-group">
+          <label>Trimestres (uno o más):</label>
           <div class="checkbox-group">
-            <div class="checkbox-item"><input type="checkbox" id="pdfForm" ${state.pdfFormacion?'checked':''} onchange="state.pdfFormacion=this.checked"><label>Formación</label></div>
-            <div class="checkbox-item"><input type="checkbox" id="pdfInt" ${state.pdfIntervencion?'checked':''} onchange="state.pdfIntervencion=this.checked"><label>Intervención</label></div>
+            ${TRIMESTRES_TAREA.map(t => chk('trimestres', t, t)).join('')}
           </div>
+        </div>
+        <div class="filtro-group">
+          <label>Estados de las tareas:</label>
+          <div class="checkbox-group">
+            ${chk('estados', 'no-iniciado', 'No iniciada')}
+            ${chk('estados', 'en-proceso', 'En proceso')}
+            ${chk('estados', 'conseguido', 'Conseguida')}
+          </div>
+        </div>
+      </div>
+      <div class="filtro-group" style="margin-top:1.5rem">
+        <label>Grupos responsables / participantes:</label>
+        <div style="font-size:.8rem;margin-bottom:.3rem">
+          <a href="javascript:void(0)" onclick="marcarTodosInforme('responsables', getAllResponsables(), true)">Marcar todos</a> ·
+          <a href="javascript:void(0)" onclick="marcarTodosInforme('responsables', getAllResponsables(), false)">Quitar todos</a>
+          <span style="color:#888">(sin marcados se incluyen todos)</span>
+        </div>
+        <div class="checkbox-group" style="max-height:170px;overflow-y:auto;border:1px solid #eee;border-radius:8px;padding:.8rem">
+          ${responsables.map(r => chk('responsables', r, r)).join('')}
         </div>
       </div>
       ${msgHtml}
-      <div class="btn-row" style="justify-content:flex-start;margin-top:1rem">
-        <button class="btn-primary" onclick="generarPDF()" style="background:#e74c3c"><i class="fas fa-file-pdf"></i> Generar PDF</button>
+      <div class="btn-row" style="justify-content:flex-start;margin-top:1.5rem">
+        <button class="btn-primary" style="background:var(--success-color)" onclick="generarInforme()"><i class="fas fa-search"></i> Generar informe</button>
+        <button class="btn-primary" style="background:#e74c3c" onclick="generarPDF()"><i class="fas fa-file-pdf"></i> Exportar a PDF</button>
       </div>
+      <div class="resultados-consulta" id="informeResultados"></div>
     </div>`;
+
+  if (f.hasSearched) {
+    renderInformeResultados();
+  }
+}
+
+function generarInforme() {
+  state.informe.hasSearched = true;
+  renderInformeResultados();
+}
+
+function construirResultadoConsulta(tarea, ambito, linea, tipoLabel, estado, ambitoId) {
+  const texto = (tarea && tarea.texto) || '';
+  const ev = (tarea && tarea.evaluacion) || {};
+  const respList = (Array.isArray(ev.responsables) && ev.responsables.length > 0) ? ev.responsables : (linea.responsables || []);
+  const tempList = (Array.isArray(ev.temporalizacion) && ev.temporalizacion.length > 0) ? ev.temporalizacion : (linea.temporalizacion || []);
+  const herrList = Array.isArray(ev.herramientas) ? ev.herramientas : [];
+  const herrTxt = herrList.join(', ') + ((herrList.includes('Otras') && ev.herramientasDetalle) ? ' (' + ev.herramientasDetalle + ')' : '');
+  const estInfo = ESTADOS_TAREA_INFO[estado] || ESTADOS_TAREA_INFO['no-iniciado'];
+  return `<div class="resultado-item">
+    <h4>${escapeHtml(texto)}</h4>
+    <div style="margin-top:.8rem">
+      <span class="badge badge-ambito">${escapeHtml(ambito.titulo)}</span>
+      <span class="badge badge-tipo">${escapeHtml(tipoLabel)}</span>
+      <span class="badge" style="background:${estInfo.color};color:#fff"><i class="fas fa-clock"></i> ${ESTADO_LABEL(estado)}</span>
+      ${linea.steam4 ? '<span class="badge badge-steam"><i class="fas fa-robot"></i> STEAM 4.0</span>' : ''}
+      ${tempList.map(t => `<span class="badge badge-trimestre">${escapeHtml(t)}</span>`).join('')}
+    </div>
+    <p style="margin-top:.8rem"><strong>Línea:</strong> Línea ${codigoLinea(ambitoId, linea.id)}: ${escapeHtml(linea.titulo)}</p>
+    <p style="margin-top:.5rem"><strong>Grupos responsables / participantes:</strong> ${escapeHtml(respList.join(', '))}</p>
+    ${ev.objeto ? `<p style="margin-top:.3rem"><strong>Objeto de evaluación:</strong> ${escapeHtml(ev.objeto)}</p>` : ''}
+    ${herrTxt ? `<p style="margin-top:.3rem"><strong>Evaluación:</strong> ${escapeHtml(herrTxt)}</p>` : ''}
+    ${ev.observaciones ? `<p style="margin-top:.3rem"><strong>Observaciones:</strong> ${escapeHtml(ev.observaciones)}</p>` : ''}
+  </div>`;
+}
+
+// Pinta el informe en pantalla: resumen con totales y resultados agrupados por ámbito
+function renderInformeResultados() {
+  const container = document.getElementById('informeResultados');
+  if (!container) return;
+
+  const tareas = obtenerTareasInforme();
+  const criterios = criteriosInformeTexto();
+
+  if (tareas.length === 0) {
+    container.innerHTML = `
+      <div class="modal-message error">No hay tareas que coincidan con los criterios seleccionados</div>
+      <p style="font-size:.85rem;color:#888;margin-top:.5rem">${criterios.map(escapeHtml).join(' · ')}</p>`;
+    return;
+  }
+
+  const nConseguidas = tareas.filter(t => t.estado === 'conseguido').length;
+  const nEnProceso = tareas.filter(t => t.estado === 'en-proceso').length;
+  const nNoIniciadas = tareas.filter(t => t.estado === 'no-iniciado').length;
+  const pctConseguidas = Math.round(nConseguidas * 100 / tareas.length);
+  const lineasAfectadas = new Set(tareas.map(t => t.ambitoId + '-' + t.linea.id)).size;
+  const ambitosAfectados = new Set(tareas.map(t => t.ambitoId)).size;
+
+  let html = `
+    <div style="background:#f0f7ff;border-radius:10px;padding:1.2rem 1.5rem;margin-top:2rem">
+      <h4 style="margin-bottom:.6rem"><i class="fas fa-chart-pie"></i> Resumen del informe</h4>
+      <p style="margin-bottom:.3rem"><strong>${tareas.length}</strong> tareas de <strong>${lineasAfectadas}</strong> líneas de actuación en <strong>${ambitosAfectados}</strong> ámbito(s)</p>
+      <p style="margin-bottom:.3rem">Conseguidas: <strong style="color:#27ae60">${nConseguidas} (${pctConseguidas}%)</strong> ·
+        En proceso: <strong style="color:#f39c12">${nEnProceso}</strong> ·
+        No iniciadas: <strong style="color:#95a5a6">${nNoIniciadas}</strong></p>
+      <p style="font-size:.8rem;color:#888;margin:0">${criterios.map(escapeHtml).join(' · ')}</p>
+    </div>`;
+
+  let ambitoActual = null;
+  tareas.forEach(item => {
+    if (item.ambitoId !== ambitoActual) {
+      ambitoActual = item.ambitoId;
+      html += `<h3 style="margin-top:1.8rem;margin-bottom:1rem;color:#2c3e50"><i class="fas ${AMBITO_INFO[item.ambitoId].icon}"></i> ${escapeHtml(item.ambito.titulo)}</h3>`;
+    }
+    html += construirResultadoConsulta(item.tarea, item.ambito, item.linea, item.tipoLabel, item.estado, item.ambitoId);
+  });
+
+  container.innerHTML = html;
 }
 
 // ==================== ESTADO CHANGE ====================
@@ -2267,27 +2491,6 @@ async function handleEstadoChange(taskId, estado) {
     renderView();
     // Show error toast AFTER renderView so it's not destroyed
     showToast('Error al guardar estado', 'error');
-  }
-}
-
-// ==================== COMENTARIO CHANGE ====================
-async function handleComentarioChange(taskId, value) {
-  const trimmed = (value || '').trim();
-  const newComentarios = { ...state.comentariosTareas };
-  if (trimmed) {
-    newComentarios[taskId] = trimmed;
-  } else {
-    delete newComentarios[taskId];
-  }
-  state.comentariosTareas = newComentarios;
-  try {
-    await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('estadosTareas').doc('global').set({ estados: state.estadosTareas, comentarios: newComentarios }, { merge: true });
-  } catch (err) {
-    console.error('Error saving comentario:', err);
-    const ta = document.getElementById('tareaComentario-' + taskId);
-    if (ta) ta.style.borderColor = 'var(--accent-color)';
-    showToast('Error al guardar comentario', 'error');
-    setTimeout(() => { if (ta) ta.style.borderColor = ''; }, 2200);
   }
 }
 
@@ -2511,7 +2714,30 @@ function openEditLinea(linea, isNew) {
     document.getElementById('formDescripcion').value = linea.descripcion;
     document.getElementById('formSteam4').checked = linea.steam4;
   }
+
+  // Tipo de línea: el guardado o el derivado de la línea que se edita
+  const tipoLinea = (!isNew && linea && linea.tipo === 'intervencion') ? 'intervencion' : 'formacion';
+  document.getElementById('formTipoFormacion').checked = tipoLinea === 'formacion';
+  document.getElementById('formTipoIntervencion').checked = tipoLinea === 'intervencion';
+  updateLineaTipoStyle();
+
   document.getElementById('editModal').classList.add('active');
+}
+
+function updateLineaTipoStyle() {
+  const fl = document.getElementById('lineaTipoFormLabel');
+  const il = document.getElementById('lineaTipoIntervLabel');
+  if (document.getElementById('formTipoFormacion').checked) {
+    fl.style.borderColor = 'var(--primary-color)';
+    fl.style.background = 'rgba(52,152,219,.08)';
+    il.style.borderColor = '#ddd';
+    il.style.background = 'transparent';
+  } else {
+    il.style.borderColor = 'var(--success-color)';
+    il.style.background = 'rgba(46,204,113,.08)';
+    fl.style.borderColor = '#ddd';
+    fl.style.background = 'transparent';
+  }
 }
 function closeEditModal() {
   document.getElementById('editModal').classList.remove('active');
@@ -2543,11 +2769,14 @@ async function saveLinea() {
   }
 
   const steam4 = document.getElementById('formSteam4').checked;
+  const tipoSel = document.querySelector('input[name="formTipo"]:checked');
+  const nuevoTipo = tipoSel ? tipoSel.value : 'formacion';
 
   if (state.isNewLinea) {
     // New line: only basic fields, empty tasks
     const newLinea = {
       id: state.editingLinea.id,
+      tipo: nuevoTipo,
       titulo: titulo,
       descripcion: descripcion,
       tareasFormacion: [],
@@ -2567,7 +2796,7 @@ async function saveLinea() {
       const freshSnap = await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(state.currentAmbitoId).get();
       const freshData = freshSnap.data();
       if (freshData) {
-        state.planData[state.currentAmbitoId] = freshData;
+        state.planData[state.currentAmbitoId] = normalizarAmbitoData(freshData);
         const createdLinea = freshData.lineas.find(l => l.id === newLinea.id);
         if (createdLinea) {
           goLineaDetalle(createdLinea);
@@ -2579,24 +2808,46 @@ async function saveLinea() {
       _savingLinea = false;
     }
   } else {
-    // Editing existing line: only update título, descripción, steam4 — preserve existing tasks
+    // Editing existing line: update título, descripción, steam4 y tipo — preserve tasks.
+    // Si cambia el tipo de línea, todas sus tareas pasan al grupo del nuevo tipo
+    // y se re-mapean los estados/comentarios guardados de esas tareas.
     if (_savingLinea) return;
     _savingLinea = true;
+    const lineaActual = ambitoData.lineas.find(l => l.id === state.editingLinea.id);
+    const tipoAnterior = lineaActual ? lineaActual.tipo : nuevoTipo;
+    const cambiaTipo = tipoAnterior !== nuevoTipo;
     const newLineas = ambitoData.lineas.map(l => {
       if (l.id === state.editingLinea.id) {
-        return { ...l, titulo: titulo, descripcion: descripcion, steam4: steam4 };
+        const actualizada = { ...l, titulo: titulo, descripcion: descripcion, steam4: steam4, tipo: nuevoTipo };
+        if (cambiaTipo) {
+          const combinadas = [...(l.tareasFormacion || []), ...(l.tareasIntervencion || [])];
+          if (nuevoTipo === 'formacion') {
+            actualizada.tareasFormacion = combinadas;
+            actualizada.tareasIntervencion = [];
+          } else {
+            actualizada.tareasFormacion = [];
+            actualizada.tareasIntervencion = combinadas;
+          }
+        }
+        return actualizada;
       }
       return l;
     });
     try {
       await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).update({ lineas: newLineas });
+      if (cambiaTipo && lineaActual) {
+        await migrarEstadosCambioTipoLinea(ambitoId, state.editingLinea.id, nuevoTipo, (lineaActual.tareasFormacion || []).length);
+      }
       // Update local state right away so the new name is visible without waiting for the snapshot
       if (state.planData[ambitoId]) state.planData[ambitoId].lineas = newLineas;
       if (state.currentLinea && state.currentLinea.id === state.editingLinea.id) {
-        state.currentLinea = { ...state.currentLinea, titulo: titulo, descripcion: descripcion, steam4: steam4 };
+        state.currentLinea = newLineas.find(l => l.id === state.currentLinea.id) || state.currentLinea;
       }
       closeEditModal();
       renderView();
+      if (cambiaTipo) {
+        showToast('Tipo de línea actualizado: las tareas se han reclasificado', 'success');
+      }
     } catch (err) {
       document.getElementById('editModalMessage').innerHTML = '<div class="modal-message error">Error al guardar la línea</div>';
     } finally {
@@ -2605,16 +2856,62 @@ async function saveLinea() {
   }
 }
 
-// ==================== NEW ACTUACIÓN MODAL ====================
+// Re-mapea los estados y comentarios de las tareas de una línea cuyo tipo ha
+// cambiado. Las claves tienen el formato ambito-linea-TIPO-indice; al mover las
+// tareas al nuevo grupo, las tareas de formación conservan su índice y las de
+// intervención pasan a continuar la numeración tras ellas (orden combinado).
+async function migrarEstadosCambioTipoLinea(ambitoId, lineaId, nuevoTipo, numFormacion) {
+  const patron = new RegExp('^' + ambitoId + '-' + lineaId + '-(formacion|intervencion)-(\\d+)$');
+  const remap = key => {
+    const m = key.match(patron);
+    if (!m) return key;
+    const idx = parseInt(m[2], 10);
+    const nuevoIdx = m[1] === 'formacion' ? idx : numFormacion + idx;
+    return ambitoId + '-' + lineaId + '-' + nuevoTipo + '-' + nuevoIdx;
+  };
+  const newEstados = {};
+  const newComentarios = {};
+  let afectados = 0;
+  Object.entries(state.estadosTareas || {}).forEach(([k, v]) => {
+    const nk = remap(k);
+    if (nk !== k) afectados++;
+    newEstados[nk] = v;
+  });
+  Object.entries(state.comentariosTareas || {}).forEach(([k, v]) => {
+    newComentarios[remap(k)] = v;
+  });
+  if (afectados === 0) return;
+  try {
+    await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('estadosTareas').doc('global').set({ estados: newEstados, comentarios: newComentarios });
+    state.estadosTareas = newEstados;
+    state.comentariosTareas = newComentarios;
+  } catch (err) {
+    console.error('Error migrando estados al cambiar el tipo de línea:', err);
+  }
+}
+
+// ==================== NEW TAREA MODAL ====================
 function openNewActuacionModal() {
-  document.getElementById('actTipoFormacion').checked = true;
-  document.getElementById('actEnunciado').value = '';
-  document.getElementById('actAlumnado').value = '';
+  // El grupo de clasificación se preselecciona con el tipo de la línea actual
+  const tipoLinea = (state.currentLinea && state.currentLinea.tipo === 'intervencion') ? 'intervencion' : 'formacion';
+  document.getElementById('actTipoFormacion').checked = tipoLinea === 'formacion';
+  document.getElementById('actTipoIntervencion').checked = tipoLinea === 'intervencion';
+  ['actTexto-nueva', 'actObjeto-nueva', 'actHerrDetalle-nueva', 'actGrupoDetalle-nueva', 'actObs-nueva'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.querySelectorAll('#actuacionModal input[type="checkbox"]').forEach(cb => {
+    cb.checked = false;
+    const opt = cb.closest('.tarea-opt');
+    if (opt) opt.classList.remove('checked');
+  });
+  document.getElementById('actHerrDetalleWrap-nueva').style.display = 'none';
+  document.getElementById('actGrupoDetalleWrap-nueva').style.display = 'none';
   document.getElementById('actuacionModalMessage').innerHTML = '';
   updateTipoStyle();
   document.getElementById('actuacionModal').classList.add('active');
   // Focus on enunciado textarea
-  setTimeout(() => document.getElementById('actEnunciado').focus(), 100);
+  setTimeout(() => document.getElementById('actTexto-nueva').focus(), 100);
 }
 
 function closeNewActuacionModal() {
@@ -2635,32 +2932,32 @@ function updateTipoStyle() {
     formLabel.style.borderColor = '#ddd';
     formLabel.style.background = 'transparent';
   }
+  // El ordinal de la nueva tarea depende del grupo elegido: las tareas de
+  // formación del profesorado se numeran antes que las tareas a realizar en el centro.
+  const linea = state.currentLinea;
+  const lbl = document.getElementById('actObjetoLabel-nueva');
+  if (linea && lbl) {
+    const nF = (linea.tareasFormacion || []).length;
+    const nI = (linea.tareasIntervencion || []).length;
+    const tipoEl = document.querySelector('input[name="actTipo"]:checked');
+    const ordinal = (tipoEl && tipoEl.value === 'formacion') ? nF + 1 : nF + nI + 1;
+    lbl.innerHTML = '<i class="fas fa-bullseye" style="color:var(--primary-color)"></i> Evaluación tarea ' + ordinal + '. Objeto';
+  }
 }
 
 async function saveNewActuacion() {
   if (!state.currentLinea || _savingActuacion) return;
   const tipo = document.querySelector('input[name="actTipo"]:checked').value;
-  const enunciado = document.getElementById('actEnunciado').value.trim();
-  const alumnadoRaw = document.getElementById('actAlumnado').value.trim();
+  const datos = leerFormTarea('nueva');
+  const msgEl = document.getElementById('actuacionModalMessage');
 
-  if (!enunciado) {
-    document.getElementById('actuacionModalMessage').innerHTML = '<div class="modal-message error">El enunciado es obligatorio</div>';
+  if (!datos.texto) {
+    msgEl.innerHTML = '<div class="modal-message error">El enunciado de la tarea es obligatorio</div>';
     return;
   }
 
-  // Parsear alumnado: nombres separados por comas, normalizados y sin duplicados
-  const alumnadoVisto = new Set();
-  const alumnado = (alumnadoRaw ? alumnadoRaw.split(',').map(s => s.trim()).filter(s => s.length > 0) : [])
-    .filter(nombre => {
-      const clave = nombre.toLowerCase();
-      if (alumnadoVisto.has(clave)) return false;
-      alumnadoVisto.add(clave);
-      return true;
-    });
-
   const ambitoId = state.currentAmbitoId;
   const lineaId = state.currentLinea.id;
-  const msgEl = document.getElementById('actuacionModalMessage');
 
   if (_savingActuacion) return;
   _savingActuacion = true;
@@ -2680,39 +2977,31 @@ async function saveNewActuacion() {
       return;
     }
 
+    const nuevaTarea = construirTareaDesdeForm(datos);
     if (tipo === 'formacion') {
-      const newFormAct = {
-        texto: enunciado,
-        evaluacion: { responsables: [], herramientas: [], temporalizacion: [], alumnado: alumnado }
-      };
-      lineas[lineaIdx].tareasFormacion = [...(lineas[lineaIdx].tareasFormacion || []), newFormAct];
+      lineas[lineaIdx].tareasFormacion = [...(lineas[lineaIdx].tareasFormacion || []), nuevaTarea];
     } else {
-      const newAct = {
-        texto: enunciado,
-        evaluacion: { responsables: [], herramientas: [], temporalizacion: [], alumnado: alumnado }
-      };
-      lineas[lineaIdx].tareasIntervencion = [...(lineas[lineaIdx].tareasIntervencion || []), newAct];
+      lineas[lineaIdx].tareasIntervencion = [...(lineas[lineaIdx].tareasIntervencion || []), nuevaTarea];
     }
 
     await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).update({ lineas });
 
     // Update local state
-    state.planData[ambitoId] = ambitoSnap;
-    state.currentLinea = lineas[lineaIdx];
+    actualizarAmbitoLocal(ambitoId, ambitoSnap);
 
     closeNewActuacionModal();
     renderView();
 
-    showToast('Actuación añadida correctamente', 'success');
+    showToast('Tarea añadida correctamente', 'success');
   } catch (err) {
-    console.error('Error saving actuación:', err);
-    msgEl.innerHTML = '<div class="modal-message error">Error al guardar la actuación</div>';
+    console.error('Error saving tarea:', err);
+    msgEl.innerHTML = '<div class="modal-message error">Error al guardar la tarea</div>';
   } finally {
     _savingActuacion = false;
   }
 }
 
-// ==================== DELETE MODAL ====================
+// ==================== DELETE MODAL ====================// ==================== DELETE MODAL ====================
 function confirmDeleteLinea(linea) {
   state.editingLinea = linea;
   document.getElementById('deleteMessage').textContent = `¿Estás seguro de que deseas eliminar "${linea.titulo}"? Esta acción no se puede deshacer.`;
@@ -2810,7 +3099,7 @@ function renderTransferLines() {
   listEl.innerHTML = ambitoData.lineas.map(linea => `
     <li class="transfer-line-item">
       <input type="checkbox" id="trL${linea.id}" value="${linea.id}" onchange="toggleTransferLine(${linea.id})">
-      <label for="trL${linea.id}">${escapeHtml(linea.titulo)}</label>
+      <label for="trL${linea.id}"><strong>${codigoLinea(ambitoId, linea.id)}</strong> · ${escapeHtml(linea.titulo)}</label>
     </li>`).join('');
 }
 
@@ -2891,71 +3180,44 @@ function ANCHOS_COLUMNAS_PDF() {
   const MARGEN_PDF = 14;
   const ANCHO_PAGINA = 297; // A4 horizontal en mm
   const disponible = ANCHO_PAGINA - MARGEN_PDF * 2;
-  const pesos = [45, 18, 90, 22, 22, 50, 45];
+  const pesos = [42, 16, 82, 30, 22, 50, 42];
   const suma = pesos.reduce((a, b) => a + b, 0);
   const estilos = {};
   pesos.forEach((peso, i) => { estilos[i] = { cellWidth: disponible * peso / suma }; });
   return estilos;
 }
 
+// Genera el PDF del informe aplicando los mismos criterios que la vista de
+// consultas (ámbitos, tipos de línea, responsables, trimestres y estados).
 async function generarPDF() {
-  state.pdfMessage = null;
+  state.informeMessage = null;
 
-  const estadosSel = [];
-  if (state.pdfNoIniciado) estadosSel.push('no-iniciado');
-  if (state.pdfEnProceso) estadosSel.push('en-proceso');
-  if (state.pdfConseguido) estadosSel.push('conseguido');
-
-  const ambitosSel = [];
-  if (state.pdfOrganizacion) ambitosSel.push('organizacion');
-  if (state.pdfInformacion) ambitosSel.push('informacion');
-  if (state.pdfProcesos) ambitosSel.push('procesos');
-
-  const tiposSel = [];
-  if (state.pdfFormacion) tiposSel.push('formacion');
-  if (state.pdfIntervencion) tiposSel.push('intervencion');
-
-  const rows = [];
-  const ESTADO_LABEL_PDF = { 'no-iniciado': 'No iniciada', 'en-proceso': 'En proceso', 'conseguido': 'Conseguida' };
-
-  ambitosSel.forEach(ambitoId => {
-    const ambito = state.planData[ambitoId];
-    if (!ambito) return;
-    (ambito.lineas || []).forEach(linea => {
-      if (tiposSel.includes('formacion')) {
-        (linea.tareasFormacion || []).forEach((tarea, index) => {
-          const idTarea = `${ambitoId}-${linea.id}-formacion-${index}`;
-          const estado = state.estadosTareas[idTarea] || 'no-iniciado';
-          if (estadosSel.includes(estado)) {
-            const texto = typeof tarea === 'string' ? tarea : (tarea.texto || '');
-            const ev = typeof tarea === 'object' && tarea.evaluacion ? tarea.evaluacion : {};
-            const resp = Array.isArray(ev.responsables) ? ev.responsables.join(', ') : (linea.responsables || []).join(', ');
-            const temp = Array.isArray(ev.temporalizacion) ? ev.temporalizacion.join(', ') : (linea.temporalizacion || []).join(', ');
-            rows.push([ambito.titulo, 'Línea ' + linea.id, texto, 'Formación', ESTADO_LABEL_PDF[estado] || estado, resp, temp]);
-          }
-        });
-      }
-      if (tiposSel.includes('intervencion')) {
-        (linea.tareasIntervencion || []).forEach((tarea, index) => {
-          const idTarea = `${ambitoId}-${linea.id}-intervencion-${index}`;
-          const estado = state.estadosTareas[idTarea] || 'no-iniciado';
-          if (estadosSel.includes(estado)) {
-            const texto = typeof tarea === 'string' ? tarea : tarea.texto;
-            const ev = typeof tarea === 'object' && tarea.evaluacion ? tarea.evaluacion : {};
-            const resp = Array.isArray(ev.responsables) ? ev.responsables.join(', ') : (linea.responsables || []).join(', ');
-            const temp = Array.isArray(ev.temporalizacion) ? ev.temporalizacion.join(', ') : (linea.temporalizacion || []).join(', ');
-            rows.push([ambito.titulo, 'Línea ' + linea.id, texto, 'Actuación', ESTADO_LABEL_PDF[estado] || estado, resp, temp]);
-          }
-        });
-      }
-    });
-  });
-
-  if (rows.length === 0) {
-    state.pdfMessage = { text: 'No hay tareas que coincidan con los filtros seleccionados', type: 'error' };
+  if (!state.informe.ambitos.length || !state.informe.tiposLinea.length || !state.informe.estados.length) {
+    state.informeMessage = { text: 'Selecciona al menos un ámbito, un tipo de línea y un estado', type: 'error' };
     renderView();
     return;
   }
+
+  const tareas = obtenerTareasInforme();
+
+  if (tareas.length === 0) {
+    state.informeMessage = { text: 'No hay tareas que coincidan con los criterios seleccionados', type: 'error' };
+    renderView();
+    return;
+  }
+
+  const rows = tareas.map(item => {
+    const ev = (item.tarea && item.tarea.evaluacion) || {};
+    const respTxt = item.respArr.join(', ') + ((item.respArr.includes('Otros') && ev.responsablesDetalle) ? ' (' + ev.responsablesDetalle + ')' : '');
+    return [item.ambito.titulo, codigoLinea(item.ambitoId, item.linea.id), (item.tarea && item.tarea.texto) || '', item.tipoLabel, ESTADO_LABEL(item.estado), respTxt, item.tempArr.join(', ')];
+  });
+
+  const criterios = criteriosInformeTexto();
+  const nConseguidas = tareas.filter(t => t.estado === 'conseguido').length;
+  const nEnProceso = tareas.filter(t => t.estado === 'en-proceso').length;
+  const nNoIniciadas = tareas.filter(t => t.estado === 'no-iniciado').length;
+  const pctConseguidas = Math.round(nConseguidas * 100 / tareas.length);
+  const lineasAfectadas = new Set(tareas.map(t => t.ambitoId + '-' + t.linea.id)).size;
 
   try {
     const { jsPDF } = window.jspdf;
@@ -2963,20 +3225,27 @@ async function generarPDF() {
 
     docPdf.setFontSize(20);
     docPdf.setTextColor(40, 40, 40);
-    docPdf.text('PLAN DE ACTUACIÓN DIGITAL', 148, 20, { align: 'center' });
+    docPdf.text('INFORME - PLAN DE ACTUACIÓN DIGITAL', 148, 20, { align: 'center' });
     docPdf.setFontSize(14);
     docPdf.text('IES Virgen de Villadiego', 148, 30, { align: 'center' });
     docPdf.setFontSize(12);
     docPdf.text('Curso ' + state.currentCourse + ' - Fecha: ' + new Date().toLocaleDateString(), 148, 38, { align: 'center' });
 
-    docPdf.setFontSize(10);
+    // Criterios aplicados y resumen
+    docPdf.setFontSize(8);
     docPdf.setTextColor(100, 100, 100);
-    docPdf.text('Total de tareas: ' + rows.length, 20, 50);
+    criterios.forEach((linea, i) => {
+      docPdf.text(linea, 20, 47 + i * 4.5, { maxWidth: 257 });
+    });
+    const yResumen = 47 + criterios.length * 4.5 + 3;
+    docPdf.setTextColor(60, 60, 60);
+    docPdf.setFontSize(10);
+    docPdf.text('Total de tareas: ' + tareas.length + ' en ' + lineasAfectadas + ' líneas de actuación  ·  Conseguidas: ' + nConseguidas + ' (' + pctConseguidas + '%)  ·  En proceso: ' + nEnProceso + '  ·  No iniciadas: ' + nNoIniciadas, 20, yResumen);
 
     docPdf.autoTable({
-      startY: 55,
+      startY: yResumen + 5,
       margin: { left: 14, right: 14 },
-      head: [['Ámbito', 'Línea', 'Tarea', 'Tipo', 'Estado', 'Responsables', 'Temporalización']],
+      head: [['Ámbito', 'Línea', 'Tarea', 'Tipo', 'Estado', 'Grupos resp./participantes', 'Temporalización']],
       body: rows,
       styles: { fontSize: 8, cellPadding: 3 },
       headStyles: { fillColor: [52, 152, 219], textColor: 255, fontStyle: 'bold' },
@@ -2992,12 +3261,12 @@ async function generarPDF() {
       }
     });
 
-    docPdf.save('plan-digital-' + state.currentCourse + '-' + new Date().toISOString().split('T')[0] + '.pdf');
-    state.pdfMessage = { text: 'PDF generado correctamente', type: 'success' };
+    docPdf.save('informe-plan-digital-' + state.currentCourse + '-' + new Date().toISOString().split('T')[0] + '.pdf');
+    state.informeMessage = { text: 'PDF del informe generado correctamente', type: 'success' };
     renderView();
   } catch (err) {
     console.error('Error generating PDF:', err);
-    state.pdfMessage = { text: 'Error al generar el PDF. Asegúrate de tener conexión a internet para cargar jsPDF.', type: 'error' };
+    state.informeMessage = { text: 'Error al generar el PDF. Asegúrate de tener conexión a internet para cargar jsPDF.', type: 'error' };
     renderView();
   }
 }
@@ -3097,21 +3366,6 @@ async function saveGlobalCatalogoItem(type, value) {
   } catch (err) {
     console.error('Error saving global catalogo item:', err);
   }
-}
-
-function getAvailableTempOptions(currentSelected) {
-  const all = valoresDelPlan('temporalizacion');
-  TEMP_PREDEFINED.forEach(t => all.add(t));
-  (currentSelected || []).forEach(t => all.delete(t));
-  return Array.from(all).sort();
-}
-
-// Get all responsables across the plan (plus the global catalogue), excluding already selected
-function getAllInfoResponsables(currentSelected) {
-  const all = valoresDelPlan('responsables');
-  RESPONSABLES_BASE.forEach(r => all.add(r));
-  (currentSelected || []).forEach(r => all.delete(r));
-  return Array.from(all).sort();
 }
 
 // ==================== ACTUACIÓN EVAL CRUD ====================
@@ -3214,11 +3468,10 @@ async function executeDeleteActuacion(taskId) {
     state.comentariosTareas = newComentarios;
 
     // Update local state
-    state.planData[ambitoId] = ambitoSnap;
-    state.currentLinea = lineas[lineaIdx];
+    actualizarAmbitoLocal(ambitoId, ambitoSnap);
     renderView();
 
-    showToast('Actuación eliminada', 'success');
+    showToast('Tarea eliminada', 'success');
   } catch (err) {
     console.error('Error deleting actuación:', err);
     state.confirmDeleteTask = null;
@@ -3232,537 +3485,45 @@ async function executeDeleteActuacion(taskId) {
 async function saveActEval(taskId) {
   if (!state.currentLinea) return;
   const ambitoId = state.currentAmbitoId;
-  const ambitoData = state.planData[ambitoId];
-  if (!ambitoData) return;
   const lineaId = state.currentLinea.id;
 
   // Parse taskId: ambitoId-lineaId-TIPO-idx (TIPO = "formacion" or "intervencion")
   const { taskType, idx } = parseTaskId(taskId);
   if (idx < 0) return;
 
-  // Read chips
-  const responsables = readChipsFromContainer('actRespChips-' + taskId);
-  const herramientas = readChipsFromContainer('actHerrChips-' + taskId);
-  const temporalizacion = readChipsFromContainer('actTempChips-' + taskId);
-  const alumnado = readChipsFromContainer('actAlumChips-' + taskId);
+  const datos = leerFormTarea(taskId);
+  if (!datos.texto) {
+    showToast('El enunciado de la tarea es obligatorio', 'error');
+    return;
+  }
 
-  // Save to Firestore
   try {
     const ambitoDoc = await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).get();
     const ambitoSnap = ambitoDoc.data();
-    if (!ambitoSnap || !ambitoSnap.lineas) return;
+    if (!ambitoSnap || !Array.isArray(ambitoSnap.lineas)) return;
     const lineas = ambitoSnap.lineas;
     const lineaIdx = lineas.findIndex(l => l.id === lineaId);
     if (lineaIdx === -1) return;
 
     const fieldKey = taskType === 'formacion' ? 'tareasFormacion' : 'tareasIntervencion';
-    const rawTarea = lineas[lineaIdx][fieldKey][idx];
-    const texto = typeof rawTarea === 'string' ? rawTarea : (rawTarea.texto || '');
-    lineas[lineaIdx][fieldKey][idx] = {
-      texto: texto,
-      evaluacion: { responsables, herramientas, temporalizacion, alumnado }
-    };
+    if (!Array.isArray(lineas[lineaIdx][fieldKey]) || idx >= lineas[lineaIdx][fieldKey].length) return;
+    lineas[lineaIdx][fieldKey][idx] = construirTareaDesdeForm(datos);
 
     await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).update({ lineas });
     state.editingActEval = null;
 
     // Update local state
-    state.planData[ambitoId] = ambitoSnap;
-    if (state.currentLinea && state.currentLinea.id === lineaId) {
-      state.currentLinea = lineas[lineaIdx];
-    }
+    actualizarAmbitoLocal(ambitoId, ambitoSnap);
     renderView();
 
-    // Show feedback
-    const blockEl = document.getElementById('actEvalBlock-' + taskId.replace(/'/g, "\\'"));
-    if (blockEl) {
-      const fb = document.createElement('div');
-      fb.className = 'info-save-feedback success';
-      fb.innerHTML = '<i class="fas fa-check"></i> Guardado';
-      blockEl.appendChild(fb);
-      setTimeout(() => fb.remove(), 2200);
-    }
+    showToast('Tarea guardada correctamente', 'success');
   } catch (err) {
-    console.error('Error saving evaluación:', err);
-    const blockEl = document.getElementById('actEvalBlock-' + taskId.replace(/'/g, "\\'"));
-    if (blockEl) {
-      const fb = document.createElement('div');
-      fb.className = 'info-save-feedback error';
-      fb.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
-      blockEl.appendChild(fb);
-      setTimeout(() => fb.remove(), 2200);
-    }
+    console.error('Error saving tarea:', err);
+    showToast('Error al guardar la tarea', 'error');
   }
 }
 
-// ==================== ALUMNADO HELPER FUNCTIONS ====================
-
-/**
- * Obtiene un mapa de alumnos duplicados en toda la línea actual.
- * Retorna: { "nombre normalizado": { display, taskIds }, ... }
- * Solo incluye alumnos que aparecen en 2 o más actuaciones.
- */
-function getAlumnadoDuplicates() {
-  if (!state.currentLinea) return {};
-  const allTasks = [
-    ...(state.currentLinea.tareasFormacion || []).map((t, i) => ({
-      tarea: t,
-      taskId: state.currentAmbitoId + '-' + state.currentLinea.id + '-formacion-' + i
-    })),
-    ...(state.currentLinea.tareasIntervencion || []).map((t, i) => ({
-      tarea: t,
-      taskId: state.currentAmbitoId + '-' + state.currentLinea.id + '-intervencion-' + i
-    }))
-  ];
-  const nameMap = {}; // normalized lower -> { display, taskIds }
-  for (const { tarea, taskId } of allTasks) {
-    const alumList = (tarea && tarea.evaluacion && tarea.evaluacion.alumnado) || [];
-    for (const name of alumList) {
-      const key = name.trim().toLowerCase();
-      if (!key) continue;
-      if (!nameMap[key]) nameMap[key] = { display: name.trim(), taskIds: [] };
-      if (!nameMap[key].taskIds.includes(taskId)) nameMap[key].taskIds.push(taskId);
-    }
-  }
-  const dupes = {};
-  for (const [key, val] of Object.entries(nameMap)) {
-    if (val.taskIds.length >= 2) dupes[key] = val;
-  }
-  return dupes;
-}
-
-/**
- * Renderiza un chip de alumnado con indicador de duplicado si procede.
- */
-function buildAlumnadoChip(name, taskId, isEditing) {
-  const dupes = getAlumnadoDuplicates();
-  const key = name.trim().toLowerCase();
-  const isDup = dupes[key] && dupes[key].taskIds.length >= 2;
-  let cls = 'info-chip alum-chip' + (isDup ? ' alum-duplicated' : '');
-  let html = '<span class="' + cls + '" data-value="' + escapeAttr(name) + '">';
-  html += escapeHtml(name);
-  if (isDup) {
-    html += ' <i class="fas fa-exclamation-triangle alum-dup-icon" title="Este alumno/a aparece en ' + dupes[key].taskIds.length + ' actuaciones"></i>';
-  }
-  if (isEditing) {
-    html += '<i class="fas fa-times"></i>';
-  }
-  html += '</span>';
-  return html;
-}
-
-/**
- * Parsea nombres separados por comas desde un input y los añade como chips.
- */
-function parseAlumnadoFromInput(taskId) {
-  const input = document.getElementById('actAlumNewInput-' + taskId);
-  const chipsEl = document.getElementById('actAlumChips-' + taskId);
-  if (!input || !chipsEl) return;
-  const raw = input.value.trim();
-  if (!raw) return;
-  const names = raw.split(',').map(s => s.trim()).filter(s => s.length > 0);
-  const existing = readChipsFromContainer('actAlumChips-' + taskId).map(n => n.toLowerCase());
-  let added = 0;
-  for (const name of names) {
-    if (existing.includes(name.toLowerCase())) continue;
-    const chip = document.createElement('span');
-    chip.className = 'info-chip alum-chip';
-    chip.innerHTML = escapeHtml(name) + '<i class="fas fa-times"></i>';
-    chip.querySelector('i').addEventListener('click', function() {
-      chip.remove();
-      refreshAlumnadoDuplicatedWarnings();
-    });
-    chipsEl.appendChild(chip);
-    existing.push(name.toLowerCase());
-    added++;
-  }
-  input.value = '';
-  if (added > 0) refreshAlumnadoDuplicatedWarnings();
-}
-
-/**
- * Refresca los indicadores visuales de duplicado en todos los chips de alumnado visibles.
- */
-function refreshAlumnadoDuplicatedWarnings() {
-  const dupes = getAlumnadoDuplicates();
-  document.querySelectorAll('.alum-chip').forEach(function(chip) {
-    // Obtener nombre del chip excluyendo iconos (leer antes de modificar)
-    const clone = chip.cloneNode(true);
-    clone.querySelectorAll('i').forEach(function(icon) { icon.remove(); });
-    const rawName = clone.textContent.trim().toLowerCase();
-    const isDup = dupes[rawName] && dupes[rawName].taskIds.length >= 2;
-    const existingIcon = chip.querySelector('.alum-dup-icon');
-    if (isDup && !existingIcon) {
-      const icon = document.createElement('i');
-      icon.className = 'fas fa-exclamation-triangle alum-dup-icon';
-      icon.title = 'Este alumno/a aparece en ' + dupes[rawName].taskIds.length + ' actuaciones';
-      chip.appendChild(icon);
-      chip.classList.add('alum-duplicated');
-    } else if (!isDup && existingIcon) {
-      existingIcon.remove();
-      chip.classList.remove('alum-duplicated');
-    }
-  });
-}
-
-// ==================== CHIP HELPERS ====================
-function readChipsFromContainer(containerId) {
-  const el = document.getElementById(containerId);
-  if (!el) return [];
-  return Array.from(el.querySelectorAll('.info-chip')).map(chip => {
-    const clone = chip.cloneNode(true);
-    const icon = clone.querySelector('i');
-    if (icon) icon.remove();
-    return clone.textContent.trim();
-  }).filter(Boolean);
-}
-
-function attachChipRemoveHandlers() {
-  document.querySelectorAll('.tarea-eval-section .info-chip i').forEach(icon => {
-    if (icon.dataset.bound) return;
-    icon.dataset.bound = 'true';
-    icon.addEventListener('click', function() {
-      const chip = this.parentElement;
-      const container = chip.parentElement;
-      chip.remove();
-      const containerId = container.id || '';
-      if (containerId.includes('Resp')) {
-        refreshActRespDropdown(containerId.replace('actRespChips-', ''));
-      } else if (containerId.includes('Temp')) {
-        refreshActTempDropdown(containerId.replace('actTempChips-', ''));
-      } else if (containerId.includes('Herr')) {
-        refreshActHerrDropdown(containerId.replace('actHerrChips-', ''));
-      } else if (containerId.includes('Alum')) {
-        refreshAlumnadoDuplicatedWarnings();
-      }
-    });
-  });
-}
-
-// ==================== RESPONSABLE CHIP FUNCTIONS (per actuación) ====================
-function refreshActRespDropdown(taskId) {
-  const sel = document.getElementById('actRespSelect-' + taskId);
-  if (!sel) return;
-  const selected = readChipsFromContainer('actRespChips-' + taskId);
-  const available = getAllInfoResponsables(selected);
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">-- Seleccionar --</option>' +
-    available.map(r => '<option value="' + escapeAttr(r) + '"' + (r === cur ? ' selected' : '') + '>' + escapeHtml(r) + '</option>').join('');
-}
-
-function addActRespFromSelect(taskId) {
-  const sel = document.getElementById('actRespSelect-' + taskId);
-  const chipsEl = document.getElementById('actRespChips-' + taskId);
-  if (!sel || !chipsEl || !sel.value) return;
-  const nombre = sel.value;
-  const selected = readChipsFromContainer('actRespChips-' + taskId);
-  if (selected.includes(nombre)) return;
-  const chip = document.createElement('span');
-  chip.className = 'info-chip resp-chip';
-  chip.innerHTML = escapeHtml(nombre) + '<i class="fas fa-times"></i>';
-  chip.querySelector('i').addEventListener('click', function() {
-    chip.remove();
-    refreshActRespDropdown(taskId);
-  });
-  chipsEl.appendChild(chip);
-  refreshActRespDropdown(taskId);
-}
-
-function addActRespNew(taskId) {
-  const input = document.getElementById('actRespNewInput-' + taskId);
-  const chipsEl = document.getElementById('actRespChips-' + taskId);
-  if (!input || !chipsEl) return;
-  const nombre = input.value.trim();
-  if (!nombre) return;
-  const selected = readChipsFromContainer('actRespChips-' + taskId);
-  if (selected.find(s => s.toLowerCase() === nombre.toLowerCase())) { input.value = ''; return; }
-  const chip = document.createElement('span');
-  chip.className = 'info-chip resp-chip';
-  chip.innerHTML = escapeHtml(nombre) + '<i class="fas fa-times"></i>';
-  chip.querySelector('i').addEventListener('click', function() {
-    chip.remove();
-    refreshActRespDropdown(taskId);
-  });
-  chipsEl.appendChild(chip);
-  if (!RESPONSABLES_BASE.find(r => r.toLowerCase() === nombre.toLowerCase())) {
-    RESPONSABLES_BASE.push(nombre);
-  }
-  saveGlobalCatalogoItem('responsables', nombre);
-  input.value = '';
-  refreshActRespDropdown(taskId);
-}
-
-// ==================== TEMPORALIZACIÓN CHIP FUNCTIONS (per actuación) ====================
-function refreshActTempDropdown(taskId) {
-  const sel = document.getElementById('actTempSelect-' + taskId);
-  if (!sel) return;
-  const selected = readChipsFromContainer('actTempChips-' + taskId);
-  const available = getAvailableTempOptions(selected);
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">-- Seleccionar --</option>' +
-    available.map(t => '<option value="' + escapeAttr(t) + '"' + (t === cur ? ' selected' : '') + '>' + escapeHtml(t) + '</option>').join('');
-}
-
-function addActTempFromSelect(taskId) {
-  const sel = document.getElementById('actTempSelect-' + taskId);
-  const chipsEl = document.getElementById('actTempChips-' + taskId);
-  if (!sel || !chipsEl || !sel.value) return;
-  const nombre = sel.value;
-  const selected = readChipsFromContainer('actTempChips-' + taskId);
-  if (selected.includes(nombre)) return;
-  const chip = document.createElement('span');
-  chip.className = 'info-chip temp-chip';
-  chip.innerHTML = escapeHtml(nombre) + '<i class="fas fa-times"></i>';
-  chip.querySelector('i').addEventListener('click', function() {
-    chip.remove();
-    refreshActTempDropdown(taskId);
-  });
-  chipsEl.appendChild(chip);
-  refreshActTempDropdown(taskId);
-}
-
-function addActTempNew(taskId) {
-  const input = document.getElementById('actTempNewInput-' + taskId);
-  const chipsEl = document.getElementById('actTempChips-' + taskId);
-  if (!input || !chipsEl) return;
-  const nombre = input.value.trim();
-  if (!nombre) return;
-  const selected = readChipsFromContainer('actTempChips-' + taskId);
-  if (selected.find(s => s.toLowerCase() === nombre.toLowerCase())) { input.value = ''; return; }
-  const chip = document.createElement('span');
-  chip.className = 'info-chip temp-chip';
-  chip.innerHTML = escapeHtml(nombre) + '<i class="fas fa-times"></i>';
-  chip.querySelector('i').addEventListener('click', function() {
-    chip.remove();
-    refreshActTempDropdown(taskId);
-  });
-  chipsEl.appendChild(chip);
-  saveGlobalCatalogoItem('temporalizacion', nombre);
-  input.value = '';
-  refreshActTempDropdown(taskId);
-}
-
-// ==================== HERRAMIENTAS CHIP FUNCTIONS (per actuación) ====================
-function getAvailableHerrOptions(currentSelected) {
-  const all = valoresDelPlan('herramientas');
-  HERRAMIENTAS_BASE.forEach(h => all.add(h));
-  // Herramientas del modelo antiguo, guardadas a nivel de línea
-  Object.values(state.planData).forEach(ambito => {
-    (ambito.lineas || []).forEach(linea => {
-      normalizarLista(linea.evaluacion && linea.evaluacion.herramientas).forEach(h => all.add(h));
-      (linea.evaluaciones || []).forEach(ev => normalizarLista(ev && ev.herramientas).forEach(h => all.add(h)));
-    });
-  });
-  (currentSelected || []).forEach(h => all.delete(h));
-  return Array.from(all).sort();
-}
-
-function refreshActHerrDropdown(taskId) {
-  const sel = document.getElementById('actHerrSelect-' + taskId);
-  if (!sel) return;
-  const selected = readChipsFromContainer('actHerrChips-' + taskId);
-  const available = getAvailableHerrOptions(selected);
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">-- Seleccionar --</option>' +
-    available.map(h => '<option value="' + escapeAttr(h) + '"' + (h === cur ? ' selected' : '') + '>' + escapeHtml(h) + '</option>').join('');
-}
-
-function addActHerrFromSelect(taskId) {
-  const sel = document.getElementById('actHerrSelect-' + taskId);
-  const chipsEl = document.getElementById('actHerrChips-' + taskId);
-  if (!sel || !chipsEl || !sel.value) return;
-  const nombre = sel.value;
-  const selected = readChipsFromContainer('actHerrChips-' + taskId);
-  if (selected.includes(nombre)) return;
-  const chip = document.createElement('span');
-  chip.className = 'info-chip';
-  chip.style.cssText = 'background:rgba(243,156,18,.15);color:#e67e22';
-  chip.innerHTML = escapeHtml(nombre) + '<i class="fas fa-times"></i>';
-  chip.querySelector('i').addEventListener('click', function() {
-    chip.remove();
-    refreshActHerrDropdown(taskId);
-  });
-  chipsEl.appendChild(chip);
-  refreshActHerrDropdown(taskId);
-}
-
-function addActHerrNew(taskId) {
-  const input = document.getElementById('actHerrNewInput-' + taskId);
-  const chipsEl = document.getElementById('actHerrChips-' + taskId);
-  if (!input || !chipsEl) return;
-  const nombre = input.value.trim();
-  if (!nombre) return;
-  const selected = readChipsFromContainer('actHerrChips-' + taskId);
-  if (selected.find(s => s.toLowerCase() === nombre.toLowerCase())) { input.value = ''; return; }
-  const chip = document.createElement('span');
-  chip.className = 'info-chip';
-  chip.style.cssText = 'background:rgba(243,156,18,.15);color:#e67e22';
-  chip.innerHTML = escapeHtml(nombre) + '<i class="fas fa-times"></i>';
-  chip.querySelector('i').addEventListener('click', function() {
-    chip.remove();
-    refreshActHerrDropdown(taskId);
-  });
-  chipsEl.appendChild(chip);
-  saveGlobalCatalogoItem('herramientas', nombre);
-  input.value = '';
-  refreshActHerrDropdown(taskId);
-}
-
-// ==================== INLINE CHIP EDIT/DELETE (view mode) ====================
-function getFieldMapping(fieldType) {
-  if (fieldType === 'responsable') return { containerSuffix: 'actViewResp', dataKey: 'responsables', chipClass: 'resp', inputClass: '' };
-  if (fieldType === 'herramienta') return { containerSuffix: 'actViewHerr', dataKey: 'herramientas', chipClass: 'herr', inputClass: ' herr-input' };
-  return { containerSuffix: 'actViewTemp', dataKey: 'temporalizacion', chipClass: 'temp', inputClass: ' temp-input' };
-}
-
-function startEditEvalChip(taskId, fieldType, oldValue) {
-  const mapping = getFieldMapping(fieldType);
-  const container = document.getElementById(mapping.containerSuffix + '-' + taskId);
-  if (!container) return;
-  // Find the chip with matching data-value
-  const chips = container.querySelectorAll('.eval-chip');
-  chips.forEach(chip => {
-    if (chip.dataset.value === oldValue) {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'eval-chip-input' + mapping.inputClass;
-      input.value = oldValue;
-      input.dataset.oldValue = oldValue;
-      // Build actions
-      const actionsDiv = document.createElement('span');
-      actionsDiv.className = 'eval-chip-edit-actions';
-      const saveBtn = document.createElement('button');
-      saveBtn.className = 'eval-chip-save-btn';
-      saveBtn.innerHTML = '<i class="fas fa-check"></i>';
-      saveBtn.title = 'Guardar';
-      saveBtn.onclick = function() { finishEditEvalChip(taskId, fieldType, chip, input); };
-      const cancelBtn = document.createElement('button');
-      cancelBtn.className = 'eval-chip-cancel-btn';
-      cancelBtn.innerHTML = '<i class="fas fa-times"></i>';
-      cancelBtn.title = 'Cancelar';
-      cancelBtn.onclick = function() { cancelEditEvalChip(chip, oldValue); };
-      actionsDiv.appendChild(saveBtn);
-      actionsDiv.appendChild(cancelBtn);
-      // Replace chip content
-      chip.textContent = '';
-      chip.appendChild(input);
-      chip.appendChild(actionsDiv);
-      input.focus();
-      input.select();
-      input.onkeydown = function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); finishEditEvalChip(taskId, fieldType, chip, input); }
-        if (e.key === 'Escape') { cancelEditEvalChip(chip, oldValue); }
-      };
-    }
-  });
-}
-
-function finishEditEvalChip(taskId, fieldType, chipEl, inputEl) {
-  const newValue = inputEl.value.trim();
-  const oldValue = inputEl.dataset.oldValue;
-  if (!newValue || newValue === oldValue) {
-    cancelEditEvalChip(chipEl, oldValue);
-    return;
-  }
-  // Check for duplicates
-  const mapping = getFieldMapping(fieldType);
-  const container = document.getElementById(mapping.containerSuffix + '-' + taskId);
-  if (container) {
-    const existingValues = Array.from(container.querySelectorAll('.eval-chip')).map(c => c.dataset.value).filter(v => v !== oldValue);
-    if (existingValues.find(v => v.toLowerCase() === newValue.toLowerCase())) {
-      cancelEditEvalChip(chipEl, oldValue);
-      return;
-    }
-  }
-  // Also save new value to global catalog if it's genuinely new
-  const catalogType = fieldType === 'responsable' ? 'responsables' : fieldType === 'herramienta' ? 'herramientas' : 'temporalizacion';
-  saveGlobalCatalogoItem(catalogType, newValue);
-  saveEvalChipChange(taskId, fieldType, oldValue, newValue);
-}
-
-function cancelEditEvalChip(chipEl, oldValue) {
-  // Restore chip to view mode by re-rendering
-  const taskId = chipEl.closest('[id^="actViewResp-"],[id^="actViewHerr-"],[id^="actViewTemp-"]');
-  if (!taskId) return;
-  // Just re-render to restore clean state
-  renderView();
-}
-
-async function deleteEvalChip(taskId, fieldType, value) {
-  if (!confirm('¿Eliminar "' + value + '"?')) return;
-  // Remove the value from the array and save
-  await saveEvalChipChange(taskId, fieldType, value, null);
-}
-
-async function saveEvalChipChange(taskId, fieldType, oldValue, newValue) {
-  if (!state.currentLinea) return;
-  const ambitoId = state.currentAmbitoId;
-  const ambitoData = state.planData[ambitoId];
-  if (!ambitoData) return;
-  const lineaId = state.currentLinea.id;
-
-  // Parse taskId
-  const { taskType, idx } = parseTaskId(taskId);
-  if (idx < 0) return;
-
-  const mapping = getFieldMapping(fieldType);
-
-  try {
-    const ambitoDoc = await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).get();
-    const ambitoSnap = ambitoDoc.data();
-    if (!ambitoSnap || !ambitoSnap.lineas) return;
-    const lineas = ambitoSnap.lineas;
-    const lineaIdx = lineas.findIndex(l => l.id === lineaId);
-    if (lineaIdx === -1) return;
-
-    const fieldKey = taskType === 'formacion' ? 'tareasFormacion' : 'tareasIntervencion';
-    const rawTarea = lineas[lineaIdx][fieldKey][idx];
-    const texto = typeof rawTarea === 'string' ? rawTarea : (rawTarea.texto || '');
-    const evalData = (typeof rawTarea === 'object' && rawTarea.evaluacion) ? rawTarea.evaluacion : { responsables: [], herramientas: [], temporalizacion: [] };
-    let arr = evalData[mapping.dataKey] || [];
-    if (Array.isArray(arr)) {
-      const pos = arr.findIndex(v => v === oldValue);
-      if (pos >= 0) {
-        if (newValue === null) {
-          // Delete
-          arr.splice(pos, 1);
-        } else {
-          // Edit
-          arr[pos] = newValue;
-        }
-      }
-    } else if (typeof arr === 'string' && arr) {
-      // Legacy: comma-separated string
-      const items = arr.split(',').map(s => s.trim()).filter(Boolean);
-      const pos = items.findIndex(v => v === oldValue);
-      if (pos >= 0) {
-        if (newValue === null) {
-          items.splice(pos, 1);
-        } else {
-          items[pos] = newValue;
-        }
-      }
-      arr = items;
-    }
-    evalData[mapping.dataKey] = arr;
-    lineas[lineaIdx][fieldKey][idx] = { texto, evaluacion: evalData };
-    await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).update({ lineas });
-    state.planData[ambitoId] = ambitoSnap;
-    if (state.currentLinea && state.currentLinea.id === lineaId) {
-      state.currentLinea = lineas[lineaIdx];
-    }
-    renderView();
-
-    // Show feedback
-    showToast(newValue === null ? 'Eliminado' : 'Actualizado', 'success');
-  } catch (err) {
-    console.error('Error saving chip change:', err);
-    renderView();
-    showToast('Error al guardar', 'error');
-  }
-}
-
-// ==================== UTILITY FUNCTIONS ====================
+// ==================== UTILITY FUNCTIONS ====================// ==================== UTILITY FUNCTIONS ====================
 function escapeHtml(text) {
   if (!text) return '';
   const div = document.createElement('div');
