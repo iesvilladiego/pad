@@ -2,12 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#3498db">
+<meta name="color-scheme" content="light">
 <meta name="description" content="Plan de Actuación Digital - IES Virgen de Villadiego">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Plan Digital">
+<meta name="format-detection" content="telephone=no">
 <title>Plan de Actuación Digital - IES Virgen de Villadiego</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="pwa/icons/apple-touch-icon.png">
@@ -17,8 +20,31 @@
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 <style>
 :root{--primary-color:#3498db;--secondary-color:#2c3e50;--accent-color:#e74c3c;--light-color:#ecf0f1;--dark-color:#34495e;--success-color:#2ecc71;--warning-color:#f39c12;--steam-color:#9b59b6;--steam-light:#bb8fce;--gradient:linear-gradient(135deg,#3498db,#2c3e50);--steam-gradient:linear-gradient(135deg,#9b59b6,#8e44ad);--card-shadow:0 10px 20px rgba(0,0,0,.1);--hover-shadow:0 15px 30px rgba(0,0,0,.15);--theme-name:'Azul'}
-body,header,nav,.portal-inicio,.ambito-card,.detalle-linea,.linea-badge,.tarea-item,.btn-primary,.nav-btn,.section-title,.info-card,.filtro-btn.active,.gestion-btn.cursos,.gestion-btn.datos,.add-linea-btn,.resp-chip.selected,.course-select{transition:background-color .5s ease,border-color .5s ease,color .3s ease,box-shadow .5s ease}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+body,header,nav,.portal-inicio,.ambito-card,.detalle-linea,.linea-badge,.tarea-item,.btn-primary,.nav-btn,.section-title,.filtro-btn.active,.gestion-btn.cursos,.add-linea-btn,.course-select{transition:background-color .5s ease,border-color .5s ease,color .3s ease,box-shadow .5s ease}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+/* ====== BASE MULTIPLATAFORMA ====== */
+/* Evita el auto-ajuste de tamaño de texto en iOS al girar el dispositivo */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* Altura dinámica del viewport (barra de direcciones de móviles) */
+body{min-height:100vh;min-height:100dvh}
+@supports(height:100dvh){.portal-inicio,.auth-overlay,.modal-overlay{height:100dvh}}
+/* Sin retardo de 300ms ni zoom por doble toque en controles; sin flash gris al tocar */
+button,label,a,input,select,textarea,.tarea-opt,.checkbox-item,.nav-btn,.gestion-btn{touch-action:manipulation}
+*{-webkit-tap-highlight-color:transparent}
+/* Contiene el pull-to-refresh para que no interfiera con los formularios */
+body{overscroll-behavior-y:none}
+/* Sin scroll horizontal accidental; clip (a diferencia de hidden) no rompe el position:sticky */
+@supports(overflow:clip){body{overflow-x:clip}}
+/* Aspecto coherente de checkboxes/radios en Windows, macOS, iOS y Android */
+input[type="checkbox"],input[type="radio"]{accent-color:var(--primary-color)}
+img,svg,video,canvas{max-width:100%;height:auto}
+/* Áreas seguras: notch e indicador de inicio (iPhone X+), también en Android */
+nav{padding-left:calc(.5rem + env(safe-area-inset-left,0px));padding-right:calc(.5rem + env(safe-area-inset-right,0px))}
+.user-bar{padding-left:calc(1.5rem + env(safe-area-inset-left,0px));padding-right:calc(1.5rem + env(safe-area-inset-right,0px))}
+.gestion-section{padding-left:calc(1rem + env(safe-area-inset-left,0px));padding-right:calc(1rem + env(safe-area-inset-right,0px))}
+.portal-instruccion{bottom:calc(1.5rem + env(safe-area-inset-bottom,0px))}
+.auth-overlay{padding:calc(1rem + env(safe-area-inset-top,0px)) 1rem calc(1rem + env(safe-area-inset-bottom,0px))}
+.modal-overlay{padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
 body{background:linear-gradient(135deg,#f5f7fa 0%,#e4e8ed 100%);color:#333;line-height:1.6;min-height:100vh}
 .portal-inicio{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--gradient);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#fff;z-index:1000;cursor:pointer;padding:2rem;transition:opacity .5s ease;overflow:hidden}
 .portal-inicio.fade-out{opacity:0;pointer-events:none}
@@ -38,8 +64,6 @@ body{background:linear-gradient(135deg,#f5f7fa 0%,#e4e8ed 100%);color:#333;line-
 .portal-progress.active{animation:portalProgress 5s linear forwards}
 @keyframes portalProgress{0%{width:0}100%{width:100%}}
 @keyframes pulse{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
-.theme-indicator{position:fixed;bottom:1rem;left:1rem;z-index:5000;display:flex;align-items:center;gap:.4rem;padding:.3rem .7rem;border-radius:16px;background:var(--primary-color);box-shadow:0 2px 10px rgba(0,0,0,.2);font-size:.7rem;font-weight:600;color:#fff;opacity:.85;transition:all .5s ease;pointer-events:none}
-.theme-indicator i{font-size:.65rem}
 .firebase-status-integrated{display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:#888}
 .firebase-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
 .firebase-dot.connected{background:#2ecc71;box-shadow:0 0 4px #2ecc71}
@@ -52,8 +76,6 @@ h2{font-size:1.4rem;font-weight:400;color:var(--light-color);position:relative}
 .course-select{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:.5rem 1rem;border-radius:50px;font-size:1rem;cursor:pointer;transition:all .3s;appearance:none;-webkit-appearance:none;padding-right:2.5rem}
 .course-select:hover{background:rgba(255,255,255,.25)}
 .course-select option{color:#333;background:#fff}
-.course-select-wrapper{display:inline-block;position:relative}
-.course-select-wrapper::after{content:"\f107";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:#fff;pointer-events:none;font-size:.8rem}
 /* Chip de curso en el banner (sin desplegable) */
 .course-chip-bar{display:inline-flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;padding:.4rem 1rem;border-radius:50px;font-size:.95rem;font-weight:500;cursor:default;transition:all .3s;user-select:none;backdrop-filter:blur(4px)}
 .course-chip-bar i{font-size:.75rem;opacity:.9}
@@ -64,9 +86,6 @@ h2{font-size:1.4rem;font-weight:400;color:var(--light-color);position:relative}
 .version-chip .version-dot{width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block;box-shadow:0 0 4px rgba(255,255,255,.8);animation:versionPulse 2s ease-in-out infinite}
 @keyframes versionPulse{0%,100%{opacity:1}50%{opacity:.4}}
 /* Chip de curso en la barra superior derecha */
-.course-chip-top{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .7rem;border-radius:20px;background:#eaf2f8;color:#2c3e50;font-size:.72rem;font-weight:600;border:1px solid #cfe2f3;transition:all .2s}
-.course-chip-top i{font-size:.65rem;color:var(--primary-color)}
-.course-chip-top.empty{color:#95a5a6;background:#f5f5f5;border-color:#e5e5e5}
 /* Botón "Marcar como actual" en el modal de gestión de cursos */
 .course-action-btn.set-current{background:#27ae60;color:#fff}
 .course-action-btn.set-current:hover{background:#229954}
@@ -92,8 +111,6 @@ nav::-webkit-scrollbar{display:none}
 .gestion-btn{background:#fff;border:none;padding:.7rem 1rem;border-radius:8px;cursor:pointer;font-weight:600;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:.5rem;box-shadow:0 2px 4px rgba(0,0,0,.1)}
 .gestion-btn:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.15)}
 .gestion-btn.consultas{background:var(--success-color);color:#fff}
-.gestion-btn.pdf{background:#e74c3c;color:#fff}
-.gestion-btn.datos{background:#f39c12;color:#fff}
 .gestion-btn.cursos{background:var(--primary-color);color:#fff}
 .gestion-btn.transferir{background:var(--steam-color);color:#fff}
 .container{max-width:1200px;margin:2rem auto;padding:0 1.5rem}
@@ -138,13 +155,6 @@ nav::-webkit-scrollbar{display:none}
 .tarea-deleting{border-left-color:var(--accent-color);background:#fff5f5}
 .tarea-delete-confirm{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.6rem .8rem;border-radius:6px;background:#fff3cd;color:#856404;font-size:.85rem;font-weight:500;margin-bottom:.8rem;flex-wrap:wrap;animation:deleteConfirmIn .18s ease-out;border:1px solid #ffc107}
 .estado-tarea{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
-.tarea-comentario{margin-top:.7rem}
-.tarea-comentario-label{display:block;font-size:.78rem;font-weight:600;color:var(--secondary-color);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.3px}
-.tarea-comentario-textarea{width:100%;min-height:52px;max-height:120px;padding:.45rem .6rem;border:1px solid #ddd;border-radius:6px;font-size:.82rem;font-family:inherit;line-height:1.5;resize:vertical;transition:all .3s;background:#f8f9fa;color:#555}
-.tarea-comentario-textarea:focus{border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(52,152,219,.15);outline:none;background:#fff}
-.tarea-comentario-textarea::placeholder{color:#aaa;font-style:italic}
-.tarea-comentario-readonly{background:#f0f7ff;border:1px solid #d0e3f7;border-radius:6px;padding:.5rem .7rem}
-.tarea-comentario-texto{font-size:.82rem;color:#555;line-height:1.5;white-space:pre-wrap;word-break:break-word}
 /* Tarjeta de tarea: elementos */
 .tarea-num-badge{display:inline-flex;align-items:center;background:var(--primary-color);color:#fff;border-radius:14px;padding:.15rem .6rem;font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0}
 .tarea-texto{flex:1;min-width:0}
@@ -175,102 +185,16 @@ nav::-webkit-scrollbar{display:none}
 .estado-btn.active{box-shadow:0 0 0 2px currentColor;transform:scale(1.05)}
 .info-section{margin-top:2rem}
 .info-section h4{color:var(--primary-color);margin-bottom:1rem;font-size:1.2rem}
-.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-top:1rem}
-.info-card{background:#fff;padding:1.5rem;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,.05);transition:all .3s ease;border-top:3px solid var(--primary-color);position:relative}
-.info-card:hover{transform:translateY(-5px);box-shadow:0 8px 15px rgba(0,0,0,.1)}
-.info-card.editing{border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(52,152,219,.3),0 8px 15px rgba(0,0,0,.1);transform:none}
-.info-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
-.info-card-header h4{margin:0}
-.info-edit-btn{background:none;border:none;cursor:pointer;padding:.3rem .5rem;border-radius:4px;transition:all .2s;color:var(--primary-color);display:flex;align-items:center;gap:.3rem;font-size:.8rem;font-weight:600}
-.info-edit-btn:hover{background:rgba(52,152,219,.1);transform:scale(1.05)}
-.info-edit-btn.cancel{color:var(--accent-color)}
-.info-edit-btn.cancel:hover{background:rgba(231,76,60,.1)}
-.info-edit-btn.danger-sm{color:var(--accent-color);font-size:.75rem;padding:.2rem .4rem}
-.info-edit-btn.danger-sm:hover{background:rgba(231,76,60,.1)}
 .info-edit-field{width:100%;padding:.5rem .6rem;border:1px solid #ddd;border-radius:6px;font-size:.9rem;font-family:inherit;transition:all .3s;margin-bottom:.5rem;background:#f8f9fa}
 .info-edit-field:focus{border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(52,152,219,.15);outline:none;background:#fff}
 .info-edit-row{display:flex;gap:.4rem;margin-top:.7rem;justify-content:flex-end}
 .info-edit-row .btn-primary,.info-edit-row .btn-secondary{padding:.4rem .8rem;font-size:.8rem}
-.info-save-feedback{position:absolute;top:.5rem;right:.5rem;padding:.3rem .7rem;border-radius:12px;font-size:.75rem;font-weight:600;animation:feedbackFade 2s ease forwards;z-index:1}
-.info-save-feedback.success{background:#d4edda;color:#155724}
-.info-save-feedback.error{background:#f8d7da;color:#721c24}
 @keyframes feedbackFade{0%{opacity:0;transform:translateY(-5px)}15%{opacity:1;transform:translateY(0)}75%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
 @keyframes deleteConfirmIn{0%{opacity:0;transform:translateY(-4px)}100%{opacity:1;transform:translateY(0)}}
-.info-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.6rem;min-height:28px}
-.info-chip{display:inline-flex;align-items:center;gap:.25rem;padding:.25rem .6rem;border-radius:14px;font-size:.8rem;font-weight:600;background:var(--primary-color);color:#fff;transition:all .2s;user-select:none;animation:chipIn .25s ease}
-.info-chip i{font-size:.65rem;opacity:.8;cursor:pointer;padding:1px}
-.info-chip i:hover{opacity:1;transform:scale(1.2)}
-.info-chip.resp-chip{background:var(--primary-color)}
-.info-chip.temp-chip{background:var(--warning-color)}
-.info-chip.alum-chip{background:rgba(142,68,173,.15);color:#8e44ad;border:1.5px solid rgba(142,68,173,.3)}
-.info-chip.alum-duplicated{background:rgba(231,76,60,.12);color:#c0392b;border-color:rgba(231,76,60,.4);box-shadow:0 0 0 1px rgba(231,76,60,.2)}
-.alum-dup-icon{font-size:.7rem!important;color:#e74c3c;opacity:1!important;cursor:help!important;animation:alumDupPulse 2s infinite;margin-left:2px}
-.alum-dup-icon:hover{transform:scale(1.3)!important}
-@keyframes alumDupPulse{0%,100%{opacity:1}50%{opacity:.5}}
-.alumnado-view-section{margin-top:.6rem;padding:.6rem .8rem;background:rgba(142,68,173,.04);border-radius:8px;border:1px solid rgba(142,68,173,.1)}
-.alumnado-view-label{font-size:.78rem;font-weight:600;color:#8e44ad;margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem}
-@keyframes chipIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-.info-add-row{display:flex;gap:.35rem;margin-top:.4rem}
-.info-add-row select{flex:1;padding:.45rem .6rem;border:1px solid #ddd;border-radius:6px;font-size:.85rem;background:#fff;transition:all .3s;font-family:inherit;min-width:0}
-.info-add-row select:focus{border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(52,152,219,.15);outline:none}
-.info-add-btn{background:var(--primary-color);color:#fff;border:none;padding:.45rem .7rem;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:.3rem;white-space:nowrap}
-.info-add-btn:hover{background:#2980b9;transform:translateY(-1px)}
-.info-new-row{display:flex;gap:.3rem;margin-top:.35rem;align-items:center}
-.info-new-input{flex:1;padding:.4rem .55rem;border:1px solid #ddd;border-radius:6px;font-size:.8rem;transition:all .3s;font-family:inherit}
-.info-new-input:focus{border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(52,152,219,.15);outline:none}
-.info-new-btn{background:#f39c12;color:#fff;border:none;padding:.4rem .6rem;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:.2rem;white-space:nowrap}
-.info-new-btn:hover{background:#e67e22}
-.eval-block{background:#f8f9fa;border:1px solid #e0e0e0;border-radius:8px;padding:1.2rem;margin-bottom:1rem;position:relative;transition:all .3s}
-.eval-block.editing{border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(52,152,219,.2)}
-.eval-block-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid #e0e0e0}
-.eval-block-header h5{color:var(--secondary-color);font-size:.95rem;display:flex;align-items:center;gap:.4rem;margin:0}
-.eval-block-header h5 i{color:var(--primary-color);font-size:.85rem}
-.eval-block-actions{display:flex;gap:.3rem;align-items:center}
-.eval-field-label{font-size:.78rem;font-weight:600;color:#666;margin-bottom:.3rem;margin-top:.6rem}
-.eval-field-label:first-child{margin-top:0}
-.eval-add-block-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.8rem;border:2px dashed var(--primary-color);border-radius:8px;background:transparent;color:var(--primary-color);font-weight:600;cursor:pointer;transition:all .3s;margin-top:.5rem;font-size:.9rem}
-.eval-add-block-btn:hover{background:rgba(52,152,219,.05);transform:translateY(-2px)}
-.eval-summary-item{display:flex;gap:.5rem;align-items:flex-start;margin-bottom:.4rem}
-.eval-summary-item i{color:var(--primary-color);margin-top:.25rem;flex-shrink:0;font-size:.8rem}
-.eval-summary-item .temp-icon{color:var(--warning-color)}
-.tarea-eval-section{background:#f0f7ff;border:1px solid #d0e3f7;border-radius:8px;padding:.9rem 1rem;margin:.8rem 0;position:relative;transition:all .3s}
-.tarea-eval-section.editing{border-color:var(--primary-color);box-shadow:0 0 0 2px rgba(52,152,219,.2);background:#fff}
-.tarea-eval-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;padding-bottom:.4rem;border-bottom:1px solid #d0e3f7}
-.tarea-eval-header h5{color:var(--primary-color);font-size:.85rem;display:flex;align-items:center;gap:.35rem;margin:0}
-.tarea-eval-header h5 i{font-size:.8rem}
-.eval-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:.4rem;font-size:.82rem}
-.eval-table thead th{background:#e8f0fe;color:var(--secondary-color);font-weight:600;padding:.5rem .6rem;text-align:left;border-bottom:2px solid #d0e3f7;font-size:.75rem;text-transform:uppercase;letter-spacing:.3px}
-.eval-table thead th:first-child{border-radius:6px 0 0 0}
-.eval-table thead th:last-child{border-radius:0 6px 0 0}
-.eval-table tbody td{padding:.5rem .6rem;vertical-align:top;border-bottom:1px solid #e8f0fe;color:#555}
-.eval-table tbody td .eval-cell-chips{display:flex;flex-wrap:wrap;gap:.3rem}
-.eval-table tbody td .eval-chip{display:inline-flex;align-items:center;gap:.2rem;padding:.2rem .5rem;border-radius:12px;font-size:.75rem;font-weight:600;background:#e8f0fe;color:var(--secondary-color)}
-.eval-table tbody td .eval-chip.resp{background:rgba(52,152,219,.12);color:#2980b9}
-.eval-table tbody td .eval-chip.herr{background:rgba(243,156,18,.12);color:#e67e22}
-.eval-table tbody td .eval-chip.temp{background:rgba(46,204,113,.12);color:#27ae60}
-.eval-chip-edit,.eval-chip-del{font-size:.6rem;opacity:.45;cursor:pointer;margin-left:2px;padding:1px 2px;border-radius:50%;transition:all .2s}
-.eval-chip:hover .eval-chip-edit,.eval-chip:hover .eval-chip-del,.eval-chip:focus-within .eval-chip-edit,.eval-chip:focus-within .eval-chip-del{opacity:1}
-@media(hover:none){.eval-chip-edit,.eval-chip-del{opacity:.7}}
-.eval-chip-edit:hover{opacity:1!important;color:var(--primary-color);background:rgba(52,152,219,.15)}
-.eval-chip-del:hover{opacity:1!important;color:var(--accent-color);background:rgba(231,76,60,.15)}
-.eval-chip-input{width:70px;padding:1px 4px;border:1px solid var(--primary-color);border-radius:8px;font-size:.75rem;font-weight:600;background:#fff;outline:none;box-shadow:0 0 0 2px rgba(52,152,219,.2);font-family:inherit}
-.eval-chip-input.herr-input{border-color:#e67e22;box-shadow:0 0 0 2px rgba(243,156,18,.2)}
-.eval-chip-input.temp-input{border-color:#27ae60;box-shadow:0 0 0 2px rgba(46,204,113,.2)}
-.eval-chip-edit-actions{display:inline-flex;gap:2px;margin-left:2px}
-.eval-chip-save-btn,.eval-chip-cancel-btn{font-size:.55rem;padding:1px 4px;border-radius:50%;border:none;cursor:pointer;transition:all .2s;line-height:1.2}
-.eval-chip-save-btn{background:var(--primary-color);color:#fff}
-.eval-chip-save-btn:hover{background:#2980b9}
-.eval-chip-cancel-btn{background:#ccc;color:#666}
-.eval-chip-cancel-btn:hover{background:#bbb}
-.eval-table-edit-row{display:flex;flex-direction:column;gap:.8rem;margin-top:.6rem}
-.eval-table-edit-field label{display:block;font-weight:600;font-size:.78rem;color:var(--secondary-color);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.3px}
-.eval-empty-row td{color:#aaa;font-style:italic;font-size:.8rem;text-align:center;padding:.8rem}
 .consultas-section{background:#fff;border-radius:12px;box-shadow:var(--card-shadow);padding:2rem;margin-top:2rem}
 .filtros-avanzados{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin:1.5rem 0}
 .filtro-group{display:flex;flex-direction:column;gap:.5rem}
 .filtro-group label{font-weight:600;color:var(--secondary-color)}
-.filtro-select{padding:.8rem;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:1rem;transition:all .3s}
-.filtro-select:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px rgba(52,152,219,.2);outline:none}
 .resultados-consulta{margin-top:2rem}
 .resultado-item{background:#f8f9fa;border-radius:8px;padding:1.5rem;margin-bottom:1rem;border-left:4px solid var(--primary-color);transition:all .3s}
 .resultado-item:hover{transform:translateX(5px);box-shadow:0 5px 15px rgba(0,0,0,.08)}
@@ -280,10 +204,6 @@ nav::-webkit-scrollbar{display:none}
 .badge-trimestre{background:var(--warning-color);color:#fff}
 .badge-steam{background:var(--steam-color);color:#fff}
 .badge-steam:hover{background:var(--steam-light);transform:translateY(-2px);box-shadow:0 4px 8px rgba(155,89,182,.3)}
-.pdf-section{background:#fff;border-radius:12px;box-shadow:var(--card-shadow);padding:2rem;margin-top:2rem}
-.filtros-pdf{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:1.5rem 0}
-.filtro-pdf-group{display:flex;flex-direction:column;gap:.5rem}
-.filtro-pdf-group h4{color:var(--secondary-color);margin-bottom:.5rem}
 .checkbox-group{display:flex;flex-direction:column;gap:.5rem}
 .checkbox-item{display:flex;align-items:center;gap:.5rem}
 .checkbox-item input{width:18px;height:18px}
@@ -321,8 +241,8 @@ nav::-webkit-scrollbar{display:none}
 .modal-message.info{background:#cce7ff;color:#004085;border:1px solid #b3d7ff}
 .form-group{margin-bottom:1.2rem}
 .form-group label{display:block;font-weight:600;color:var(--secondary-color);margin-bottom:.4rem;font-size:.9rem}
-.form-input,.form-textarea,.form-select{width:100%;padding:.7rem;border:1px solid #ddd;border-radius:8px;font-size:1rem;transition:all .3s;font-family:inherit}
-.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px rgba(52,152,219,.2);outline:none}
+.form-input,.form-textarea{width:100%;padding:.7rem;border:1px solid #ddd;border-radius:8px;font-size:1rem;transition:all .3s;font-family:inherit}
+.form-input:focus,.form-textarea:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px rgba(52,152,219,.2);outline:none}
 .form-textarea{min-height:80px;resize:vertical}
 .btn-primary{background:var(--primary-color);color:#fff;border:none;padding:.7rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:600;transition:all .3s;display:inline-flex;align-items:center;gap:.5rem}
 .btn-primary:hover{background:#2980b9;transform:translateY(-2px)}
@@ -372,16 +292,6 @@ nav::-webkit-scrollbar{display:none}
 .user-mgmt-count{font-size:.85rem;color:#888;margin-bottom:.8rem;padding:.5rem 0}
 .user-mgmt-confirm{margin-top:.5rem;padding:.6rem;border-radius:8px;background:#fff3cd;color:#856404;font-size:.85rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
 .user-mgmt-confirm button{border:none;padding:.3rem .6rem;border-radius:6px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s}
-.resp-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .6rem;border-radius:16px;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;user-select:none;border:none;line-height:1.4}
-.resp-chip.selected{background:var(--primary-color);color:#fff}
-.resp-chip.selected:hover{background:#2980b9}
-.resp-chip.available{background:#fff;color:var(--secondary-color);border:1.5px solid #ccc}
-.resp-chip.available:hover{border-color:var(--primary-color);color:var(--primary-color);background:rgba(52,152,219,.05)}
-.resp-chip i{font-size:.7rem}
-.resp-chip.selected i{opacity:.7}
-.resp-chip.available i{display:none}
-.resp-list-label{width:100%;font-size:.75rem;font-weight:600;color:#999;padding:.2rem 0;margin-top:.2rem;cursor:default}
-.resp-list-label:first-child{margin-top:0}
 .hidden{display:none}
 .auth-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1e3a8a 0%,#3498db 50%,#3b82f6 100%);display:flex;justify-content:center;align-items:center;z-index:9000;min-height:100vh;padding:1rem}
 .auth-card{background:#fff;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,.25);width:90%;max-width:420px;padding:2.5rem;color:#333;animation:authSlideIn .4s ease}
@@ -408,37 +318,159 @@ nav::-webkit-scrollbar{display:none}
 .user-bar .user-name{font-weight:600;color:var(--secondary-color)}
 .user-bar .logout-btn{background:none;border:1.5px solid #e74c3c;color:#e74c3c;padding:.3rem .7rem;border-radius:20px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:.3rem}
 .user-bar .logout-btn:hover{background:#e74c3c;color:#fff}
-@media(max-width:480px){.auth-card{padding:1.8rem;width:95%}.auth-card h2{font-size:1.3rem}.user-bar{padding:.3rem .6rem;font-size:.75rem}.user-bar-right{gap:.3rem}.user-bar .logout-btn{font-size:.65rem;padding:.2rem .4rem}.version-chip{font-size:.62rem;padding:.2rem .5rem}.course-chip-top{font-size:.65rem;padding:.2rem .5rem}.course-chip-top i{font-size:.6rem}}
-@media(max-width:480px){.portal-titulo{font-size:2rem}.portal-subtitulo{font-size:1.4rem}.portal-curso{font-size:1.2rem}header{padding:.5rem .6rem}h1{font-size:.85rem;display:inline;margin-right:.4rem}h2{font-size:.65rem;display:inline}.course-select{font-size:.65rem;padding:.15rem 2rem .15rem .4rem}.course-chip-bar{font-size:.7rem;padding:.25rem .7rem}.container{padding:0 .6rem;margin:.6rem auto}.ambito-card{padding:.8rem}.ambito-card h3{font-size:1rem}.linea-item{padding:.7rem;flex-direction:column;align-items:flex-start;gap:.4rem}.linea-badge{min-width:20px;height:20px;font-size:.58rem;padding:0 .4rem;border-radius:10px}.linea-actions{opacity:1}.detalle-linea{padding:.8rem}.tarea-item{padding:.7rem}.estado-tarea{flex-direction:column;align-items:stretch}.estado-btn{width:100%;margin-bottom:.3rem;padding:.4rem;font-size:.75rem}.info-grid{grid-template-columns:1fr}.info-card{padding:.7rem}.info-edit-btn{font-size:.6rem;padding:.1rem .25rem}.info-edit-row .btn-primary,.info-edit-row .btn-secondary{padding:.25rem .4rem;font-size:.65rem}.eval-block{padding:.5rem}.eval-block-header h5{font-size:.75rem}.eval-table thead th,.eval-table tbody td{padding:.25rem .2rem;font-size:.6rem}.eval-chip{font-size:.6rem;padding:.1rem .25rem}.consultas-section,.pdf-section{padding:.8rem}.filtros-avanzados,.filtros-pdf{grid-template-columns:1fr}.steam-hero{padding:1rem .6rem}.steam-hero h2{font-size:1.2rem}.steam-card{padding:.8rem}.steam-integration{padding:.8rem}.modal-content{width:96%;padding:.8rem}.nav-btn .nav-label{display:none}.nav-btn{padding:.35rem .5rem;border-radius:16px;gap:0}.nav-btn i{font-size:.85rem}.gestion-btn{padding:.4rem .45rem;font-size:.68rem;gap:.15rem}.gestion-btn i{font-size:.65rem}.volver-btn{padding:.4rem .7rem;font-size:.75rem}.task-comment-box{font-size:.75rem}}
+/* ============================================================
+   CAPA RESPONSIVA Y MULTIPLATAFORMA
+   Rangos: tablets (≤1024) → móviles grandes (≤768) → móviles (≤480)
+   → móviles pequeños (≤360) → horizontal corto → táctil → movimiento reducido
+   ============================================================ */
+
+/* --- Tablets en vertical y pantallas medianas (≤1024px) --- */
+@media(max-width:1024px){
+  .container{padding:0 1rem;margin:1.5rem auto}
+  header{padding:1.4rem 1rem}
+  .ambitos-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-top:1.2rem}
+  .steam-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-top:1.2rem}
+  .consultas-section{padding:1.5rem}
+  .modal-content{max-width:560px}
+}
+
+/* --- Móviles grandes y tablets pequeñas (≤768px) --- */
 @media(max-width:768px){
   .user-bar{padding:.3rem .8rem;font-size:.78rem}
   .user-bar-right{gap:.4rem}
-  .user-bar .logout-btn{font-size:.68rem;padding:.2rem .5rem}
+  .user-bar .logout-btn{font-size:.68rem;padding:.25rem .55rem;min-height:36px}
   header{padding:.6rem .8rem;text-align:center}
   header h1{font-size:.95rem;display:inline;margin-right:.5rem}
   header h2{font-size:.75rem;display:inline}
   .course-selector{margin-top:.25rem}
-  .course-select{font-size:.7rem;padding:.2rem 2rem .2rem .5rem}
+  /* 16px evita que iOS haga zoom automático al desplegar el selector */
+  .course-select{font-size:16px;padding:.3rem 2.2rem .3rem .7rem}
   nav{padding:.3rem .2rem;gap:.2rem}
-  .nav-btn{padding:.4rem .55rem;font-size:.72rem;border-radius:18px;gap:.2rem}
+  .nav-btn{padding:.45rem .7rem;font-size:.72rem;border-radius:18px;gap:.2rem;min-height:40px}
   .nav-btn i{font-size:.8rem}
   .ambitos-grid{grid-template-columns:1fr}
   .gestion-buttons{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.35rem}
-  .gestion-btn{padding:.45rem .55rem;font-size:.72rem;gap:.2rem}
+  .gestion-buttons.open{max-height:800px}
+  .gestion-btn{padding:.55rem .55rem;font-size:.72rem;gap:.2rem;min-height:44px}
   .gestion-btn i{font-size:.7rem}
-  .gestion-buttons.open{max-height:500px}
   .filtros-avanzados{grid-template-columns:1fr}
   .seccion-cabecera{flex-direction:column;align-items:flex-start}
-  .volver-btn{align-self:flex-end;padding:.4rem .8rem;font-size:.8rem}
-  .filtros-pdf{grid-template-columns:1fr}
+  .volver-btn{align-self:flex-end;padding:.5rem .9rem;font-size:.8rem;min-height:44px}
+  .filtros{gap:.5rem}
+  .filtro-btn{padding:.55rem 1rem;font-size:.82rem;min-height:44px}
+  /* Botones de estado: misma fila, objetivo táctil de 44px */
+  .estado-tarea{display:flex;gap:.4rem}
+  .estado-btn{flex:1 1 0;min-width:0;min-height:44px;padding:.4rem .3rem;font-size:.78rem}
+  .tarea-opt{padding:.55rem .85rem;min-height:44px}
+  .tarea-opt input{width:18px;height:18px}
+  .linea-action-btn{padding:.55rem;font-size:1.15rem}
+  /* Checkboxes con objetivo táctil amplio */
+  .checkbox-item{min-height:44px;align-items:center}
+  .checkbox-item input[type="checkbox"]{width:20px;height:20px;flex-shrink:0}
+  .transfer-line-item{padding:.9rem .7rem}
+  .transfer-line-item input[type="checkbox"]{width:22px;height:22px}
+  /* Botonera de modales: envuelve y ocupa el ancho disponible */
+  .btn-row{flex-wrap:wrap}
+  .btn-row .btn-primary,.btn-row .btn-secondary,.btn-row .btn-danger{flex:1 1 auto;justify-content:center;min-height:44px}
+  /* Ítems del modal de cursos: apilados y acciones repartidas (antes desbordaban en móvil) */
+  .course-list-item{flex-direction:column;align-items:stretch;gap:.6rem}
+  .course-list-actions{flex-wrap:wrap}
+  .course-action-btn{flex:1 1 auto;justify-content:center;min-height:40px}
   .steam-grid{grid-template-columns:1fr}
   .steam-hero{padding:1.5rem 1rem}
   .steam-hero h2{font-size:1.6rem}
   .steam-integration ul{grid-template-columns:1fr}
-  .modal-content{width:95%;padding:1.2rem}
+  .resultado-item{padding:1rem}
+  /* Modal: casi todo el alto y cabecera fija mientras se desplaza el contenido */
+  .modal-content{width:95%;max-height:88vh;max-height:88dvh;padding:0 1.2rem 1.2rem}
+  .modal-header{position:sticky;top:0;z-index:3;background:#fff;margin:0 -1.2rem 1rem;padding:.9rem 1.2rem;border-bottom:1px solid #eee;border-radius:12px 12px 0 0;box-shadow:0 1px 0 #eee}
+  .modal-title{font-size:1.15rem}
+  .modal-close{min-width:44px;min-height:44px;font-size:1.4rem}
 }
-@media(max-width:360px){.portal-titulo{font-size:1.8rem}.portal-subtitulo{font-size:1.2rem}.portal-curso{font-size:1rem}.portal-instruccion{font-size:.9rem}.ambito-card{padding:1rem}.ambito-card h3{font-size:1.2rem}.detalle-linea{padding:1rem}.tarea-item{padding:.8rem}.eval-table thead th,.eval-table tbody td{padding:.35rem .3rem;font-size:.7rem}.eval-chip{font-size:.68rem;padding:.15rem .35rem}.consultas-section,.pdf-section{padding:1rem}.steam-hero{padding:1.5rem 1rem}.steam-hero h2{font-size:1.5rem}.steam-card{padding:1rem}.steam-integration{padding:1rem}.nav-btn .nav-label{display:none}.nav-btn{padding:.4rem .55rem}nav{justify-content:center}}
-@media(max-width:480px){.eval-table{font-size:.75rem}.eval-table thead th,.eval-table tbody td{padding:.4rem .35rem}.eval-chip{font-size:.7rem;padding:.15rem .4rem}}
+
+/* --- Móviles (≤480px) --- */
+@media(max-width:480px){
+  .auth-card{padding:1.8rem;width:95%}
+  .auth-card h2{font-size:1.3rem}
+  .portal-titulo{font-size:2rem}.portal-subtitulo{font-size:1.4rem}.portal-curso{font-size:1.2rem}
+  header{padding:.5rem .6rem}
+  h1{font-size:.85rem;display:inline;margin-right:.4rem}
+  h2{font-size:.65rem;display:inline}
+  .course-select{font-size:16px;padding:.25rem 2rem .25rem .5rem}
+  .course-chip-bar{font-size:.7rem;padding:.25rem .7rem}
+  .container{padding:0 .6rem;margin:.6rem auto}
+  .ambito-card{padding:.8rem}
+  .ambito-card h3{font-size:1rem}
+  .linea-item{padding:.7rem;flex-direction:column;align-items:flex-start;gap:.4rem}
+  .linea-badge{min-width:20px;height:20px;font-size:.58rem;padding:0 .4rem;border-radius:10px}
+  .linea-actions{opacity:1}
+  .detalle-linea{padding:.8rem}
+  .tarea-item{padding:.7rem}
+  .estado-btn{font-size:.7rem}
+  .info-edit-row .btn-primary,.info-edit-row .btn-secondary{padding:.35rem .5rem;font-size:.7rem;min-height:40px}
+  .consultas-section{padding:.8rem}
+  .filtros-avanzados{grid-template-columns:1fr}
+  .steam-hero{padding:1rem .6rem}
+  .steam-hero h2{font-size:1.2rem}
+  .steam-card{padding:.8rem}
+  .steam-integration{padding:.8rem}
+  .modal-content{width:96%;padding:0 .9rem .9rem}
+  .modal-header{margin:0 -.9rem 1rem;padding:.8rem .9rem}
+  .nav-btn .nav-label{display:none}
+  .nav-btn{padding:.4rem .6rem;border-radius:16px;gap:0}
+  .nav-btn i{font-size:.9rem}
+  nav{flex-wrap:wrap;justify-content:center}
+  .gestion-btn{padding:.5rem .45rem;font-size:.68rem;gap:.15rem}
+  .gestion-btn i{font-size:.65rem}
+  .volver-btn{align-self:stretch;justify-content:center;font-size:.75rem}
+  .user-bar{padding:.3rem .6rem;font-size:.75rem}
+  .user-bar-right{gap:.3rem}
+  .user-bar .logout-btn{font-size:.65rem;padding:.2rem .4rem}
+  .version-chip{font-size:.62rem;padding:.2rem .5rem}
+}
+
+/* --- Móviles pequeños (≤360px) --- */
+@media(max-width:360px){
+  .portal-titulo{font-size:1.8rem}.portal-subtitulo{font-size:1.2rem}.portal-curso{font-size:1rem}
+  .portal-instruccion{font-size:.9rem}
+  .ambito-card{padding:1rem}
+  .ambito-card h3{font-size:1.2rem}
+  .detalle-linea{padding:1rem}
+  .tarea-item{padding:.8rem}
+  .estado-btn{font-size:.64rem;padding:.4rem .15rem}
+  .consultas-section{padding:1rem}
+  .steam-hero{padding:1.5rem 1rem}
+  .steam-hero h2{font-size:1.5rem}
+  .steam-card{padding:1rem}
+  .steam-integration{padding:1rem}
+  .nav-btn .nav-label{display:none}
+  .nav-btn{padding:.4rem .55rem}
+  nav{justify-content:center}
+}
+
+/* --- Móvil en horizontal (pantalla corta): compacta portada, login y modales --- */
+@media(max-height:450px) and (orientation:landscape){
+  .portal-titulo{font-size:1.8rem;margin-bottom:.4rem}
+  .portal-subtitulo{font-size:1.1rem;margin-bottom:.6rem}
+  .portal-curso{font-size:1.1rem;margin-bottom:.6rem}
+  header{padding:.5rem .8rem}
+  .auth-overlay{align-items:flex-start;overflow-y:auto}
+  .auth-card{margin:1rem auto}
+  .modal-content{max-height:92vh;max-height:92dvh}
+}
+
+/* --- Pantallas táctiles: sin estados hover "pegados" ni saltos --- */
+@media(hover:none){
+  .nav-btn:hover,.ambito-card:hover,.gestion-btn:hover,.volver-btn:hover,
+  .btn-primary:hover,.btn-danger:hover,.add-linea-btn:hover,.filtro-btn:hover,
+  .auth-btn.primary:hover{transform:none;box-shadow:none}
+}
+
+/* --- Accesibilidad: respetar la preferencia de movimiento reducido --- */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .portal-progress.active{animation:none;width:100%}
+}
 </style>
 </head>
 <body>
@@ -747,11 +779,7 @@ nav::-webkit-scrollbar{display:none}
     </div>
     <div class="form-group">
       <label>Ámbito origen</label>
-      <select class="course-select-modal" id="transferAmbitoSelect" onchange="renderTransferLines()">
-        <option value="organizacion">Organización del Centro</option>
-        <option value="informacion">Información y Comunicación</option>
-        <option value="procesos">Procesos de Enseñanza Aprendizaje</option>
-      </select>
+      <select class="course-select-modal" id="transferAmbitoSelect" onchange="renderTransferLines()"></select>
     </div>
     <div class="form-group">
       <label>Curso destino</label>
@@ -761,6 +789,7 @@ nav::-webkit-scrollbar{display:none}
       <label>Líneas a transferir</label>
       <ul class="transfer-line-list" id="transferLineList"></ul>
     </div>
+    <p style="font-size:.78rem;color:#888;margin:-.4rem 0 .8rem"><i class="fas fa-info-circle"></i> Las líneas seleccionadas se copian al curso destino con sus tareas y su progreso. El curso de origen no se modifica.</p>
     <div id="transferModalMessage"></div>
     <div class="btn-row">
       <button class="btn-secondary" onclick="closeTransferModal()">Cancelar</button>
@@ -959,23 +988,6 @@ async function getAllUsersSorted() {
     return [];
   }
 }
-
-// Base list of predefined responsables (mutable — new entries can be added)
-let RESPONSABLES_BASE = [
-  'Equipo directivo',
-  'Equipo de coordinación',
-  'Profesorado',
-  'PAS',
-  'Familias',
-  'Alumnado',
-  'Departamento FOREVIN',
-  'Community manager',
-  'CEP'
-];
-
-const TEMP_PREDEFINED_BASE = ['Primer trimestre', 'Segundo trimestre', 'Tercer trimestre'];
-let TEMP_PREDEFINED = [...TEMP_PREDEFINED_BASE];
-let HERRAMIENTAS_BASE = [];
 
 // ==================== MODELO DE TAREAS ====================
 // Opciones fijas de los elementos de la tarjeta de tarea
@@ -1199,16 +1211,18 @@ function setConnectionStatus(connected) {
 }
 
 // ==================== SEED FUNCTION ====================
-async function seedCourse(cursoId) {
+// Crea la estructura de un curso: documento raíz, ámbitos y documento de
+// estados. Con semilla (primer arranque) usa las líneas iniciales del
+// SEED_DATA; sin semilla crea los ámbitos vacíos para rellenarlos luego
+// por transferencia. Antes eran dos funciones casi idénticas.
+async function crearEstructuraCurso(cursoId, conSemilla) {
   await db.collection(PLANES_COLLECTION).doc(cursoId).set({ name: cursoId });
   for (const ambitoId of AMBITOS) {
-    const ambitoData = SEED_DATA[ambitoId];
-    if (ambitoData) {
-      await db.collection(PLANES_COLLECTION).doc(cursoId).collection('ambitos').doc(ambitoId).set({
-        titulo: ambitoData.titulo,
-        lineas: ambitoData.lineas.map(normalizarLineaDatos)
-      });
-    }
+    const semilla = conSemilla ? SEED_DATA[ambitoId] : null;
+    await db.collection(PLANES_COLLECTION).doc(cursoId).collection('ambitos').doc(ambitoId).set({
+      titulo: (semilla && semilla.titulo) || AMBITO_INFO[ambitoId].titulo,
+      lineas: semilla ? semilla.lineas.map(normalizarLineaDatos) : []
+    });
   }
   await db.collection(PLANES_COLLECTION).doc(cursoId).collection('estadosTareas').doc('global').set({ estados: {}, comentarios: {} });
 }
@@ -1375,7 +1389,6 @@ async function handleAuth() {
 
 function handleLogout() {
   // Cancelar cualquier transición pendiente del portal antes de volver al login.
-  if (_portalTimer) { clearTimeout(_portalTimer); _portalTimer = null; }
   const portal = document.getElementById('portalInicio');
   const mainApp = document.getElementById('mainApp');
   if (portal) { portal.style.display = 'none'; portal.classList.remove('fade-out'); }
@@ -1383,18 +1396,8 @@ function handleLogout() {
   sessionStorage.removeItem(AUTH_SESSION_KEY);
   state.user = null;
   state.userRole = 'viewer';
-  unsubscribeFns.forEach(fn => fn());
-  unsubscribeFns = [];
   if (state.currentCourse) { try { localStorage.setItem('lastActiveCourse', state.currentCourse); } catch (e) {} }
-  state.planData = {};
-  state.estadosTareas = {};
-  state.comentariosTareas = {};
-  state.currentCourse = '';
-  state.currentLinea = null;
-  state.currentAmbitoId = '';
-  state.viewState = 'inicio';
-  state.courses = [];
-  state.loading = true;
+  resetUserSessionState();
   showAuthOverlay();
 }
 
@@ -1513,7 +1516,7 @@ async function loadCourses() {
 
     if (courseList.length === 0) {
       const currentCurso = getCurrentCurso();
-      await seedCourse(currentCurso);
+      await crearEstructuraCurso(currentCurso, true);
       state.courses = [currentCurso];
       state.currentCourse = currentCurso;
       renderCourseSelect();
@@ -1545,7 +1548,6 @@ async function loadCourses() {
     // Apply theme to the portal-inicio dynamically
     const portal = document.getElementById('portalInicio');
     if (portal) portal.style.background = 'var(--gradient)';
-    await loadGlobalCatalogos();
     await listenToCourseData();
     // The caller controls portal visibility/countdown after course loading.
   } catch (err) {
@@ -1756,13 +1758,11 @@ function renderCourseSelect() {
   if (chipText) chipText.textContent = state.currentCourse || '—';
 }
 
-document.getElementById('courseSelect').addEventListener('change', async function() {
-  state.currentCourse = this.value;
-  applyCourseTheme(state.currentCourse);
-  renderCourseSelect(); // mantiene el chip del banner sincronizado
-  updateUserBar();
-  await listenToCourseData();
-  goInicio();
+// Delega en setCurrentCourse para persistir lastActiveCourse y mantener
+// sincronizados chip, tema y portal (antes el cambio no se guardaba y al
+// recargar la app volvía a otro curso).
+document.getElementById('courseSelect').addEventListener('change', function() {
+  setCurrentCourse(this.value);
 });
 
 // ==================== NAV ACTIVE STATE ====================
@@ -2110,15 +2110,9 @@ function renderTaskItem(taskId, tarea, ordinal, tipoKey, estado) {
         </div>
       ` : ''}
       ${cuerpoHtml}
-      ${canEdit ? `<div class="estado-tarea">
-        <button class="estado-btn no-iniciado ${estado==='no-iniciado'?'active':''}" onclick="handleEstadoChange('${taskId}','no-iniciado')">No iniciada</button>
-        <button class="estado-btn en-proceso ${estado==='en-proceso'?'active':''}" onclick="handleEstadoChange('${taskId}','en-proceso')">En proceso</button>
-        <button class="estado-btn conseguido ${estado==='conseguido'?'active':''}" onclick="handleEstadoChange('${taskId}','conseguido')">Conseguida</button>
-      </div>` : `<div class="estado-tarea">
-        <button class="estado-btn no-iniciado ${estado==='no-iniciado'?'active':''}" style="pointer-events:none;opacity:.7">No iniciada</button>
-        <button class="estado-btn en-proceso ${estado==='en-proceso'?'active':''}" style="pointer-events:none;opacity:.7">En proceso</button>
-        <button class="estado-btn conseguido ${estado==='conseguido'?'active':''}" style="pointer-events:none;opacity:.7">Conseguida</button>
-      </div>`}
+      <div class="estado-tarea">
+        ${Object.entries(ESTADOS_TAREA_INFO).map(([est, info]) => `<button class="estado-btn ${est} ${estado===est?'active':''}"${canEdit ? ` onclick="handleEstadoChange('${taskId}','${est}')"` : ' style="pointer-events:none;opacity:.7"'}>${info.label}</button>`).join('')}
+      </div>
     </div>`;
 }
 
@@ -2351,16 +2345,13 @@ function renderConsultas(container) {
         <div class="filtro-group">
           <label>Ámbitos:</label>
           <div class="checkbox-group">
-            ${chk('ambitos', 'organizacion', 'Organización del Centro')}
-            ${chk('ambitos', 'informacion', 'Información y Comunicación')}
-            ${chk('ambitos', 'procesos', 'Procesos de Enseñanza Aprendizaje')}
+            ${AMBITOS.map(a => chk('ambitos', a, AMBITO_INFO[a].titulo)).join('')}
           </div>
         </div>
         <div class="filtro-group">
           <label>Tipos de línea de actuación:</label>
           <div class="checkbox-group">
-            ${chk('tiposLinea', 'formacion', 'Formación del profesorado')}
-            ${chk('tiposLinea', 'intervencion', 'A realizar en el centro')}
+            ${Object.entries(TIPOS_LINEA_INFO).map(([id, info]) => chk('tiposLinea', id, info.label)).join('')}
           </div>
         </div>
         <div class="filtro-group">
@@ -2372,9 +2363,7 @@ function renderConsultas(container) {
         <div class="filtro-group">
           <label>Estados de las tareas:</label>
           <div class="checkbox-group">
-            ${chk('estados', 'no-iniciado', 'No iniciada')}
-            ${chk('estados', 'en-proceso', 'En proceso')}
-            ${chk('estados', 'conseguido', 'Conseguida')}
+            ${Object.keys(ESTADOS_TAREA_INFO).map(e => chk('estados', e, ESTADOS_TAREA_INFO[e].label)).join('')}
           </div>
         </div>
       </div>
@@ -2478,6 +2467,7 @@ function renderInformeResultados() {
 
 // ==================== ESTADO CHANGE ====================
 async function handleEstadoChange(taskId, estado) {
+  const teniaEstado = Object.prototype.hasOwnProperty.call(state.estadosTareas, taskId);
   const oldEstado = state.estadosTareas[taskId] || 'no-iniciado';
   const newEstados = { ...state.estadosTareas, [taskId]: estado };
   state.estadosTareas = newEstados;
@@ -2486,8 +2476,10 @@ async function handleEstadoChange(taskId, estado) {
     renderView();
   } catch (err) {
     console.error('Error saving estado:', err);
-    // Rollback optimistic update
-    state.estadosTareas[taskId] = oldEstado;
+    // Rollback optimistic update: si la tarea no tenía estado guardado, se
+    // elimina la clave en vez de dejar un 'no-iniciado' explícito
+    if (teniaEstado) state.estadosTareas[taskId] = oldEstado;
+    else delete state.estadosTareas[taskId];
     renderView();
     // Show error toast AFTER renderView so it's not destroyed
     showToast('Error al guardar estado', 'error');
@@ -2640,25 +2632,18 @@ async function executeCourseAction() {
   }
 }
 
-async function createEmptyCourse(cursoId) {
-  // Create course root document + empty ambitos (no data — only seed 2025-2026)
-  await db.collection(PLANES_COLLECTION).doc(cursoId).set({ name: cursoId });
-  for (const ambitoId of AMBITOS) {
-    const ambitoInfo = AMBITO_INFO[ambitoId];
-    await db.collection(PLANES_COLLECTION).doc(cursoId).collection('ambitos').doc(ambitoId).set({
-      titulo: ambitoInfo.titulo,
-      lineas: []
-    });
-  }
-  await db.collection(PLANES_COLLECTION).doc(cursoId).collection('estadosTareas').doc('global').set({ estados: {}, comentarios: {} });
-}
-
 async function handleCreateCourse() {
   const name = document.getElementById('newCourseInput').value.trim();
   if (!name) return;
   const msgEl = document.getElementById('courseModalMessage');
   if (!/^\d{4}-\d{4}$/.test(name)) {
     msgEl.innerHTML = '<div class="modal-message error">Usa el formato YYYY-YYYY (ej: 2026-2027)</div>';
+    return;
+  }
+  // Los dos años deben ser consecutivos: un curso 2026-2029 sería un error tipográfico
+  const [anyoIni, anyoFin] = name.split('-').map(Number);
+  if (anyoFin !== anyoIni + 1) {
+    msgEl.innerHTML = '<div class="modal-message error">El segundo año debe ser consecutivo con el primero (ej: 2026-2027)</div>';
     return;
   }
   if (/[\/\\.~]/.test(name)) {
@@ -2672,7 +2657,7 @@ async function handleCreateCourse() {
       return;
     }
     // Create EMPTY course — data only comes via transfer
-    await createEmptyCourse(name);
+    await crearEstructuraCurso(name, false);
     state.courses.push(name);
     state.courses.sort();
     state.currentCourse = name;
@@ -2724,20 +2709,28 @@ function openEditLinea(linea, isNew) {
   document.getElementById('editModal').classList.add('active');
 }
 
-function updateLineaTipoStyle() {
-  const fl = document.getElementById('lineaTipoFormLabel');
-  const il = document.getElementById('lineaTipoIntervLabel');
-  if (document.getElementById('formTipoFormacion').checked) {
-    fl.style.borderColor = 'var(--primary-color)';
-    fl.style.background = 'rgba(52,152,219,.08)';
-    il.style.borderColor = '#ddd';
-    il.style.background = 'transparent';
+// Resalta la etiqueta del tipo elegido (formación en azul, intervención en
+// verde); lo comparten el modal de edición de línea y el de nueva tarea.
+function resaltarTipoElegido(radioFormacion, labelFormacion, labelIntervencion) {
+  if (radioFormacion.checked) {
+    labelFormacion.style.borderColor = 'var(--primary-color)';
+    labelFormacion.style.background = 'rgba(52,152,219,.08)';
+    labelIntervencion.style.borderColor = '#ddd';
+    labelIntervencion.style.background = 'transparent';
   } else {
-    il.style.borderColor = 'var(--success-color)';
-    il.style.background = 'rgba(46,204,113,.08)';
-    fl.style.borderColor = '#ddd';
-    fl.style.background = 'transparent';
+    labelIntervencion.style.borderColor = 'var(--success-color)';
+    labelIntervencion.style.background = 'rgba(46,204,113,.08)';
+    labelFormacion.style.borderColor = '#ddd';
+    labelFormacion.style.background = 'transparent';
   }
+}
+
+function updateLineaTipoStyle() {
+  resaltarTipoElegido(
+    document.getElementById('formTipoFormacion'),
+    document.getElementById('lineaTipoFormLabel'),
+    document.getElementById('lineaTipoIntervLabel')
+  );
 }
 function closeEditModal() {
   document.getElementById('editModal').classList.remove('active');
@@ -2787,7 +2780,6 @@ async function saveLinea() {
       steam4: steam4
     };
     const newLineas = [...ambitoData.lineas, newLinea].sort((a, b) => a.id - b.id);
-    if (_savingLinea) return;
     _savingLinea = true;
     try {
       await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(state.currentAmbitoId).update({ lineas: newLineas });
@@ -2811,7 +2803,6 @@ async function saveLinea() {
     // Editing existing line: update título, descripción, steam4 y tipo — preserve tasks.
     // Si cambia el tipo de línea, todas sus tareas pasan al grupo del nuevo tipo
     // y se re-mapean los estados/comentarios guardados de esas tareas.
-    if (_savingLinea) return;
     _savingLinea = true;
     const lineaActual = ambitoData.lineas.find(l => l.id === state.editingLinea.id);
     const tipoAnterior = lineaActual ? lineaActual.tipo : nuevoTipo;
@@ -2890,6 +2881,54 @@ async function migrarEstadosCambioTipoLinea(ambitoId, lineaId, nuevoTipo, numFor
   }
 }
 
+// Aplica fn a cada clave del mapa de estados/comentarios y devuelve mapas
+// nuevos. Si fn devuelve null, la clave se elimina; si devuelve la misma clave,
+// se conserva. Construir objetos nuevos (en vez de mutar mientras se itera)
+// evita perder valores cuando el orden de inserción hace que una clave
+// renumerada sobrescriba a otra aún no procesada.
+function remapearClavesTareas(estados, comentarios, fn) {
+  const nuevosEstados = {};
+  const nuevosComentarios = {};
+  Object.entries(estados || {}).forEach(([k, v]) => {
+    const nk = fn(k);
+    if (nk) nuevosEstados[nk] = v;
+  });
+  Object.entries(comentarios || {}).forEach(([k, v]) => {
+    const nk = fn(k);
+    if (nk) nuevosComentarios[nk] = v;
+  });
+  return { estados: nuevosEstados, comentarios: nuevosComentarios };
+}
+
+// Claves tras eliminar la tarea idxBorrado: se quita su clave y las tareas
+// posteriores del mismo grupo bajan un índice.
+function remapearEstadosBorradoTarea(estados, comentarios, ambitoId, lineaId, taskType, idxBorrado) {
+  const prefijo = ambitoId + '-' + lineaId + '-' + taskType + '-';
+  return remapearClavesTareas(estados, comentarios, k => {
+    if (k === prefijo + idxBorrado) return null;
+    if (k.startsWith(prefijo)) {
+      const i = parseInt(k.slice(prefijo.length), 10);
+      if (!isNaN(i) && i > idxBorrado) return prefijo + (i - 1);
+    }
+    return k;
+  });
+}
+
+// Claves tras eliminar una línea y renumerar las restantes del ámbito.
+// idMapping asocia id antiguo -> id nuevo para las líneas que cambian de número.
+function remapearEstadosBorradoLinea(estados, comentarios, ambitoId, lineaIdBorrada, idMapping) {
+  const prefijo = ambitoId + '-';
+  return remapearClavesTareas(estados, comentarios, k => {
+    if (!k.startsWith(prefijo)) return k;
+    const m = k.slice(prefijo.length).match(/^(\d+)-(formacion|intervencion)-(\d+)$/);
+    if (!m) return k;
+    const lineaId = parseInt(m[1], 10);
+    if (lineaId === lineaIdBorrada) return null;
+    const nuevoId = idMapping[lineaId];
+    return nuevoId ? prefijo + nuevoId + '-' + m[2] + '-' + m[3] : k;
+  });
+}
+
 // ==================== NEW TAREA MODAL ====================
 function openNewActuacionModal() {
   // El grupo de clasificación se preselecciona con el tipo de la línea actual
@@ -2919,19 +2958,11 @@ function closeNewActuacionModal() {
 }
 
 function updateTipoStyle() {
-  const formLabel = document.getElementById('actTipoFormLabel');
-  const intervLabel = document.getElementById('actTipoIntervLabel');
-  if (document.getElementById('actTipoFormacion').checked) {
-    formLabel.style.borderColor = 'var(--primary-color)';
-    formLabel.style.background = 'rgba(52,152,219,.08)';
-    intervLabel.style.borderColor = '#ddd';
-    intervLabel.style.background = 'transparent';
-  } else {
-    intervLabel.style.borderColor = 'var(--success-color)';
-    intervLabel.style.background = 'rgba(46,204,113,.08)';
-    formLabel.style.borderColor = '#ddd';
-    formLabel.style.background = 'transparent';
-  }
+  resaltarTipoElegido(
+    document.getElementById('actTipoFormacion'),
+    document.getElementById('actTipoFormLabel'),
+    document.getElementById('actTipoIntervLabel')
+  );
   // El ordinal de la nueva tarea depende del grupo elegido: las tareas de
   // formación del profesorado se numeran antes que las tareas a realizar en el centro.
   const linea = state.currentLinea;
@@ -2959,7 +2990,6 @@ async function saveNewActuacion() {
   const ambitoId = state.currentAmbitoId;
   const lineaId = state.currentLinea.id;
 
-  if (_savingActuacion) return;
   _savingActuacion = true;
   try {
     // Read latest from Firestore to avoid conflicts
@@ -3001,7 +3031,7 @@ async function saveNewActuacion() {
   }
 }
 
-// ==================== DELETE MODAL ====================// ==================== DELETE MODAL ====================
+// ==================== DELETE MODAL ====================
 function confirmDeleteLinea(linea) {
   state.editingLinea = linea;
   document.getElementById('deleteMessage').textContent = `¿Estás seguro de que deseas eliminar "${linea.titulo}"? Esta acción no se puede deshacer.`;
@@ -3022,32 +3052,15 @@ async function deleteLinea() {
   try {
     await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(state.currentAmbitoId).update({ lineas: renumbered });
 
-    const newEstados = { ...state.estadosTareas };
-    const newComentarios = { ...state.comentariosTareas };
     // Delete estados for the removed line and renumber surviving lines
     // Mapa id antiguo -> id nuevo por posición (los títulos pueden repetirse)
     const idMapping = {};
     newLineas.forEach((l, i) => {
       if (l.id !== i + 1) idMapping[l.id] = i + 1;
     });
-    Object.keys(newEstados).forEach(key => {
-      const parts = key.split('-');
-      const lineId = parts.length >= 2 ? parseInt(parts[1]) : null;
-      if (lineId === state.editingLinea.id) {
-        delete newEstados[key];
-        delete newComentarios[key];
-      } else if (idMapping[lineId]) {
-        const newKey = key.replace('-' + lineId + '-', '-' + idMapping[lineId] + '-');
-        if (newKey !== key) {
-          newEstados[newKey] = newEstados[key];
-          delete newEstados[key];
-          if (newComentarios[key] !== undefined) {
-            newComentarios[newKey] = newComentarios[key];
-            delete newComentarios[key];
-          }
-        }
-      }
-    });
+    const { estados: newEstados, comentarios: newComentarios } = remapearEstadosBorradoLinea(
+      state.estadosTareas, state.comentariosTareas, state.currentAmbitoId, state.editingLinea.id, idMapping
+    );
     await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('estadosTareas').doc('global').set({ estados: newEstados, comentarios: newComentarios });
     state.estadosTareas = newEstados;
     state.comentariosTareas = newComentarios;
@@ -3067,9 +3080,10 @@ function openTransferModal() {
   state.selectedTransferLines = [];
   document.getElementById('transferModalMessage').innerHTML = '';
 
-  // Set ambito select
+  // Set ambito select (opciones generadas desde AMBITO_INFO para no duplicar literales)
   const ambitoSel = document.getElementById('transferAmbitoSelect');
-  ambitoSel.value = state.currentAmbitoId || 'organizacion';
+  ambitoSel.innerHTML = AMBITOS.map(a => `<option value="${a}">${escapeHtml(AMBITO_INFO[a].titulo)}</option>`).join('');
+  ambitoSel.value = state.currentAmbitoId || AMBITOS[0];
 
   // Set target course select
   const targetSel = document.getElementById('transferTargetSelect');
@@ -3120,7 +3134,6 @@ async function handleTransfer() {
     return;
   }
 
-  if (_transferring) return;
   _transferring = true;
   try {
     // Get source ambito data
@@ -3164,7 +3177,30 @@ async function handleTransfer() {
       lineas: merged
     }, { merge: true });
 
-    msgEl.innerHTML = `<div class="modal-message success">${toTransfer.length} línea(s) transferida(s) correctamente</div>`;
+    // Copiar estados y comentarios de las tareas de las líneas transferidas,
+    // re-mapeando las claves a los nuevos ids de línea del curso destino
+    // (si no, las líneas llegarían con todas las tareas "No iniciada").
+    const srcEstDoc = await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('estadosTareas').doc('global').get();
+    const srcEstados = srcEstDoc.exists ? (srcEstDoc.data().estados || {}) : {};
+    const srcComentarios = srcEstDoc.exists ? (srcEstDoc.data().comentarios || {}) : {};
+    const nuevoIdPorAntiguo = {};
+    toTransfer.forEach((l, i) => { nuevoIdPorAntiguo[l.id] = newLines[i].id; });
+    const prefijo = ambitoId + '-';
+    const { estados: estadosDestino, comentarios: comentariosDestino } = remapearClavesTareas(srcEstados, srcComentarios, k => {
+      if (!k.startsWith(prefijo)) return null;
+      const m = k.slice(prefijo.length).match(/^(\d+)-(formacion|intervencion)-(\d+)$/);
+      if (!m) return null;
+      const nuevoId = nuevoIdPorAntiguo[parseInt(m[1], 10)];
+      return nuevoId ? prefijo + nuevoId + '-' + m[2] + '-' + m[3] : null;
+    });
+    if (Object.keys(estadosDestino).length > 0 || Object.keys(comentariosDestino).length > 0) {
+      await db.collection(PLANES_COLLECTION).doc(targetCourse).collection('estadosTareas').doc('global').set(
+        { estados: estadosDestino, comentarios: comentariosDestino },
+        { merge: true }
+      );
+    }
+
+    msgEl.innerHTML = `<div class="modal-message success">${toTransfer.length} línea(s) copiada(s) al curso ${escapeHtml(targetCourse)} con el progreso de sus tareas. El curso de origen conserva las líneas originales.</div>`;
     setTimeout(() => closeTransferModal(), 1500);
   } catch (err) {
     msgEl.innerHTML = '<div class="modal-message error">Error al transferir</div>';
@@ -3304,70 +3340,6 @@ function getAllResponsables() {
 }
 
 // ==================== GLOBAL CATALOG (cross-course) ====================
-async function loadGlobalCatalogos() {
-  try {
-    const doc = await db.collection(PLANES_COLLECTION).doc('_config').collection('catalogos').doc('global').get();
-    if (doc.exists) {
-      const data = doc.data();
-      // Merge global responsables with base list (deduplicated)
-      if (data.responsables && Array.isArray(data.responsables)) {
-        const merged = new Set(RESPONSABLES_BASE);
-        data.responsables.forEach(r => merged.add(r));
-        RESPONSABLES_BASE = Array.from(merged).sort();
-      }
-      // Merge global temporalizacion with predefined
-      if (data.temporalizacion && Array.isArray(data.temporalizacion)) {
-        const merged = new Set(TEMP_PREDEFINED_BASE);
-        data.temporalizacion.forEach(t => merged.add(t));
-        TEMP_PREDEFINED = Array.from(merged).sort();
-      }
-      // Load global herramientas
-      if (data.herramientas && Array.isArray(data.herramientas)) {
-        HERRAMIENTAS_BASE = data.herramientas;
-      }
-    }
-  } catch (err) {
-    console.error('Error loading global catalogos:', err);
-  }
-}
-
-async function saveGlobalCatalogoItem(type, value) {
-  if (!value || !value.trim()) return;
-  const trimmed = value.trim();
-  try {
-    const docRef = db.collection(PLANES_COLLECTION).doc('_config').collection('catalogos').doc('global');
-    await db.runTransaction(async (transaction) => {
-      const doc = await transaction.get(docRef);
-      let data = doc.exists ? doc.data() : {};
-      let arr = data[type] || [];
-      if (!arr.find(v => v.toLowerCase() === trimmed.toLowerCase())) {
-        arr.push(trimmed);
-        data[type] = arr;
-        transaction.set(docRef, data, { merge: true });
-      }
-    });
-    // Also update local base arrays
-    if (type === 'responsables') {
-      if (!RESPONSABLES_BASE.find(v => v.toLowerCase() === trimmed.toLowerCase())) {
-        RESPONSABLES_BASE.push(trimmed);
-        RESPONSABLES_BASE.sort();
-      }
-    } else if (type === 'temporalizacion') {
-      if (!TEMP_PREDEFINED.find(v => v.toLowerCase() === trimmed.toLowerCase())) {
-        TEMP_PREDEFINED.push(trimmed);
-        TEMP_PREDEFINED.sort();
-      }
-    } else if (type === 'herramientas') {
-      if (!HERRAMIENTAS_BASE.find(v => v.toLowerCase() === trimmed.toLowerCase())) {
-        HERRAMIENTAS_BASE.push(trimmed);
-        HERRAMIENTAS_BASE.sort();
-      }
-    }
-  } catch (err) {
-    console.error('Error saving global catalogo item:', err);
-  }
-}
-
 // ==================== ACTUACIÓN EVAL CRUD ====================
 function startEditActEval(taskId) {
   state.editingActEval = taskId;
@@ -3415,7 +3387,6 @@ async function executeDeleteActuacion(taskId) {
     showDeleteActuacionError('No se ha podido identificar la actuación que quieres eliminar. Recarga la página e inténtalo de nuevo.');
     return;
   }
-  if (_deletingTask) return;
   _deletingTask = true;
 
   try {
@@ -3442,27 +3413,9 @@ async function executeDeleteActuacion(taskId) {
     await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('ambitos').doc(ambitoId).update({ lineas });
 
     // Clean up estadosTareas for this specific task and renumber remaining
-    const newEstados = { ...state.estadosTareas };
-    const newComentarios = { ...state.comentariosTareas };
-    Object.keys(newEstados).forEach(key => {
-      if (key === taskId) {
-        delete newEstados[key];
-        delete newComentarios[key];
-      } else if (key.startsWith(ambitoId + '-' + lineaId + '-' + taskType + '-')) {
-        const parts = key.split('-' + taskType + '-');
-        const oldIdx = parseInt(parts[parts.length - 1]);
-        if (oldIdx > idx) {
-          const newIdx = oldIdx - 1;
-          const newKey = ambitoId + '-' + lineaId + '-' + taskType + '-' + newIdx;
-          newEstados[newKey] = newEstados[key];
-          delete newEstados[key];
-          if (newComentarios[key] !== undefined) {
-            newComentarios[newKey] = newComentarios[key];
-            delete newComentarios[key];
-          }
-        }
-      }
-    });
+    const { estados: newEstados, comentarios: newComentarios } = remapearEstadosBorradoTarea(
+      state.estadosTareas, state.comentariosTareas, ambitoId, lineaId, taskType, idx
+    );
     await db.collection(PLANES_COLLECTION).doc(state.currentCourse).collection('estadosTareas').doc('global').set({ estados: newEstados, comentarios: newComentarios });
     state.estadosTareas = newEstados;
     state.comentariosTareas = newComentarios;
@@ -3523,7 +3476,7 @@ async function saveActEval(taskId) {
   }
 }
 
-// ==================== UTILITY FUNCTIONS ====================// ==================== UTILITY FUNCTIONS ====================
+// ==================== UTILITY FUNCTIONS ====================
 function escapeHtml(text) {
   if (!text) return '';
   const div = document.createElement('div');
@@ -3888,13 +3841,13 @@ async function handleImportJSON(event) {
         }
       }
 
-      // Import estados
-      if (courseData.estados || courseData.comentarios) {
-        await db.collection(PLANES_COLLECTION).doc(courseId).collection('estadosTareas').doc('global').set({
-          estados: courseData.estados || {},
-          comentarios: courseData.comentarios || {}
-        }, { merge: true });
-      }
+      // Import estados: set completo (sin merge) para que la importación
+      // sobrescriba de verdad; con merge, los estados de tareas eliminadas
+      // en el archivo de respaldo seguirían vivos en Firestore.
+      await db.collection(PLANES_COLLECTION).doc(courseId).collection('estadosTareas').doc('global').set({
+        estados: courseData.estados || {},
+        comentarios: courseData.comentarios || {}
+      });
       coursesImported++;
     }
 
